@@ -1,10 +1,17 @@
 #!/usr/bin/env node
 /**
+ * Day 30 build 脚本。
+ *
+ * build.js 是 Web day 的静态页面构建脚本：它把 runDemo 的结果写成 dist/index.html。
+ * 这里只生成本地静态产物，不启动服务、不访问模型、不部署远程环境。
+ */
+/**
  * Day 30 Web 构建脚本。
  *
  * 这里不用 Vite，是为了让当天示例完全自包含、零依赖。
  * 构建结果写入 dist/index.html，dist 已在根 .gitignore 中排除。
  */
+// mkdir/writeFile 是异步文件 API，用来创建 dist 目录并写入 HTML 文件。
 import { mkdir, writeFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { runDemo } from './index.js';
@@ -26,6 +33,8 @@ function renderHtml(result) {
 
 const result = runDemo();
 const distDir = resolve('dist');
+// recursive=true 表示 dist 不存在就创建，存在也不报错。
 await mkdir(distDir, { recursive: true });
+// 把完整 HTML 写入 dist/index.html，浏览器可直接打开查看。
 await writeFile(resolve(distDir, 'index.html'), renderHtml(result));
 console.error('built dist/index.html');

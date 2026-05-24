@@ -4,6 +4,7 @@
  * 这个文件属于 day02-multi-agent-cli，不能 import 其它 day 的源码。
  * 注释说明保留在文件顶部，帮助学习时先理解本文件职责。
  */
+// 教学：导出常量：其它文件可以 import 这个值，适合放默认配置或元信息。
 export const rolePrompts = {
   planner: [
     '你是 planner agent，只负责把问题拆成工具步骤。',
@@ -23,9 +24,12 @@ export const rolePrompts = {
 };
 
 /** 生成不同 agent 角色的 system/user 消息。 */
+// 教学：导出函数：这是当前模块提供给测试、CLI 或其它本 day 文件使用的能力。
 export function roleMessages(role, payload) {
+  // 教学：返回结果：调用方会拿到这个值继续后续流程。
   return [
     { role: 'system', content: rolePrompts[role] },
+    // 教学：序列化对象：把 JS 对象转成 JSON 字符串，便于写入请求体或 stdout。
     { role: 'user', content: JSON.stringify(payload, null, 2) },
   ];
 }

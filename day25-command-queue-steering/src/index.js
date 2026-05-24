@@ -1,40 +1,50 @@
 /**
- * Day 25：Command Queue + Steering
+ * Day 25：Command Queue + Steering。
  *
- * 这个文件是当天的核心学习代码。它刻意保持小而完整：
- * 1. 不依赖其它 day 的源码，方便学习时随意修改。
- * 2. 用 mock 数据演示 mini-openclaw 的一个能力点。
- * 3. 在关键流程旁边写中文注释，帮助理解设计意图。
+ * 本文件是当天最小可运行核心逻辑，接近逐行写中文注释，方便新手顺着代码读。
+ * 重要边界：这里不 import 其它 day，不调用真实模型，不执行远程命令或部署。
  */
 
+// lesson 是当天的元信息，CLI、测试和 README 都可以围绕它理解本 day 在学什么。
 export const lesson = Object.freeze({
+  // day 使用两位字符串，便于排序和在输出中展示。
   day: "25",
+  // slug 是机器友好的英文短名，适合文件名、事件 source 和 URL 片段。
   slug: "command-queue-steering",
+  // title 是给人看的中文标题，CLI 成功日志会打印它。
   title: "Command Queue + Steering",
   concepts: [
-  "学习运行中追加指令、排队和取消。",
-  "用内存队列模拟 steering。"
-],
+    // concepts 是今天要理解的核心概念列表。
+    "学习运行中追加指令、排队和取消。",
+    "用内存队列模拟 steering。"
+  ],
   artifacts: [
-  "enqueue command",
-  "steer running job",
-  "cancel command"
-],
+    // artifacts 是今天代码产出的最小能力或接口。
+    "enqueue command",
+    "steer running job",
+    "cancel command"
+  ],
+  // web 标记今天是否产出静态页面；false 表示只需要 CLI 和测试。
   web: false,
 });
 
 /**
  * 构造当天的 mock 输入。
  *
- * 真实 OpenClaw 会从 Gateway、消息通道或 workspace 读取输入。
- * 教学版先用固定对象表达输入形状，避免引入额外系统依赖。
+ * overrides 是给测试或 CLI 临时覆盖字段用的对象；例如传入 message 可以模拟用户输入。
  */
 export function createDemoInput(overrides = {}) {
+  // 返回对象就是本 day 的最小请求形状，字段都显式写出来方便学习。
   return {
+    // requestId 模拟一次请求或一次 agent run 的唯一标识。
     requestId: "day25-demo",
+    // actor 表示是谁触发了这次 demo；教学里固定为 learner。
     actor: 'learner',
+    // message 是本次 demo 的输入文本；CLI 会用命令行参数覆盖它。
     message: "Command Queue + Steering demo",
+    // mode=mock 明确说明这里不会访问真实模型、文件系统或远程服务。
     mode: 'mock',
+    // overrides 放最后，表示外部传入的同名字段优先生效。
     ...overrides,
   };
 }
@@ -42,39 +52,59 @@ export function createDemoInput(overrides = {}) {
 /**
  * 运行当天的核心流程。
  *
- * 返回值统一包含 ok、lesson、input、events 和 summary，便于每一天
- * 用同一种方式写测试，也便于最终 day30 对齐平台事件模型。
+ * input 默认来自 createDemoInput；测试可以传自定义 input 验证流程是否稳定。
  */
 export function runDemo(input = createDemoInput()) {
+  // events 是教学版事件流，用数组按顺序描述今天的关键步骤。
   const events = [
   {
+    // step 是事件顺序，帮助你按时间线理解流程。
     "step": 1,
+    // name 是这一步模拟的 mini-openclaw 能力点。
     "name": "enqueue command",
+    // status 表示这一步只是教学 mock，不执行真实外部副作用。
     "status": "ready"
   },
   {
+    // step 是事件顺序，帮助你按时间线理解流程。
     "step": 2,
+    // name 是这一步模拟的 mini-openclaw 能力点。
     "name": "steer running job",
+    // status 表示这一步只是教学 mock，不执行真实外部副作用。
     "status": "mocked"
   },
   {
+    // step 是事件顺序，帮助你按时间线理解流程。
     "step": 3,
+    // name 是这一步模拟的 mini-openclaw 能力点。
     "name": "cancel command",
+    // status 表示这一步只是教学 mock，不执行真实外部副作用。
     "status": "mocked"
   }
 ].map((event) => ({
+    // 展开原始事件字段，保留 step、name、status。
     ...event,
-    // 所有事件都显式标注来源，模拟 Gateway event stream 的最小形态。
+    // source 标注事件来自哪一天，方便未来聚合多个 agent run 时排查来源。
     source: "day25:command-queue-steering",
   }));
+
+  // 返回统一结构，方便每一天用同一套测试方式验证。
   return {
+    // ok=true 表示 demo 流程成功，没有触发校验错误。
     ok: true,
+    // lesson 放进结果里，调用方无需再 import 元信息也能展示标题和概念。
     lesson,
+    // input 回显本次输入，便于理解 overrides 是否生效。
     input,
+    // events 是本 day 最重要的学习结果，模拟平台事件流。
     events,
+    // summary 是给测试和人类快速判断结果的摘要。
     summary: {
+      // eventCount 记录事件数量，测试会确认它大于 0。
       eventCount: events.length,
+      // lastEvent 取最后一个事件名，用来快速知道流程走到哪里。
       lastEvent: events.at(-1)?.name,
+      // safeMode=true 是安全边界：本 day 只 mock，不做真实副作用。
       safeMode: true,
     },
   };
@@ -83,12 +113,15 @@ export function runDemo(input = createDemoInput()) {
 /**
  * 校验 demo 是否满足当天的安全边界。
  *
- * 这里不执行真实模型、远程命令或部署动作，只检查 mock 流程是否
- * 按预期产生事件，作为每一天最小测试的共同基础。
+ * result 是 runDemo 返回的对象；函数返回 {ok:false,error} 时 CLI 会退出非 0。
  */
 export function validateDemo(result) {
+  // 没有结果或 ok 不是 true，说明核心流程没有成功执行。
   if (!result || result.ok !== true) return { ok: false, error: 'demo 没有成功执行' };
+  // events 必须是非空数组，因为本项目用事件流教学 agent 平台行为。
   if (!Array.isArray(result.events) || result.events.length === 0) return { ok: false, error: 'demo 没有产生事件' };
+  // safeMode 必须保持 true，防止教学 demo 意外执行真实外部动作。
   if (result.summary.safeMode !== true) return { ok: false, error: 'demo 必须保持 safeMode' };
+  // 所有检查通过，返回 ok=true 给 CLI 和测试使用。
   return { ok: true };
 }

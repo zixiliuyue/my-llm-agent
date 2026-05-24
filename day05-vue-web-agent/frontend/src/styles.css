@@ -1,217 +1,356 @@
+/* Day 05：Web Agent 页面样式。
+ *
+ * 本文件学习重点：
+ * 1. 用 CSS Grid 做左侧说明栏 + 右侧结果面板。
+ * 2. 用稳定尺寸和换行规则保证新手示例在桌面和移动端都可读。
+ * 3. 用颜色区分正常内容、空状态和错误状态。
+ */
+
+/* :root 代表整个文档的根节点，适合放全局字体、颜色和背景。 */
 :root {
+  /* font-family 定义整站字体栈；前面的字体不存在时会依次回退。 */
   font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  /* color 是默认文字颜色，子元素没有单独设置时会继承它。 */
   color: #17202a;
+  /* background 是页面底色，和白色面板形成轻微层次。 */
   background: #f4f7f6;
+  /* font-synthesis: none 禁止浏览器伪造粗体/斜体，让字体表现更稳定。 */
   font-synthesis: none;
+  /* optimizeLegibility 让浏览器优先优化正文可读性。 */
   text-rendering: optimizeLegibility;
 }
 
+/* 星号选择器覆盖所有元素，统一盒模型，避免 padding 撑大宽度。 */
 * {
+  /* border-box 表示 width/height 包含 padding 和 border，更适合布局教学。 */
   box-sizing: border-box;
 }
 
+/* body 是浏览器默认页面容器，这里清掉默认外边距。 */
 body {
+  /* margin:0 避免浏览器默认 8px 外边距影响布局判断。 */
   margin: 0;
+  /* min-width 保证很窄屏幕下仍有基本可读宽度。 */
   min-width: 320px;
+  /* min-height 让背景至少铺满一屏。 */
   min-height: 100vh;
 }
 
+/* 表单控件默认字体各浏览器不一致，这里统一继承页面字体。 */
 button,
 textarea,
 input {
+  /* inherit 表示使用父元素字体，保持按钮和输入框风格一致。 */
   font: inherit;
 }
 
+/* shell 是页面最外层容器。 */
 .shell {
+  /* min-height 让内容少时也能占满整屏，背景不会断开。 */
   min-height: 100vh;
+  /* padding 给页面四周留白，避免内容贴边。 */
   padding: 28px;
 }
 
+/* workspace 是主布局容器：左侧 sidebar，右侧 panel。 */
 .workspace {
+  /* grid 适合二维布局，这里用来做两列结构。 */
   display: grid;
+  /* 左列固定 280px，右列占剩余空间；minmax(0,1fr) 防止内容把列撑爆。 */
   grid-template-columns: 280px minmax(0, 1fr);
+  /* gap 是两列之间的间距。 */
   gap: 20px;
+  /* max-width 限制大屏宽度，避免行太长不易阅读。 */
   max-width: 1180px;
+  /* margin: 0 auto 让主布局在页面中水平居中。 */
   margin: 0 auto;
 }
 
+/* sidebar 和 panel 共用白底边框，减少重复样式。 */
 .sidebar,
 .panel {
+  /* border 给面板边界，便于学习者观察布局范围。 */
   border: 1px solid #d9e2dd;
+  /* background 使用白色，和页面灰绿背景区分。 */
   background: #ffffff;
 }
 
+/* sidebar 是左侧学习说明栏。 */
 .sidebar {
+  /* 视口高度减去 shell 上下 padding，让侧栏接近整屏高度。 */
   min-height: calc(100vh - 56px);
+  /* padding 给侧栏内部内容留空间。 */
   padding: 22px;
 }
 
+/* brand 是左上角产品标识和标题区域。 */
 .brand {
+  /* flex 让图标和文字横向排列。 */
   display: flex;
+  /* gap 控制图标和文字之间的距离。 */
   gap: 12px;
+  /* align-items:center 让图标和两行文字垂直居中。 */
   align-items: center;
+  /* margin-bottom 拉开标题区和下面学习目标的距离。 */
   margin-bottom: 28px;
 }
 
+/* mark 是一个固定尺寸的视觉标记。 */
 .mark {
+  /* grid + place-items:center 是居中单个字母的简洁写法。 */
   display: grid;
+  /* place-items 同时控制水平和垂直居中。 */
   place-items: center;
+  /* 固定宽度保证标记不会随文字变化。 */
   width: 36px;
+  /* 固定高度和 width 相同，得到正方形。 */
   height: 36px;
+  /* 8px 圆角保持轻量，不做夸张装饰。 */
   border-radius: 8px;
+  /* 深绿色背景和主按钮保持一致。 */
   background: #164c45;
+  /* 白色文字保证在深色背景上可读。 */
   color: #ffffff;
+  /* 字重加粗，让单字母标记有足够视觉重量。 */
   font-weight: 800;
 }
 
+/* h1 是页面主标题。 */
 h1 {
+  /* 清掉浏览器默认 margin，避免标题区域高度不可控。 */
   margin: 0;
+  /* 标题在工具页面里保持克制，不做 hero 级别字号。 */
   font-size: 20px;
+  /* line-height 控制多行标题时的行距。 */
   line-height: 1.2;
 }
 
+/* p 是普通段落，默认 margin 也会影响紧凑布局。 */
 p {
+  /* 清掉默认 margin，由外层组件统一控制间距。 */
   margin: 0;
 }
 
+/* 次级说明文字统一使用较浅颜色。 */
 .brand p,
 .note span,
 .empty {
+  /* 低对比但仍可读的灰绿色，表示辅助信息。 */
   color: #60706a;
 }
 
+/* note 是左侧学习目标说明块。 */
 .note {
+  /* grid 让 strong 和 span 纵向排列。 */
   display: grid;
+  /* gap 控制两行文字间距。 */
   gap: 8px;
+  /* padding 只给上下，左右跟随 sidebar 内边距。 */
   padding: 16px 0;
+  /* 顶部分隔线让学习目标和品牌区分开。 */
   border-top: 1px solid #e6ece8;
+  /* 底部分隔线让学习目标和开关区分开。 */
   border-bottom: 1px solid #e6ece8;
+  /* line-height 提高中文长句可读性。 */
   line-height: 1.55;
 }
 
+/* switch 是 Mock 模式开关所在行。 */
 .switch {
+  /* flex 让 checkbox 和文字横向排列。 */
   display: flex;
+  /* 垂直居中输入框和文字。 */
   align-items: center;
+  /* gap 控制 checkbox 和文案的距离。 */
   gap: 10px;
+  /* margin-top 拉开开关和学习目标块。 */
   margin-top: 20px;
+  /* 使用正文偏深颜色，提示它是可操作项。 */
   color: #33423d;
 }
 
+/* panel 是右侧主要交互区。 */
 .panel {
+  /* 和 sidebar 一样接近一屏高度，桌面端布局更稳定。 */
   min-height: calc(100vh - 56px);
+  /* 内边距给输入和结果区留空间。 */
   padding: 24px;
 }
 
+/* composer 是问题输入和按钮的容器。 */
 .composer {
+  /* grid 让 label、textarea、button 纵向排列。 */
   display: grid;
+  /* gap 统一表单控件间距。 */
   gap: 12px;
 }
 
+/* 这些都是小标签文字，统一字号、字重和颜色。 */
 .composer label,
 .label,
 .event-type {
+  /* 13px 适合紧凑工具界面里的标签。 */
   font-size: 13px;
+  /* 加粗让标签从正文里跳出来。 */
   font-weight: 700;
+  /* 使用主色，和按钮、标记建立视觉关联。 */
   color: #164c45;
 }
 
+/* textarea 是用户输入问题的地方。 */
 textarea {
+  /* 宽度 100% 让输入框撑满右侧面板。 */
   width: 100%;
+  /* 只允许纵向拖动，避免横向拖坏布局。 */
   resize: vertical;
+  /* 边框定义输入区范围。 */
   border: 1px solid #cdd9d4;
+  /* 圆角和按钮一致。 */
   border-radius: 8px;
+  /* padding 给输入文字留呼吸空间。 */
   padding: 14px;
+  /* 文字颜色使用全局正文色。 */
   color: #17202a;
+  /* 略浅背景表示这是可输入区域。 */
   background: #fbfdfc;
 }
 
+/* button 是运行 Agent 的主操作。 */
 button {
+  /* fit-content 让按钮宽度跟随文字，不撑满整行。 */
   width: fit-content;
+  /* 去掉浏览器默认边框，使用背景色表达按钮。 */
   border: 0;
+  /* 8px 圆角和其它控件保持统一。 */
   border-radius: 8px;
+  /* padding 控制按钮点击区域大小。 */
   padding: 10px 16px;
+  /* 白色文字配深色背景。 */
   color: #ffffff;
+  /* 主按钮背景色。 */
   background: #164c45;
+  /* cursor:pointer 表示它可以点击。 */
   cursor: pointer;
 }
 
+/* 按钮禁用时表示请求正在进行。 */
 button:disabled {
+  /* wait 光标提示用户需要等待。 */
   cursor: wait;
+  /* 降低透明度表示当前不可点击。 */
   opacity: 0.72;
 }
 
+/* result 和 empty 都是输入区下方的反馈区域。 */
 .result,
 .empty {
+  /* margin-top 拉开输入区和反馈区。 */
   margin-top: 22px;
 }
 
+/* answer、error、timeline 共用卡片边框和浅底色。 */
 .answer,
 .error,
 .timeline {
+  /* border 明确结果块范围。 */
   border: 1px solid #d9e2dd;
+  /* 圆角与输入控件保持一致。 */
   border-radius: 8px;
+  /* 浅色背景让结果和页面白底有层次。 */
   background: #fbfdfc;
 }
 
+/* answer 和 error 都是单块文本，统一内边距。 */
 .answer,
 .error {
+  /* padding 保证文本不贴边。 */
   padding: 16px;
 }
 
+/* answer 内的段落是最终回答正文。 */
 .answer p {
+  /* margin-top 拉开 Final 标签和回答正文。 */
   margin-top: 8px;
+  /* line-height 提升中文回答可读性。 */
   line-height: 1.65;
 }
 
+/* error 是错误状态，使用红色系提醒。 */
 .error {
+  /* 红色文字表示失败或异常。 */
   color: #9f2d20;
+  /* 浅红背景比纯红更适合长文本阅读。 */
   background: #fff5f3;
+  /* 红色边框和错误背景匹配。 */
   border-color: #f1c9c2;
 }
 
+/* timeline 是 agent 事件流列表。 */
 .timeline {
+  /* grid 让每个 li 按行排列。 */
   display: grid;
+  /* gap=0，事件之间用边框分隔。 */
   gap: 0;
+  /* margin 顶部留出和 Final/error 的距离，左右下方清零。 */
   margin: 14px 0 0;
+  /* ol 默认 padding 会影响对齐，这里清掉。 */
   padding: 0;
+  /* 去掉有序列表数字，因为事件 type 已经足够表达顺序。 */
   list-style: none;
+  /* overflow:hidden 让子元素边框不会超出圆角。 */
   overflow: hidden;
 }
 
+/* 每条事件占一行，两列分别展示事件类型和事件内容。 */
 .timeline li {
+  /* grid 让类型列和内容列稳定对齐。 */
   display: grid;
+  /* 第一列固定 150px，第二列占剩余空间并允许收缩换行。 */
   grid-template-columns: 150px minmax(0, 1fr);
+  /* gap 控制两列之间距离。 */
   gap: 12px;
+  /* padding 给每条事件内部留白。 */
   padding: 12px 14px;
+  /* 顶部分隔线区分相邻事件。 */
   border-top: 1px solid #e6ece8;
 }
 
+/* 第一条事件不需要顶部边框，否则会和外层边框叠加。 */
 .timeline li:first-child {
+  /* 清掉第一条事件顶部边框。 */
   border-top: 0;
 }
 
+/* code 用来展示 preview、tool 名或 JSON 内容。 */
 code {
+  /* 使用正文偏深颜色，避免代码文本太刺眼。 */
   color: #33423d;
+  /* pre-wrap 保留空白和换行，同时允许正常换行。 */
   white-space: pre-wrap;
+  /* word-break 避免很长 JSON 或 URL 撑破面板。 */
   word-break: break-word;
 }
 
+/* 小屏幕适配：把左右两列改成上下布局。 */
 @media (max-width: 760px) {
+  /* 移动端边距缩小，给内容更多空间。 */
   .shell {
     padding: 14px;
   }
 
+  /* 小屏幕下主布局只保留一列。 */
   .workspace {
     grid-template-columns: 1fr;
   }
 
+  /* 侧栏和面板不再强制接近一屏高度，避免移动端内容过长。 */
   .sidebar,
   .panel {
     min-height: auto;
   }
 
+  /* 事件列表在移动端改成单列，避免类型列挤压内容。 */
   .timeline li {
     grid-template-columns: 1fr;
   }
 }
-
