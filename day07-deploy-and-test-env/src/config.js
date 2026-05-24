@@ -44,6 +44,7 @@ export async function checkOllamaHealth({
 } = {}) {
   const baseUrl = normalizeHost(host);
   try {
+    // /api/tags 是 Ollama 的只读模型列表接口：健康检查用它确认服务在线。
     const response = await fetchImpl(`${baseUrl}/api/tags`);
     if (!response.ok) {
       return { ok: false, host: baseUrl, error: `HTTP ${response.status}` };
@@ -58,4 +59,3 @@ export async function checkOllamaHealth({
     return { ok: false, host: baseUrl, error: error.message };
   }
 }
-

@@ -42,14 +42,23 @@ export function createOllamaClient({
     async chat(messages) {
       let response;
       try {
+        // Ollama 的 /api/chat 是“聊天补全”接口：把 messages 发送给本地模型，
+        // Ollama 会返回下一条 assistant 消息。本示例所有真实模型回答都从这里来。
         response = await fetchImpl(`${baseUrl}/api/chat`, {
+          // POST 表示这次请求会提交一段对话内容给模型计算，不能用 GET。
           method: 'POST',
+          // 告诉 Ollama 请求体是 JSON；如果漏掉，服务端可能无法正确解析 body。
           headers: { 'content-type': 'application/json' },
+          // fetch 的 body 必须是字符串，所以要把下面的 JS 对象 JSON.stringify。
           body: JSON.stringify({
+            // model 指定要调用哪个本地模型，例如 qwen2.5:7b。
             model,
+            // messages 是完整对话上下文，通常包含 system 规则、user 问题和历史 observation。
             messages,
+            // stream=false 表示一次性等模型生成完整回答；CLI 教学里更容易解析和测试。
             stream: false,
             options: {
+              // temperature 越低，模型越稳定；这里用 0.1 让 JSON 协议输出更可控。
               temperature: 0.1,
             },
           }),
@@ -83,7 +92,9 @@ export async function listOllamaModels({
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), timeoutMs);
   try {
+    // /api/tags 是 Ollama 的模型列表接口，用来确认服务是否启动、默认模型是否已拉取。
     const response = await fetchImpl(`${baseUrl}/api/tags`, {
+      // signal 连接 AbortController；超过 timeoutMs 会取消请求，避免 check 命令一直卡住。
       signal: controller.signal,
     });
     if (!response.ok) {

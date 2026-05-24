@@ -128,11 +128,18 @@ function runCommand({
   });
 }
 
-/** 用 fetch 调用 JSON API，并给网络请求加 timeout。 */
+/**
+ * 用 fetch 调用 JSON API，并给网络请求加 timeout。
+ *
+ * url 是接口地址；options 是 method、headers、body 等 fetch 参数；
+ * timeoutMs 是最长等待时间，超过后用 AbortController 取消请求。
+ */
 async function fetchJson(url, options = {}, timeoutMs = SHORT_TIMEOUT_MS) {
   const controller = new AbortController();
+  // AbortController 是浏览器和 Node fetch 的取消机制；这里用它防止 smoke 卡死。
   const timer = setTimeout(() => controller.abort(), timeoutMs);
   try {
+    // signal 把本次 fetch 和 AbortController 绑定，计时器触发时请求会被中断。
     const response = await fetch(url, { ...options, signal: controller.signal });
     const text = await response.text();
     let body;
@@ -164,6 +171,7 @@ async function getFreePort() {
 
 /** 检查本地 Ollama 是否可用，并确认默认模型已经拉取。 */
 async function checkOllama() {
+  // /api/tags 是 Ollama 的模型列表接口；如果这里失败，说明 Ollama 没启动或地址不对。
   const tags = await fetchJson(`${OLLAMA_HOST}/api/tags`, {}, SHORT_TIMEOUT_MS);
   const models = Array.isArray(tags.models) ? tags.models : [];
   if (!models.some((model) => model.name === OLLAMA_MODEL || model.model === OLLAMA_MODEL)) {
@@ -248,10 +256,16 @@ async function runDay05ApiSmoke() {
       }
     }
     await fetchJson(`http://127.0.0.1:${port}/api/health`, {}, 2000);
+    // 这里调用 day05 的本地 /api/agent，验证“前端提交问题 -> 后端调用真实 Ollama -> 返回步骤和答案”。
     const body = await fetchJson(`http://127.0.0.1:${port}/api/agent`, {
+      // POST 表示提交一个真实问题给 agent API。
       method: 'POST',
+      // 告诉 day05 后端 body 是 JSON，readJson 会按 JSON 解析。
       headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ question: '用一句话解释 agent loop。' }),
+      // question 是 smoke 测试的问题；不传 mock，所以会走真实 Ollama。
+      body: JSON.stringify({
+        question: '用一句话解释 agent loop。',
+      }),
     }, LONG_TIMEOUT_MS);
     if (body.ok !== true || typeof body.answer !== 'string' || !body.answer.trim()) {
       throw new Error(`day05 API 没有返回有效 answer: ${JSON.stringify(body).slice(0, 300)}`);

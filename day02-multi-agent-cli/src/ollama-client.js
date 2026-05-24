@@ -23,10 +23,25 @@ export function createOllamaClient({
     model,
     /** 调用 Ollama /api/chat，返回模型文本内容。 */
     async chat(messages) {
+      // /api/chat 是 Ollama 的聊天接口：planner、critic、writer 都通过它让本地模型生成文本。
       const response = await fetchImpl(`${baseUrl}/api/chat`, {
+        // POST 用来提交本轮多 agent 的上下文和角色提示词。
         method: 'POST',
+        // 明确告诉 Ollama body 是 JSON 格式。
         headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ model, messages, stream: false, options: { temperature: 0.1 } }),
+        // fetch body 只能传字符串；这里把教学用请求对象转成 JSON 字符串。
+        body: JSON.stringify({
+          // model 选择本地运行的模型，默认 qwen2.5:7b。
+          model,
+          // messages 包含当前 agent 角色的 system prompt 和本轮输入 payload。
+          messages,
+          // stream=false 让 Ollama 一次性返回完整文本，方便 parsePlan/parseFinal 解析 JSON。
+          stream: false,
+          options: {
+            // 低 temperature 会减少随机性，适合多 agent 之间传递结构化 JSON。
+            temperature: 0.1,
+          },
+        }),
       });
       if (!response.ok) {
         throw new Error(`Ollama 请求失败: HTTP ${response.status}`);
@@ -40,4 +55,3 @@ export function createOllamaClient({
     },
   };
 }
-

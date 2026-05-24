@@ -12,9 +12,13 @@ export const DEFAULT_MODEL = 'qwen2.5:7b';
 /** 输出 JSON 响应，并设置本地开发需要的 CORS 头。 */
 function jsonResponse(response, statusCode, payload) {
   response.writeHead(statusCode, {
+    // content-type 告诉浏览器：响应体是 UTF-8 JSON，前端可以直接 response.json()。
     'content-type': 'application/json; charset=utf-8',
+    // 本地 Vite 前端和 Node API 端口不同，CORS 允许浏览器跨端口访问这个教学 API。
     'access-control-allow-origin': '*',
+    // OPTIONS 是浏览器跨域预检请求；GET 用于 health，POST 用于提交 agent 问题。
     'access-control-allow-methods': 'GET,POST,OPTIONS',
+    // 允许前端发送 content-type: application/json 请求头。
     'access-control-allow-headers': 'content-type',
   });
   response.end(JSON.stringify(payload));
@@ -37,14 +41,28 @@ async function runLocalOllamaAgent(question, record) {
   const host = String(process.env.OLLAMA_HOST || DEFAULT_OLLAMA_HOST).replace(/\/+$/, '');
   const model = process.env.OLLAMA_MODEL || DEFAULT_MODEL;
   const messages = [
+    // system 消息是给模型看的规则，约束它用中文、简洁回答。
     { role: 'system', content: '你是教学用 mini agent。请用中文简洁回答。' },
+    // user 消息是真正来自页面或 smoke 测试的问题。
     { role: 'user', content: question },
   ];
   record({ type: 'model_request', step: 1, preview: `model=${model}` });
+  // /api/chat 是 Ollama 的聊天接口：这里让本地模型为 Web API 生成最终回答。
   const response = await fetch(`${host}/api/chat`, {
+    // POST 表示提交问题给模型生成答案。
     method: 'POST',
+    // 告诉 Ollama 请求体是 JSON。
     headers: { 'content-type': 'application/json' },
-    body: JSON.stringify({ model, messages, stream: false }),
+    // body 是要发送给 Ollama 的参数对象；fetch 需要字符串，所以使用 JSON.stringify。
+    body: JSON.stringify({
+      // model 指定本地模型名，默认 qwen2.5:7b。
+      model,
+      // messages 是本轮对话上下文，包含 system 规则和用户问题。
+      messages,
+      // stream=false 表示关闭流式返回，后端等完整回答后再一次性返回给前端。
+      stream: false,
+      // 本 day 不设置 options.temperature，表示使用 Ollama 默认采样参数。
+    }),
   });
   if (!response.ok) {
     throw new Error(`Ollama 请求失败: HTTP ${response.status}`);
@@ -123,7 +141,9 @@ export function createAgentHttpServer() {
       if (request.method === 'POST' && request.url === '/api/agent') {
         const body = await readJson(request);
         const result = await runAgentRequest({
+          // question 是前端传来的用户问题，后端会把它放进 Ollama 的 user message。
           question: body.question,
+          // mock=true 表示只演示工具调用事件，不访问 Ollama；适合前端页面和单元测试。
           mock: body.mock === true || process.env.AGENT_MOCK === '1',
         });
         jsonResponse(response, result.ok ? 200 : 400, result);
