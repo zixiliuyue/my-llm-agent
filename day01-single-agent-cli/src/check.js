@@ -1,10 +1,10 @@
+#!/usr/bin/env node
 /**
  * Day 1：自包含学习源码。
  *
  * 这个文件属于 day01-single-agent-cli，不能 import 其它 day 的源码。
  * 注释说明保留在文件顶部，帮助学习时先理解本文件职责。
  */
-#!/usr/bin/env node
 import { DEFAULT_MODEL, DEFAULT_OLLAMA_HOST, listOllamaModels } from './ollama-client.js';
 
 /** 判断当前 Node 版本是否满足教学项目最低要求。 */

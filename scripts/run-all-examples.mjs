@@ -6,7 +6,7 @@
  * 真实模型调用只访问 OLLAMA_HOST，远程部署、Docker 和危险命令都不执行。
  */
 import { spawn } from 'node:child_process';
-import { existsSync, readdirSync, rmSync } from 'node:fs';
+import { readdirSync, rmSync } from 'node:fs';
 import { createServer } from 'node:net';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -172,13 +172,28 @@ async function checkOllama() {
   return `${OLLAMA_HOST} has ${OLLAMA_MODEL}`;
 }
 
-/** 检查所有 CLI 入口语法，专门防止 shebang 位置错误再次出现。 */
+/** 递归收集本仓库教学源码里的 JS 文件，跳过依赖、构建产物和 Git 目录。 */
+function collectJavaScriptFiles(dir = REPO_ROOT) {
+  const entries = readdirSync(dir, { withFileTypes: true });
+  const files = [];
+  for (const entry of entries) {
+    const fullPath = resolve(dir, entry.name);
+    const relativePath = fullPath.slice(REPO_ROOT.length + 1);
+    if (entry.isDirectory()) {
+      if (['.git', 'node_modules', 'dist'].includes(entry.name)) continue;
+      files.push(...collectJavaScriptFiles(fullPath));
+      continue;
+    }
+    if (entry.isFile() && /\.(?:mjs|js)$/.test(entry.name)) {
+      files.push(relativePath);
+    }
+  }
+  return files.sort();
+}
+
+/** 检查所有 JS 入口语法，专门防止 shebang 位置错误再次出现。 */
 async function runSyntaxCheck() {
-  const files = readdirSync(REPO_ROOT)
-    .filter((name) => /^day\d{2}-/.test(name))
-    .map((name) => `${name}/src/cli.js`)
-    .filter((file) => existsSync(resolve(REPO_ROOT, file)));
-  files.push('day05-vue-web-agent/server/index.js');
+  const files = collectJavaScriptFiles();
 
   for (const file of files) {
     const result = await runCommand({
