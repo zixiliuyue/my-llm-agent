@@ -1,3 +1,9 @@
+/**
+ * Day 7：自包含学习源码。
+ *
+ * 这个文件属于 day07-deploy-and-test-env，不能 import 其它 day 的源码。
+ * 注释说明保留在文件顶部，帮助学习时先理解本文件职责。
+ */
 export const DEFAULT_LOCAL_OLLAMA_HOST = 'http://127.0.0.1:11434';
 export const DEFAULT_MODEL = 'qwen2.5:7b';
 

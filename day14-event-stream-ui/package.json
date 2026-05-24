@@ -1,0 +1,16 @@
+{
+  "name": "llm-agent-day14-event-stream-ui",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Day 14: mini-openclaw learning example.",
+  "scripts": {
+    "start": "node src/cli.js",
+    "demo": "node src/cli.js --demo",
+    "test": "node test/index.test.js",
+    "build": "node src/build.js"
+  },
+  "engines": {
+    "node": ">=18.17"
+  }
+}

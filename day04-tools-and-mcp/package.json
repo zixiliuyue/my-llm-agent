@@ -1,0 +1,15 @@
+{
+  "name": "llm-agent-day04-tools-and-mcp",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Day 04: self-contained mini-openclaw example.",
+  "scripts": {
+    "start": "node src/cli.js --list",
+    "demo": "node src/cli.js --list",
+    "test": "node test/tools.test.js"
+  },
+  "engines": {
+    "node": ">=18.17"
+  }
+}

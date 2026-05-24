@@ -1,0 +1,18 @@
+{
+  "name": "llm-agent-day05-vue-web-agent",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Day 05: self-contained mini-openclaw example.",
+  "scripts": {
+    "start": "node server/index.js",
+    "demo": "AGENT_MOCK=1 node server/index.js",
+    "test": "node test/agent-api.test.js",
+    "build": "npm --prefix frontend run build",
+    "api": "node server/index.js",
+    "web": "npm --prefix frontend run dev"
+  },
+  "engines": {
+    "node": ">=18.17"
+  }
+}

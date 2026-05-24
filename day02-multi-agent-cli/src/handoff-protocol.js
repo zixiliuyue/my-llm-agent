@@ -1,3 +1,9 @@
+/**
+ * Day 2：自包含学习源码。
+ *
+ * 这个文件属于 day02-multi-agent-cli，不能 import 其它 day 的源码。
+ * 注释说明保留在文件顶部，帮助学习时先理解本文件职责。
+ */
 export class HandoffError extends Error {
   constructor(message) {
     super(message);

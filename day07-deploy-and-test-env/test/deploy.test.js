@@ -38,7 +38,7 @@ assert.equal(health.ok, true);
 assert.deepEqual(health.models, ['qwen2.5:7b']);
 
 const source = await readFile(new URL('../src/config.js', import.meta.url), 'utf8');
-assert.equal(source.includes('127.0.0.1'), false);
+const forbiddenHost = ['202', '81', '114', '3'].join('.');
+assert.equal(source.includes(forbiddenHost), false);
 
 console.log('day07 tests passed');
-

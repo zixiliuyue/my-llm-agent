@@ -1,0 +1,15 @@
+{
+  "name": "llm-agent-day07-deploy-and-test-env",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Day 07: self-contained mini-openclaw example.",
+  "scripts": {
+    "start": "node src/cli.js --config",
+    "demo": "node src/cli.js --dry-run",
+    "test": "node test/deploy.test.js"
+  },
+  "engines": {
+    "node": ">=18.17"
+  }
+}

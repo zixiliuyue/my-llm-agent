@@ -1,11 +1,18 @@
-import { runTool as runDay01Tool } from '../../day01-single-agent-cli/src/tools.js';
+/**
+ * Day 04：工具注册表与 MCP mock。
+ *
+ * 本文件自包含实现 calculator/current_time 等 read-only 工具，并在代码层
+ * 做 schema 校验和风险拦截，避免依赖其它 day 的源码。
+ */
 
 const registry = new Map();
 
+/** 注册一个工具定义到当前 day 的内存注册表。 */
 function registerTool(tool) {
   registry.set(tool.name, tool);
 }
 
+/** 根据非常小的 schema 描述校验输入对象。 */
 function validateInput(schema = {}, input = {}) {
   for (const [key, rule] of Object.entries(schema)) {
     const required = rule.required === true;
@@ -20,12 +27,34 @@ function validateInput(schema = {}, input = {}) {
   return null;
 }
 
+/** 执行安全算术表达式。这里只允许数字和运算符，避免任意代码执行。 */
+function runCalculator(input = {}) {
+  const expression = input.expression;
+  if (!/^[0-9+\-*/%().\s]+$/.test(expression)) {
+    return { ok: false, error: '表达式包含不允许的字符' };
+  }
+  try {
+    const value = Function(`"use strict"; return (${expression})`)();
+    return Number.isFinite(value)
+      ? { ok: true, data: { expression, value } }
+      : { ok: false, error: '计算结果不是有限数字' };
+  } catch (error) {
+    return { ok: false, error: error.message };
+  }
+}
+
+/** 读取当前时间，作为 read-only 工具示例。 */
+function runCurrentTime() {
+  const now = new Date();
+  return { ok: true, data: { iso: now.toISOString(), text: now.toLocaleString('zh-CN') } };
+}
+
 registerTool({
   name: 'calculator',
   description: '计算安全算术表达式。',
   risk: 'read-only',
   schema: { expression: { type: 'string', required: true } },
-  execute: (input) => runDay01Tool('calculator', input),
+  execute: runCalculator,
 });
 
 registerTool({
@@ -33,7 +62,7 @@ registerTool({
   description: '读取当前时间。',
   risk: 'read-only',
   schema: { timezone: { type: 'string', required: false } },
-  execute: (input) => runDay01Tool('current_time', input),
+  execute: runCurrentTime,
 });
 
 registerTool({
@@ -52,6 +81,7 @@ registerTool({
   execute: async (input) => ({ ok: true, data: { dryRun: true, input } }),
 });
 
+/** 列出工具的公开元信息，不暴露 execute 函数。 */
 export function listTools() {
   return [...registry.values()].map(({ name, description, risk, schema }) => ({
     name,
@@ -61,6 +91,7 @@ export function listTools() {
   }));
 }
 
+/** 用本地注册表模拟 MCP list_tools 返回。 */
 export function listMockMcpTools() {
   return listTools().map((tool) => ({
     source: 'mock-mcp',
@@ -68,6 +99,7 @@ export function listMockMcpTools() {
   }));
 }
 
+/** 调用注册工具，并在执行前做 schema 校验和风险策略判断。 */
 export async function callRegisteredTool(name, input = {}, { allowRisk = ['read-only'] } = {}) {
   const tool = registry.get(name);
   if (!tool) {
@@ -93,4 +125,3 @@ export async function callRegisteredTool(name, input = {}, { allowRisk = ['read-
 
   return tool.execute(input);
 }
-

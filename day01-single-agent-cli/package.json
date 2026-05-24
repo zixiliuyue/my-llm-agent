@@ -8,7 +8,8 @@
     "start": "node src/cli.js",
     "ask": "node src/cli.js",
     "check": "node src/check.js",
-    "test": "node test/protocol.test.js"
+    "test": "node test/protocol.test.js",
+    "demo": "node src/cli.js --help"
   },
   "engines": {
     "node": ">=18.17"

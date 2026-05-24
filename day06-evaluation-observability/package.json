@@ -1,0 +1,15 @@
+{
+  "name": "llm-agent-day06-evaluation-observability",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Day 06: self-contained mini-openclaw example.",
+  "scripts": {
+    "start": "node src/cli.js",
+    "demo": "node src/cli.js",
+    "test": "node test/eval.test.js"
+  },
+  "engines": {
+    "node": ">=18.17"
+  }
+}

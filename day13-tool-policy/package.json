@@ -1,0 +1,15 @@
+{
+  "name": "llm-agent-day13-tool-policy",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Day 13: mini-openclaw learning example.",
+  "scripts": {
+    "start": "node src/cli.js",
+    "demo": "node src/cli.js --demo",
+    "test": "node test/index.test.js"
+  },
+  "engines": {
+    "node": ">=18.17"
+  }
+}

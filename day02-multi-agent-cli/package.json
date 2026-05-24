@@ -1,0 +1,15 @@
+{
+  "name": "llm-agent-day02-multi-agent-cli",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Day 02: self-contained mini-openclaw example.",
+  "scripts": {
+    "start": "node src/cli.js",
+    "demo": "node src/cli.js --help",
+    "test": "node test/multi-agent.test.js"
+  },
+  "engines": {
+    "node": ">=18.17"
+  }
+}
