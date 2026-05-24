@@ -1,14 +1,17 @@
 {
-  "name": "local-llm-agent-tutorial",
+  "name": "llm-agent-learning",
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "A zero-dependency local Ollama LLM-Agent tutorial CLI.",
+  "description": "Day-by-day local LLM-Agent learning examples.",
   "scripts": {
-    "start": "node src/cli.js",
-    "ask": "node src/cli.js",
-    "check": "node src/check.js",
-    "test": "node test/protocol.test.js"
+    "start": "node day01-single-agent-cli/src/cli.js",
+    "ask": "node day01-single-agent-cli/src/cli.js",
+    "check": "node day01-single-agent-cli/src/check.js",
+    "test": "node day01-single-agent-cli/test/protocol.test.js",
+    "day01:ask": "node day01-single-agent-cli/src/cli.js",
+    "day01:check": "node day01-single-agent-cli/src/check.js",
+    "day01:test": "node day01-single-agent-cli/test/protocol.test.js"
   },
   "engines": {
     "node": ">=18.17"
