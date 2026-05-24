@@ -8,6 +8,7 @@
     "start": "npm run day01:start",
     "ask": "npm run day01:start --",
     "check": "npm --prefix day01-single-agent-cli run check",
+    "examples:smoke": "PATH=/Users/hongsen.ren/.nvm/versions/node/v22.21.1/bin:$PATH node scripts/run-all-examples.mjs",
     "test": "npm run day01:test && npm run day02:test && npm run day03:test && npm run day04:test && npm run day05:test && npm run day06:test && npm run day07:test && npm run day08:test && npm run day09:test && npm run day10:test && npm run day11:test && npm run day12:test && npm run day13:test && npm run day14:test && npm run day15:test && npm run day16:test && npm run day17:test && npm run day18:test && npm run day19:test && npm run day20:test && npm run day21:test && npm run day22:test && npm run day23:test && npm run day24:test && npm run day25:test && npm run day26:test && npm run day27:test && npm run day28:test && npm run day29:test && npm run day30:test",
     "day01:start": "npm --prefix day01-single-agent-cli start",
     "day01:test": "npm --prefix day01-single-agent-cli test",

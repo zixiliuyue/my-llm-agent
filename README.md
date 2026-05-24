@@ -47,6 +47,22 @@
 npm test
 ```
 
+```bash
+# 用途：一键跑通 30 天 start 示例、单元测试、Web build 和 day05 真实模型 API
+# 执行目录：/Users/hongsen.ren/code/github-code/llm-agent
+# 输出判断：最后打印 examples smoke passed，所有步骤为 OK
+# 风险：会访问本地 Ollama，不执行远程命令或部署；脚本会清理生成的 dist
+npm run examples:smoke
+```
+
+```bash
+# 用途：当 shell 默认 npm/node 过旧时，直接使用本机 Node 22 跑同一套 smoke
+# 执行目录：/Users/hongsen.ren/code/github-code/llm-agent
+# 输出判断：最后打印 examples smoke passed，所有步骤为 OK
+# 风险：会访问本地 Ollama，不执行远程命令或部署
+./scripts/run-all-examples.sh
+```
+
 ## 学习规则
 
 - 每天只学习一个 mini-openclaw 能力点。

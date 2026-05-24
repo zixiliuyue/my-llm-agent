@@ -6,6 +6,7 @@ const mockResult = await runAgentRequest({ question: '计算 (18+24)*3', mock: t
 assert.equal(mockResult.ok, true);
 assert.equal(mockResult.mock, true);
 assert.ok(mockResult.events.some((event) => event.type === 'tool_call'));
+assert.ok(mockResult.steps.some((event) => event.type === 'tool_call'));
 
 const badResult = await runAgentRequest({ question: '', mock: true });
 assert.equal(badResult.ok, false);
@@ -22,7 +23,7 @@ const body = await response.json();
 assert.equal(response.status, 200);
 assert.equal(body.ok, true);
 assert.equal(body.mock, true);
+assert.ok(Array.isArray(body.steps));
 await new Promise((resolve) => server.close(resolve));
 
 console.log('day05 tests passed');
-
