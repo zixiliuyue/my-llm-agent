@@ -2,36 +2,37 @@
 
 第六天学习如何判断 agent 是否真的变好了，而不是只凭一次聊天感觉。
 
-## 学习目标
+## 概念
 
-- 建立小型 evaluation set。
-- 记录每轮模型调用、工具调用、耗时和错误。
-- 区分功能测试、回归测试和质量评测。
-
-## 核心概念
-
-- eval case：一个问题、期望行为和检查方式。
-- trace：一次 agent run 的完整过程。
-- latency：模型调用和工具调用耗时。
+- eval case：问题、期望工具、期望文本。
+- trace：一次 agent run 的事件序列。
+- latency：每条 case 的执行耗时。
 - regression：新增功能不能破坏旧例子。
 
-## 建议实现步骤
+## 运行
 
-1. 增加 `evals/cases.jsonl`。
-2. 增加 `npm run eval`，支持 mock 模型和真实模型两种模式。
-3. 每次 agent run 输出 trace JSON。
-4. 统计总耗时、模型调用次数、工具调用次数。
-5. 给 README 增加如何阅读评测结果。
+```bash
+# 用途：运行 mock eval 并输出 JSON 报告
+# 执行目录：/Users/hongsen.ren/code/github-code/llm-agent
+# 输出判断：summary.failed 为 0
+# 风险：默认 mock runner，不调用 Ollama
+npm run day06:eval
+```
 
-## 验收标准
+```bash
+# 用途：测试 eval case、trace 和统计字段
+# 执行目录：/Users/hongsen.ren/code/github-code/llm-agent
+# 输出判断：看到 day06 tests passed
+# 风险：只跑本地测试
+npm run day06:test
+```
 
-- mock eval 不依赖 Ollama 可以跑通。
-- 真实 eval 可以用 `OLLAMA_HOST` 切换本地或测试环境。
-- trace 不泄露敏感环境变量。
-- 评测失败能指出是哪条 case 不符合预期。
+## 代码入口
 
-## 常见坑
+- `evals/cases.jsonl`：评测用例。
+- `src/eval-runner.js`：加载 case、运行 mock agent、统计 trace。
+- `src/cli.js`：输出评测报告。
 
-- 不要只看最终文本，要检查是否调用了正确工具。
-- 不要把评测写成必须完全匹配长文本。
-- 不要把真实模型不稳定输出当成单元测试唯一依据。
+## 复盘
+
+评测不要只看最终文本，还要检查是否调用了正确工具，以及失败时能定位到具体 case。

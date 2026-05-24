@@ -1,36 +1,40 @@
 # Day 03：Memory 与 RAG
 
-第三天学习如何让 agent 不只依赖 prompt 里的上下文，而是从本地资料中检索相关内容，再带着引用回答。
+第三天学习如何让 agent 从本地资料中检索相关内容，再带着引用回答。
 
-## 学习目标
-
-- 理解 memory、notes、RAG 的区别。
-- 把 day01 的 `search_notes` 从简单字符串匹配升级为 chunk 检索。
-- 学会在最终回答中说明信息来自哪个 chunk。
-
-## 核心概念
+## 概念
 
 - chunk：把长文档切成较小片段。
 - retrieval：根据用户问题找最相关的片段。
-- grounding：模型回答必须基于检索到的片段，不编造。
-- citation：回答中给出来源，方便 review。
+- grounding：回答基于检索内容，不编造。
+- citation：最终答案带来源，方便复核。
 
-## 建议实现步骤
+## 运行
 
-1. 增加 `data/knowledge/` 示例资料。
-2. 写一个不依赖模型的 chunker。
-3. 写一个简单 BM25 或关键词打分检索器。
-4. 把检索结果作为 observation 回填给 agent。
-5. 要求 final answer 带引用片段标题。
+```bash
+# 用途：用本地知识库回答问题
+# 执行目录：/Users/hongsen.ren/code/github-code/llm-agent
+# 参数含义：-- 后面是用户问题
+# 输出判断：stderr 展示命中的 chunk，stdout 输出带引用的答案
+# 风险：只读取本地 Markdown，不调用 Ollama
+npm run day03:ask -- "什么是 agent loop"
+```
 
-## 验收标准
+```bash
+# 用途：测试 chunk、检索排序和无命中 fallback
+# 执行目录：/Users/hongsen.ren/code/github-code/llm-agent
+# 输出判断：看到 day03 tests passed
+# 风险：只跑本地测试
+npm run day03:test
+```
 
-- 本地测试不调用 Ollama，也能验证 chunk 和检索排序。
-- 问“agent loop 是什么”时，答案来自知识库片段。
-- 找不到资料时，agent 必须说明没有检索到可靠内容。
+## 代码入口
 
-## 常见坑
+- `data/knowledge/agent-notes.md`：示例知识库。
+- `src/chunker.js`：Markdown 分块。
+- `src/retriever.js`：关键词打分检索。
+- `src/rag-agent.js`：组合答案和引用。
 
-- 不要一开始就上向量数据库。
-- 不要把整篇文档塞进 prompt。
-- 不要让模型自己决定引用来源，来源要来自检索结果。
+## 复盘
+
+RAG 的重点不是把整篇文档塞进 prompt，而是先找相关片段，再让回答和来源保持可复核。

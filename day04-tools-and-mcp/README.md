@@ -1,36 +1,46 @@
 # Day 04：工具系统与 MCP 思路
 
-第四天学习如何把工具调用从硬编码函数，升级成可注册、可描述、可治理的工具系统，并理解 MCP 为什么有价值。
+第四天把工具调用从硬编码函数升级成 tool registry，并用 mock MCP adapter 理解“外部能力按协议暴露给 agent”的思路。
 
-## 学习目标
+## 概念
 
-- 把工具元信息和执行函数拆开。
-- 给每个工具定义输入 schema、风险级别和说明。
-- 理解 MCP 的核心思想：让外部能力通过标准协议暴露给 agent。
+- tool registry：集中登记工具说明、schema、风险级别和执行函数。
+- schema：在代码层校验模型传入的参数。
+- permission：read-only、local-write、remote 工具不能混为一谈。
+- MCP：用统一协议连接外部工具和资源。
 
-## 核心概念
+## 运行
 
-- tool registry：工具注册表。
-- schema：约束工具输入，减少模型乱传参数。
-- permission：不同工具有不同风险。
-- MCP：模型上下文协议，用统一方式连接工具、资源和外部系统。
+```bash
+# 用途：列出本地工具注册表
+# 执行目录：/Users/hongsen.ren/code/github-code/llm-agent
+# 输出判断：输出工具名、schema、risk
+# 风险：只读
+npm run day04:tools -- --list
+```
 
-## 建议实现步骤
+```bash
+# 用途：调用 read-only calculator 工具
+# 执行目录：/Users/hongsen.ren/code/github-code/llm-agent
+# 参数含义：--input 是 JSON 对象
+# 输出判断：返回计算结果
+# 风险：只执行本地安全计算
+npm run day04:tools -- --call calculator --input '{"expression":"2+3*4"}'
+```
 
-1. 重构 day01 的工具定义，形成 registry。
-2. 增加工具风险标记：read-only、local-write、remote。
-3. agent 调用工具前先做 schema 校验。
-4. 写一个 mock MCP adapter，模拟从外部列出工具。
-5. 保持 CLI 可运行，不接真实远程高风险工具。
+```bash
+# 用途：运行工具注册和权限边界测试
+# 执行目录：/Users/hongsen.ren/code/github-code/llm-agent
+# 输出判断：看到 day04 tests passed
+# 风险：不执行真实远程命令
+npm run day04:test
+```
 
-## 验收标准
+## 代码入口
 
-- 未知工具会列出可用工具。
-- 参数不符合 schema 时不会执行工具。
-- read-only 工具可以直接执行，高风险工具只给提示，不默认执行。
+- `src/tool-registry.js`：工具注册、schema 校验、风险拦截、mock MCP 输出。
+- `src/cli.js`：列工具、调用工具、查看 mock MCP 工具。
 
-## 常见坑
+## 复盘
 
-- 不要让模型直接执行 shell。
-- 不要把权限判断藏在 prompt 里，必须在代码层做。
-- 不要为了演示 MCP 就接真实敏感系统。
+权限判断必须在代码层完成，不能只靠 prompt 约束模型“不要调用危险工具”。

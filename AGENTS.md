@@ -7,14 +7,14 @@
 - 这是 7 天 LLM-Agent 学习项目，从 CLI 单体 agent 逐步推进到多 agent、memory/RAG、MCP/tool 扩展、Vue3 Web UI、评测和测试环境部署。
 - 默认使用中文解释。
 - 先说明当前属于第几天、要学习的核心概念、成功标准，再进入实现。
-- 每次只推进一个 day，不跨天大改。
+- 普通学习任务每次只推进一个 day，不跨天大改；用户明确要求全量补齐示例时，可以一次性更新多个 day。
 - 代码要尽量小，优先可读性和教学价值。
 - 不为了展示复杂度引入 LangChain、数据库、Web UI、MCP 等，除非当前 day 明确要求。
 
 ## 2. 环境版本
 
 - Node.js：以根 `package.json` 的 `engines.node` 为准，当前要求 `>=18.17`。
-- package manager：当前没有 lock 文件，默认使用 `npm`，不要引入 yarn/pnpm。
+- package manager：默认使用 `npm`，不要引入 yarn/pnpm；day05 前端有独立 `package-lock.json`。
 - 本地模型接口：`OLLAMA_HOST=http://127.0.0.1:11434`。
 - 默认模型：`OLLAMA_MODEL=qwen2.5:7b`。
 - 远程测试环境只能通过 `OLLAMA_HOST` 切换，不把测试机地址硬编码进源码逻辑。
@@ -23,7 +23,7 @@
 ## 3. 常用命令
 
 ```bash
-# 用途：运行 day01 不依赖真实模型的测试
+# 用途：运行 day01-day07 不依赖真实模型的测试
 # 执行目录：/Users/hongsen.ren/code/github-code/llm-agent
 # 结果判断：看到 tests passed，退出码为 0
 # 风险：只跑本地测试，不调用 Ollama
@@ -89,6 +89,7 @@ npm run check
 - 新增代码必须保留必要中文注释，解释教学意图和关键边界。
 - 每天至少保留一个不依赖真实模型的测试。
 - 修改 day01 后至少运行 `npm test`。
+- 修改 day05 前端后至少运行 `npm run day05:build`，并用浏览器检查 mock 模式页面。
 - 如果 Ollama 未启动，`npm run check` 可以失败，但必须给出清晰安装/启动/拉模型提示。
 - 不提交 `node_modules`、模型权重、运行日志和临时输出。
 - 不因为文档规划任务运行构建、部署或下载模型。

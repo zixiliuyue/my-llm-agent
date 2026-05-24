@@ -1,37 +1,54 @@
 # Day 07：部署与测试环境
 
-第七天学习如何把本地 agent 切换到测试环境模型接口，并理解远程部署的边界。
+第七天学习如何把本地 agent 切换到测试环境模型接口，并理解远程部署边界。
 
-## 学习目标
+## 概念
 
-- 理解本地 Ollama 和测试环境 Ollama 的差异。
-- 用环境变量切换模型 API，不改源码。
-- 规划 Docker/Ollama 部署，但不默认执行高风险远程操作。
+- 本地/测试环境切换只靠 `OLLAMA_HOST`，不改源码。
+- Docker 部署命令先 dry-run，真实执行前必须 review 风险。
+- 模型目录建议放 `/data9`，不要占用根分区。
 
-## 测试环境规划假设
+## 运行
 
-- 如果测试机使用 Docker 跑 Ollama，优先把模型目录挂到 `/data9`。
-- 根分区通常不适合放模型权重。
-- 没有 NVIDIA GPU 时，CPU-only 推理可能慢。
-- 远程部署前必须重新确认磁盘、端口、GPU 和访问控制。
+```bash
+# 用途：查看当前 Ollama 配置来源
+# 执行目录：/Users/hongsen.ren/code/github-code/llm-agent
+# 输出判断：显示 host、model、source
+# 风险：只读
+npm run day07:config
+```
 
-## 建议实现步骤
+```bash
+# 用途：检查 OLLAMA_HOST 是否可访问
+# 执行目录：/Users/hongsen.ren/code/github-code/llm-agent
+# 输出判断：ok=true 时可访问；不可访问时返回错误
+# 风险：只访问 /api/tags，不生成模型回答
+npm run day07:health
+```
 
-1. 写 `docs/test-env-ollama.md`，说明 Docker 部署方案。
-2. 给出 `docker run` 或 compose 示例，但默认不执行。
-3. 模型目录挂载到 `/data9/...`。
-4. 本地通过 `OLLAMA_HOST=http://127.0.0.1:<port>` 切换。
-5. 增加连通性检查命令。
+```bash
+# 用途：生成 Docker 部署命令，不执行
+# 执行目录：/Users/hongsen.ren/code/github-code/llm-agent
+# 参数含义：--port 是宿主机端口，--model-dir 是模型目录
+# 输出判断：打印 docker run 命令
+# 风险：dry-run 只打印命令，不部署
+npm run day07:dry-run -- --port 11434 --model-dir /data9/ollama
+```
 
-## 验收标准
+```bash
+# 用途：测试配置切换、dry-run 和源码不硬编码测试机地址
+# 执行目录：/Users/hongsen.ren/code/github-code/llm-agent
+# 输出判断：看到 day07 tests passed
+# 风险：只跑本地测试
+npm run day07:test
+```
 
-- 不改源码即可切换本地/测试环境模型。
-- 文档明确端口、模型目录、风险和回滚。
-- 不自动拉模型、不自动启动远程容器。
+## 代码入口
 
-## 常见坑
+- `src/config.js`：配置解析、健康检查、Docker dry-run 命令生成。
+- `src/cli.js`：配置、健康检查、dry-run CLI。
+- `docs/test-env-ollama.md`：测试环境部署说明。
 
-- 不要把测试环境地址硬编码到业务代码。
-- 不要用根分区存模型。
-- 不要把 Ollama API 暴露到不可信网络。
-- 没有 GPU 时不要期待远程 CPU 推理有很低延迟。
+## 复盘
+
+远程部署属于风险操作。学习阶段先把配置切换和命令生成讲清楚，不自动执行远程 Docker 或拉模型。

@@ -1,37 +1,61 @@
 # Day 05：Vue3 Web Agent
 
-第五天把 CLI agent 包成一个本地 Web 体验：Vue3 + Vite 前端聊天界面，调用本地 Node agent API。
+第五天把 CLI agent 包成本地 Web 体验：Vue3 + Vite 前端聊天界面，调用本地 Node agent API。
 
-## 学习目标
+## 概念
 
-- 理解 Web UI 只是 agent 的一层交互壳。
-- 把 CLI 的 agent loop 复用到 HTTP API。
-- 在页面上展示 message、tool call、observation 和 final。
+- Web UI 是 agent 的交互壳，不应该隐藏 agent loop。
+- 后端统一读取 `OLLAMA_HOST` / `OLLAMA_MODEL`，前端不直接接模型地址。
+- Mock 模式让页面验证不依赖本地 Ollama。
 
-## 技术方向
+## 运行
 
-- 前端：Vue3 + Vite。
-- 后端：Node 内置 HTTP server 或轻量 fetch handler。
-- 模型：继续通过 `OLLAMA_HOST` 调 Ollama。
-- 不在本阶段引入数据库、登录或复杂部署。
+```bash
+# 用途：安装 Vue3 + Vite 前端依赖
+# 执行目录：/Users/hongsen.ren/code/github-code/llm-agent
+# 输出判断：前端 node_modules 安装完成
+# 风险：会下载 npm 依赖，不提交 node_modules
+npm --prefix day05-vue-web-agent/frontend install
+```
 
-## 建议实现步骤
+```bash
+# 用途：启动本地 Agent API，mock 模式不调用 Ollama
+# 执行目录：/Users/hongsen.ren/code/github-code/llm-agent
+# 输出判断：监听 http://127.0.0.1:8787
+# 风险：只启动本机服务
+AGENT_MOCK=1 npm run day05:api
+```
 
-1. 新建 `frontend/`，使用 Vue3 + Vite。
-2. 新建 `server/`，暴露 `/api/agent`。
-3. API 返回结构化事件流或分步 JSON。
-4. 前端用时间线展示 tool call 和 observation。
-5. 保留 CLI 入口，避免 Web 成为唯一调试方式。
+```bash
+# 用途：启动 Vue3 + Vite 前端
+# 执行目录：/Users/hongsen.ren/code/github-code/llm-agent
+# 输出判断：Vite 输出本地访问地址
+# 风险：只启动本机开发服务
+npm run day05:web
+```
 
-## 验收标准
+```bash
+# 用途：构建前端
+# 执行目录：/Users/hongsen.ren/code/github-code/llm-agent
+# 输出判断：Vite build 成功
+# 风险：生成 dist 构建产物
+npm run day05:build
+```
 
-- 页面可以输入问题并看到最终答案。
-- 页面能区分模型消息、工具调用、工具结果。
-- 后端测试不依赖真实模型，可以用 mock client。
-- 前端构建通过。
+```bash
+# 用途：测试 mock API 和 HTTP handler
+# 执行目录：/Users/hongsen.ren/code/github-code/llm-agent
+# 输出判断：看到 day05 tests passed
+# 风险：只起本地临时端口，不调用 Ollama
+npm run day05:test
+```
 
-## 常见坑
+## 代码入口
 
-- 不要做营销 landing page，第一屏就是可用聊天界面。
-- 不要让 UI 隐藏 agent loop，工具过程要可见。
-- 不要把 Ollama 地址写死在前端，后端统一读取环境变量。
+- `server/agent-api.js`：Node HTTP API 和 mock agent response。
+- `server/index.js`：本地 API server。
+- `frontend/src/App.vue`：聊天界面，展示 tool call、observation、final。
+
+## 复盘
+
+Web 阶段的核心不是做复杂页面，而是把 agent loop 的过程可视化，帮助理解每一步为什么发生。

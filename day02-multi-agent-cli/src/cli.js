@@ -1,0 +1,41 @@
+#!/usr/bin/env node
+import { runMultiAgent } from './multi-agent.js';
+
+function printUsage() {
+  console.error('用法: npm run day02:ask -- "你的问题"');
+  console.error('');
+  console.error('示例:');
+  console.error('  npm run day02:ask -- "计算 (18+24)*3"');
+  console.error('');
+  console.error('环境变量:');
+  console.error('  OLLAMA_HOST  默认 http://127.0.0.1:11434');
+  console.error('  OLLAMA_MODEL 默认 qwen2.5:7b');
+}
+
+function logEvent(event) {
+  if (event.type === 'tool_call') {
+    console.error(`[${event.role}] 调用工具 ${event.tool} (${event.id})`);
+    return;
+  }
+  console.error(`[${event.role}] ${event.type}: ${event.preview}`);
+}
+
+async function main() {
+  const question = process.argv.slice(2).join(' ').trim();
+  if (!question || question === '--help' || question === '-h') {
+    printUsage();
+    process.exitCode = question ? 0 : 2;
+    return;
+  }
+
+  try {
+    const result = await runMultiAgent({ question, onEvent: logEvent });
+    console.log(result.answer);
+  } catch (error) {
+    console.error(`执行失败: ${error.message}`);
+    process.exitCode = 1;
+  }
+}
+
+await main();
+
