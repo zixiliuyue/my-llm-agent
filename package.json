@@ -1,0 +1,16 @@
+{
+  "name": "local-llm-agent-tutorial",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "A zero-dependency local Ollama LLM-Agent tutorial CLI.",
+  "scripts": {
+    "start": "node src/cli.js",
+    "ask": "node src/cli.js",
+    "check": "node src/check.js",
+    "test": "node test/protocol.test.js"
+  },
+  "engines": {
+    "node": ">=18.17"
+  }
+}
