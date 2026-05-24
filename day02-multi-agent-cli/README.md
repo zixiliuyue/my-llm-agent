@@ -1,4 +1,4 @@
-# Day 02：多 Agent 协作预告
+# Day 02：多 Agent CLI 协作
 
 第二天会在第一天单体 agent 的基础上，把一个 agent loop 拆成多个职责明确的 agent。当前目录先作为学习路线和设计入口，暂不放未实现命令。
 
@@ -42,7 +42,7 @@
 ## 后续建议目录
 
 ```text
-day02-multi-agent-preview/
+day02-multi-agent-cli/
 ├── README.md
 ├── prompts/
 │   ├── planner.md
@@ -56,5 +56,19 @@ day02-multi-agent-preview/
 └── test/
     └── multi-agent.test.js
 ```
+
+## 验收标准
+
+- 不依赖真实模型的多 agent handoff 测试可以通过。
+- planner 只输出任务计划，不执行工具。
+- tool-runner 只执行工具并返回 observation。
+- critic 只检查结果是否覆盖问题，不重写答案。
+- writer 只基于已有上下文生成 final。
+
+## 常见坑
+
+- 不要让多个 agent 都能随意调用工具，否则边界会混乱。
+- 不要让 critic 直接编造新事实。
+- 不要一次性引入 Web UI；第二天仍然保持 CLI。
 
 等 day01 的本地模型调用稳定后，再按这个结构实现第二天。

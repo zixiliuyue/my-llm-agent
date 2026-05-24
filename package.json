@@ -11,7 +11,9 @@
     "test": "node day01-single-agent-cli/test/protocol.test.js",
     "day01:ask": "node day01-single-agent-cli/src/cli.js",
     "day01:check": "node day01-single-agent-cli/src/check.js",
-    "day01:test": "node day01-single-agent-cli/test/protocol.test.js"
+    "day01:test": "node day01-single-agent-cli/test/protocol.test.js",
+    "day02:read": "node -e \"console.log('Day 02 尚未实现，请先阅读 day02-multi-agent-cli/README.md')\"",
+    "day05:web": "node -e \"console.log('Day 05 尚未实现 Vue3 + Vite，请先阅读 day05-vue-web-agent/README.md')\""
   },
   "engines": {
     "node": ">=18.17"
