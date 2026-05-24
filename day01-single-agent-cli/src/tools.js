@@ -35,18 +35,22 @@ const toolSpecs = [
   },
 ];
 
+/** 返回工具规格清单，供系统提示词告诉模型可用工具。 */
 export function getToolSpecs() {
   return toolSpecs;
 }
 
+/** 统一包装成功工具结果，让 observation 结构保持稳定。 */
 function ok(data) {
   return { ok: true, data };
 }
 
+/** 统一包装失败工具结果，让错误信息能被模型下一轮读取。 */
 function fail(error) {
   return { ok: false, error };
 }
 
+/** 读取当前时间工具，保持为只读能力。 */
 function getCurrentTime(input = {}) {
   const now = new Date();
   const timezone = typeof input.timezone === 'string' && input.timezone.trim()
@@ -164,6 +168,7 @@ class ExpressionParser {
   }
 }
 
+/** 执行受限计算工具，只允许安全字符组成的表达式。 */
 function calculate(input = {}) {
   const expression = input.expression;
   if (typeof expression !== 'string' || !expression.trim()) {
@@ -182,11 +187,13 @@ function calculate(input = {}) {
   }
 }
 
+/** 计算 chunk 与查询的关键词重合度。 */
 function scoreChunk(chunk, terms) {
   const lower = chunk.toLowerCase();
   return terms.reduce((score, term) => score + (lower.includes(term) ? 1 : 0), 0);
 }
 
+/** 在本地 notes 中检索知识片段，模拟最小 RAG 工具。 */
 async function searchNotes(input = {}) {
   const query = input.query;
   if (typeof query !== 'string' || !query.trim()) {
@@ -216,6 +223,7 @@ async function searchNotes(input = {}) {
   });
 }
 
+/** 按工具名分发执行，并统一返回 observation 友好的结果。 */
 export async function runTool(name, input) {
   switch (name) {
     case 'current_time':

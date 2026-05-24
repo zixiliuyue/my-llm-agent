@@ -7,6 +7,7 @@
 #!/usr/bin/env node
 import { runMultiAgent } from './multi-agent.js';
 
+/** 打印当前 CLI 的用法说明，帮助学习者直接运行当天示例。 */
 function printUsage() {
   console.error('用法: npm run day02:ask -- "你的问题"');
   console.error('');
@@ -18,6 +19,7 @@ function printUsage() {
   console.error('  OLLAMA_MODEL 默认 qwen2.5:7b');
 }
 
+/** 把多 agent 交接事件输出到 stderr，便于观察角色协作过程。 */
 function logEvent(event) {
   if (event.type === 'tool_call') {
     console.error(`[${event.role}] 调用工具 ${event.tool} (${event.id})`);
@@ -26,6 +28,7 @@ function logEvent(event) {
   console.error(`[${event.role}] ${event.type}: ${event.preview}`);
 }
 
+/** CLI 主入口，负责解析参数、调用当天示例并处理错误。 */
 async function main() {
   const question = process.argv.slice(2).join(' ').trim();
   if (!question || question === '--help' || question === '-h') {

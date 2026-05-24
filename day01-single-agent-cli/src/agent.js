@@ -16,6 +16,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const PROJECT_ROOT = resolve(__dirname, '..');
 const DEFAULT_MAX_STEPS = 5;
 
+/** 加载系统提示词，并把当天允许使用的工具规格拼进提示词。 */
 async function loadSystemPrompt() {
   const promptPath = resolve(PROJECT_ROOT, 'prompts/system.md');
   const prompt = await readFile(promptPath, 'utf8');
@@ -28,11 +29,13 @@ async function loadSystemPrompt() {
   ].join('\n');
 }
 
+/** 把较长的值压缩成日志摘要，避免学习输出被大对象淹没。 */
 function preview(value, max = 180) {
   const text = typeof value === 'string' ? value : JSON.stringify(value);
   return text.length > max ? `${text.slice(0, max)}...` : text;
 }
 
+/** 把工具执行结果包装成 observation，让模型能进入下一轮判断。 */
 function observationMessage(payload) {
   return [
     'OBSERVATION:',
@@ -42,6 +45,7 @@ function observationMessage(payload) {
   ].join('\n');
 }
 
+/** 把协议解析错误转成可回填给模型的 observation。 */
 function protocolErrorObservation(error) {
   return observationMessage({
     ok: false,
@@ -61,6 +65,7 @@ function protocolErrorObservation(error) {
   });
 }
 
+/** 执行单体 agent loop，直到拿到 final 或超过最大轮数。 */
 export async function runAgent({
   question,
   client = createOllamaClient(),

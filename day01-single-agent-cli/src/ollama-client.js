@@ -7,10 +7,12 @@
 export const DEFAULT_OLLAMA_HOST = 'http://127.0.0.1:11434';
 export const DEFAULT_MODEL = 'qwen2.5:7b';
 
+/** 规范化 Ollama 地址，避免结尾斜杠影响 API 拼接。 */
 function normalizeHost(host) {
   return String(host || DEFAULT_OLLAMA_HOST).replace(/\/+$/, '');
 }
 
+/** 把 Ollama 连接失败转换成更容易理解的中文提示。 */
 function friendlyConnectionError(host, error) {
   return new Error([
     `无法连接 Ollama: ${host}`,
@@ -23,6 +25,7 @@ function friendlyConnectionError(host, error) {
   ].join('\n'));
 }
 
+/** 创建 Ollama chat 客户端，所有真实模型调用都走这里。 */
 export function createOllamaClient({
   host = process.env.OLLAMA_HOST || DEFAULT_OLLAMA_HOST,
   model = process.env.OLLAMA_MODEL || DEFAULT_MODEL,
@@ -70,6 +73,7 @@ export function createOllamaClient({
   };
 }
 
+/** 读取 Ollama 本地模型列表，供环境检查使用。 */
 export async function listOllamaModels({
   host = process.env.OLLAMA_HOST || DEFAULT_OLLAMA_HOST,
   fetchImpl = globalThis.fetch,

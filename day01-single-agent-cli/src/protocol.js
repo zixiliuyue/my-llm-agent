@@ -11,12 +11,14 @@ export class ProtocolError extends Error {
   }
 }
 
+/** 去掉模型可能包裹的 Markdown 代码块，便于继续解析 JSON。 */
 function stripMarkdownFence(text) {
   const trimmed = String(text || '').trim();
   const fence = /^```(?:json)?\s*([\s\S]*?)\s*```$/i.exec(trimmed);
   return fence ? fence[1].trim() : trimmed;
 }
 
+/** 从模型文本里提取第一个 JSON 对象，降低本地模型输出噪声影响。 */
 function extractJsonObject(text) {
   const source = stripMarkdownFence(text);
   const start = source.indexOf('{');
@@ -55,6 +57,7 @@ function extractJsonObject(text) {
   throw new ProtocolError('JSON 对象括号不完整');
 }
 
+/** 校验单体 agent 的 JSON 协议，只允许 tool_call 或 final。 */
 export function parseAgentResponse(text) {
   let value;
   try {

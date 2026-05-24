@@ -22,6 +22,7 @@ export const rolePrompts = {
   ].join('\n'),
 };
 
+/** 生成不同 agent 角色的 system/user 消息。 */
 export function roleMessages(role, payload) {
   return [
     { role: 'system', content: rolePrompts[role] },

@@ -14,11 +14,13 @@ import { retrieve } from './retriever.js';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const PROJECT_ROOT = resolve(__dirname, '..');
 
+/** 读取本地知识库并切成检索片段。 */
 export async function loadKnowledge(path = resolve(PROJECT_ROOT, 'data/knowledge/agent-notes.md')) {
   const content = await readFile(path, 'utf8');
   return chunkMarkdown(content);
 }
 
+/** 根据检索命中片段组装带引用的回答。 */
 export function composeAnswer(question, matches) {
   if (!matches.length) {
     return {
@@ -42,6 +44,7 @@ export function composeAnswer(question, matches) {
   };
 }
 
+/** 执行本地 RAG 流程：加载知识、检索、生成引用回答。 */
 export async function runRag({ question, chunks } = {}) {
   if (!question || typeof question !== 'string') {
     throw new Error('question 不能为空');

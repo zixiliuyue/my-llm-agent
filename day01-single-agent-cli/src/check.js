@@ -7,6 +7,7 @@
 #!/usr/bin/env node
 import { DEFAULT_MODEL, DEFAULT_OLLAMA_HOST, listOllamaModels } from './ollama-client.js';
 
+/** 判断当前 Node 版本是否满足教学项目最低要求。 */
 function nodeVersionOk(version) {
   const match = /^v?(\d+)\.(\d+)\.(\d+)/.exec(version);
   if (!match) {
@@ -17,6 +18,7 @@ function nodeVersionOk(version) {
   return major > 18 || (major === 18 && minor >= 17);
 }
 
+/** CLI 主入口，负责解析参数、调用当天示例并处理错误。 */
 async function main() {
   const host = process.env.OLLAMA_HOST || DEFAULT_OLLAMA_HOST;
   const model = process.env.OLLAMA_MODEL || DEFAULT_MODEL;

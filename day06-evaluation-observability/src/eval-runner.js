@@ -12,6 +12,7 @@ import { performance } from 'node:perf_hooks';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const PROJECT_ROOT = resolve(__dirname, '..');
 
+/** 从 JSONL 文件读取评测用例。 */
 export async function loadCases(path = resolve(PROJECT_ROOT, 'evals/cases.jsonl')) {
   const content = await readFile(path, 'utf8');
   return content
@@ -21,6 +22,7 @@ export async function loadCases(path = resolve(PROJECT_ROOT, 'evals/cases.jsonl'
     .map((line) => JSON.parse(line));
 }
 
+/** 运行不依赖真实模型的 mock agent，供评测流程稳定测试。 */
 export async function runMockAgent(question) {
   const lower = question.toLowerCase();
   if (/计算|[0-9]\s*[+*]/.test(question)) {
@@ -53,6 +55,7 @@ export async function runMockAgent(question) {
   };
 }
 
+/** 比较单条用例的期望结果和实际输出。 */
 export function evaluateCase(testCase, runResult) {
   const tools = runResult.events
     .filter((event) => event.type === 'tool_call')
@@ -73,6 +76,7 @@ export function evaluateCase(testCase, runResult) {
   };
 }
 
+/** 运行全部评测用例，并输出 trace、统计和失败报告。 */
 export async function runEvaluations({
   cases,
   runner = runMockAgent,

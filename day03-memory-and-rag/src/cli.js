@@ -7,6 +7,7 @@
 #!/usr/bin/env node
 import { runRag } from './rag-agent.js';
 
+/** 打印当前 CLI 的用法说明，帮助学习者直接运行当天示例。 */
 function printUsage() {
   console.error('用法: npm run day03:ask -- "你的问题"');
   console.error('');
@@ -14,6 +15,7 @@ function printUsage() {
   console.error('  npm run day03:ask -- "什么是 agent loop"');
 }
 
+/** CLI 主入口，负责解析参数、调用当天示例并处理错误。 */
 async function main() {
   const question = process.argv.slice(2).join(' ').trim();
   if (!question || question === '--help' || question === '-h') {

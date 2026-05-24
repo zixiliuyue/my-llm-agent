@@ -12,6 +12,7 @@ function tokenize(text) {
     .filter(Boolean);
 }
 
+/** 计算 chunk 与查询的关键词重合度。 */
 export function scoreChunk(query, chunk) {
   const terms = tokenize(query);
   const haystack = `${chunk.title}\n${chunk.text}`.toLowerCase();
@@ -25,6 +26,7 @@ export function scoreChunk(query, chunk) {
   }, 0);
 }
 
+/** 按分数排序返回最相关的知识片段。 */
 export function retrieve(query, chunks, { limit = 3 } = {}) {
   return chunks
     .map((chunk) => ({ ...chunk, score: scoreChunk(query, chunk) }))

@@ -7,6 +7,7 @@
 #!/usr/bin/env node
 import { callRegisteredTool, listMockMcpTools, listTools } from './tool-registry.js';
 
+/** 打印当前 CLI 的用法说明，帮助学习者直接运行当天示例。 */
 function printUsage() {
   console.error('用法:');
   console.error('  npm run day04:tools -- --list');
@@ -14,11 +15,13 @@ function printUsage() {
   console.error('  npm run day04:tools -- --call calculator --input \'{"expression":"2+3"}\'');
 }
 
+/** 从命令行参数中读取指定选项值。 */
 function getArg(name) {
   const index = process.argv.indexOf(name);
   return index >= 0 ? process.argv[index + 1] : undefined;
 }
 
+/** CLI 主入口，负责解析参数、调用当天示例并处理错误。 */
 async function main() {
   if (process.argv.includes('--help') || process.argv.includes('-h')) {
     printUsage();

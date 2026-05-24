@@ -8,6 +8,7 @@
 import { runAgent } from './agent.js';
 import { DEFAULT_MODEL, DEFAULT_OLLAMA_HOST } from './ollama-client.js';
 
+/** 打印当前 CLI 的用法说明，帮助学习者直接运行当天示例。 */
 function printUsage() {
   console.error('用法: npm run ask -- "你的问题"');
   console.error('');
@@ -20,6 +21,7 @@ function printUsage() {
   console.error(`  OLLAMA_MODEL 默认 ${DEFAULT_MODEL}`);
 }
 
+/** 把 agent 过程事件输出到 stderr，保持最终回答只走 stdout。 */
 function logStep(event) {
   if (event.type === 'model_response') {
     console.error(`[step ${event.step}] 模型返回: ${event.preview}`);
@@ -38,6 +40,7 @@ function logStep(event) {
   }
 }
 
+/** CLI 主入口，负责解析参数、调用当天示例并处理错误。 */
 async function main() {
   const question = process.argv.slice(2).join(' ').trim();
   if (!question || question === '--help' || question === '-h') {
