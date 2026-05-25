@@ -13,7 +13,7 @@
 
 ```bash
 # 用途：运行多 agent CLI
-# 执行目录：/Users/hongsen.ren/code/github-code/llm-agent
+# 执行目录：<项目根目录>
 # 参数含义：-- 后面是用户问题
 # 输出判断：stderr 展示各 agent 交接，stdout 输出最终答案
 # 风险：会调用 OLLAMA_HOST 指向的模型
@@ -22,7 +22,7 @@ npm run day02:ask -- "计算 (18+24)*3"
 
 ```bash
 # 用途：运行不依赖真实模型的 handoff 测试
-# 执行目录：/Users/hongsen.ren/code/github-code/llm-agent
+# 执行目录：<项目根目录>
 # 输出判断：看到 day02 tests passed
 # 风险：只用 mock client，不调用 Ollama
 npm run day02:test

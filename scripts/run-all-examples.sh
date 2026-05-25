@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
-# Day 01-30：一键 smoke 入口。
+# Day 01-45：一键 smoke 入口。
 #
 # 本脚本学习重点：
 # 1. Shell 入口只负责准备环境，不把验证逻辑写散在 bash 里。
-# 2. 固定使用本机已验证的 Node 22，避免用户默认 node 版本过低导致报错。
+# 2. 使用当前 PATH 中的 node，避免写死某台机器的安装路径。
 # 3. 最终把参数原样转交给 scripts/run-all-examples.mjs，由 JS runner 统一输出结果表。
 
 # set -e：任意命令失败立即退出，防止错误继续扩大。
@@ -11,19 +11,13 @@
 # set -o pipefail：管道中任意一段失败都算失败，避免只看最后一个命令退出码。
 set -euo pipefail
 
-# NODE22_BIN 是已验证可运行本项目的 Node 22 安装目录。
-# 如果以后升级 Node，只需要改这里和 JS runner 的同名常量。
-NODE22_BIN="/Users/hongsen.ren/.nvm/versions/node/v22.21.1/bin"
 # BASH_SOURCE[0] 是当前脚本路径；dirname 取脚本目录；/.. 回到仓库根目录。
 # cd + pwd 会得到绝对路径，避免从其它目录调用脚本时 cwd 错乱。
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
-# 把 Node 22 放到 PATH 最前面，npm 子进程也会优先使用这个 node。
-# ${PATH:-} 表示 PATH 未定义时用空字符串，配合 set -u 不会报错。
-export PATH="${NODE22_BIN}:${PATH:-}"
 # 切到仓库根目录，保证 runner 里的相对路径和 npm scripts 都按项目根执行。
 cd "${REPO_ROOT}"
 
 # exec 会用 node 进程替换当前 shell 进程。
 # "$@" 会把用户传给 shell 脚本的所有参数原样转交给 JS runner。
-exec "${NODE22_BIN}/node" scripts/run-all-examples.mjs "$@"
+exec node scripts/run-all-examples.mjs "$@"

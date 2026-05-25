@@ -29,6 +29,17 @@ macOS 可以用官网安装包：
 open https://ollama.com/download
 ```
 
+Windows PowerShell 可以打开同一个下载页：
+
+```powershell
+# 用途：打开 Ollama 下载页
+# 执行目录：任意目录
+# 参数含义：无
+# 输出判断：浏览器打开 Ollama 下载页面
+# 风险：只打开网页，不改系统配置
+Start-Process https://ollama.com/download
+```
+
 安装后启动服务：
 
 ```bash
@@ -55,7 +66,7 @@ ollama pull qwen2.5:7b
 
 ```bash
 # 用途：检查 Node、Ollama API、默认模型是否可用
-# 执行目录：/Users/hongsen.ren/code/github-code/llm-agent/day01-single-agent-cli
+# 执行目录：<项目根目录>/day01-single-agent-cli
 # 参数含义：无
 # 输出判断：看到“自检通过”
 # 风险：只读检查，不会调用模型生成内容
@@ -73,7 +84,7 @@ ollama pull qwen2.5:7b
 
 ```bash
 # 用途：让 agent 调用 calculator 工具
-# 执行目录：/Users/hongsen.ren/code/github-code/llm-agent/day01-single-agent-cli
+# 执行目录：<项目根目录>/day01-single-agent-cli
 # 参数含义：-- 后面是用户问题
 # 输出判断：stderr 能看到工具调用过程，stdout 输出最终答案
 # 风险：会调用本地模型，占用 CPU/GPU/内存
@@ -82,7 +93,7 @@ npm run ask -- "计算 (18+24)*3"
 
 ```bash
 # 用途：让 agent 调用 current_time 工具
-# 执行目录：/Users/hongsen.ren/code/github-code/llm-agent/day01-single-agent-cli
+# 执行目录：<项目根目录>/day01-single-agent-cli
 # 参数含义：-- 后面是用户问题
 # 输出判断：最终答案包含当前时间
 # 风险：会调用本地模型
@@ -91,7 +102,7 @@ npm run ask -- "现在几点"
 
 ```bash
 # 用途：让 agent 搜索本地知识库
-# 执行目录：/Users/hongsen.ren/code/github-code/llm-agent/day01-single-agent-cli
+# 执行目录：<项目根目录>/day01-single-agent-cli
 # 参数含义：-- 后面是用户问题
 # 输出判断：最终答案解释 agent loop
 # 风险：会调用本地模型，只读取 data/notes.md
@@ -113,10 +124,22 @@ OLLAMA_MODEL=qwen2.5:7b
 OLLAMA_MODEL=qwen2.5-coder:7b npm run ask -- "解释一下这个 agent 示例"
 ```
 
+Windows PowerShell 写法：
+
+```powershell
+$env:OLLAMA_MODEL="qwen2.5-coder:14b"; npm run ask -- "解释一下这个 agent 示例"
+```
+
 后续如果测试环境 Docker 跑了 Ollama，并暴露端口，可以这样切换：
 
 ```bash
-OLLAMA_HOST=http://127.0.0.1:<port> OLLAMA_MODEL=qwen2.5:7b npm run ask -- "计算 17*23"
+OLLAMA_HOST=http://<test-host>:<port> OLLAMA_MODEL=qwen2.5:7b npm run ask -- "计算 17*23"
+```
+
+Windows PowerShell 写法：
+
+```powershell
+$env:OLLAMA_HOST="http://<test-host>:<port>"; $env:OLLAMA_MODEL="qwen2.5:7b"; npm run ask -- "计算 17*23"
 ```
 
 测试环境建议：
@@ -147,7 +170,7 @@ OLLAMA_HOST=http://127.0.0.1:<port> OLLAMA_MODEL=qwen2.5:7b npm run ask -- "计�
 
 ```bash
 # 用途：测试协议解析、工具调用和 agent loop 边界
-# 执行目录：/Users/hongsen.ren/code/github-code/llm-agent/day01-single-agent-cli
+# 执行目录：<项目根目录>/day01-single-agent-cli
 # 参数含义：无
 # 输出判断：看到“tests passed”
 # 风险：不调用 Ollama，不读取真实模型
@@ -169,7 +192,7 @@ npm test
 仓库根目录也保留了快捷命令，方便以后按天管理：
 
 ```bash
-cd /Users/hongsen.ren/code/github-code/llm-agent
+cd <项目根目录>
 npm run ask -- "计算 (18+24)*3"
 npm run test
 ```

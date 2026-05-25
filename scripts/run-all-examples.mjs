@@ -2,7 +2,7 @@
 /**
  * 一键 smoke runner。
  *
- * 这个脚本用于把 30 天示例按固定顺序跑一遍。它只做本地验证：
+ * 这个脚本用于把 45 天示例按固定顺序跑一遍。它只做本地验证：
  * 真实模型调用只访问 OLLAMA_HOST，远程部署、Docker 和危险命令都不执行。
  */
 // 教学：导入依赖：这一行把当前文件需要用到的模块或函数拿进来。
@@ -12,7 +12,7 @@ import { readdirSync, rmSync } from 'node:fs';
 // 教学：导入依赖：这一行把当前文件需要用到的模块或函数拿进来。
 import { createServer } from 'node:net';
 // 教学：导入依赖：这一行把当前文件需要用到的模块或函数拿进来。
-import { dirname, resolve } from 'node:path';
+import { delimiter, dirname, resolve } from 'node:path';
 // 教学：导入依赖：这一行把当前文件需要用到的模块或函数拿进来。
 import { fileURLToPath } from 'node:url';
 
@@ -20,17 +20,19 @@ import { fileURLToPath } from 'node:url';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 // 教学：定义常量：这个值只在当前作用域读取，不会被重新赋值。
 const REPO_ROOT = resolve(__dirname, '..');
-// 教学：定义常量：这个值只在当前作用域读取，不会被重新赋值。
-const NODE22_BIN = '/Users/hongsen.ren/.nvm/versions/node/v22.21.1/bin';
 // 教学：读取环境变量：允许用户不改源码就切换模型地址、端口或运行模式。
 const OLLAMA_HOST = process.env.OLLAMA_HOST || 'http://127.0.0.1:11434';
 // 教学：读取环境变量：允许用户不改源码就切换模型地址、端口或运行模式。
 const OLLAMA_MODEL = process.env.OLLAMA_MODEL || 'qwen2.5:7b';
+// Windows 环境变量名常见是 Path，macOS/Linux 是 PATH；保留原名能避免覆盖失败。
+const PATH_KEY = Object.keys(process.env).find((key) => key.toLowerCase() === 'path') || 'PATH';
+// Windows 下 npm 可执行文件是 npm.cmd，直接 spawn npm 会找不到入口。
+const NPM_COMMAND = process.platform === 'win32' ? 'npm.cmd' : 'npm';
 // 教学：定义常量：这个值只在当前作用域读取，不会被重新赋值。
 const BASE_ENV = {
   ...process.env,
   // 教学：读取环境变量：允许用户不改源码就切换模型地址、端口或运行模式。
-  PATH: `${dirname(process.execPath)}:${NODE22_BIN}:${process.env.PATH || ''}`,
+  [PATH_KEY]: [dirname(process.execPath), process.env[PATH_KEY] || ''].filter(Boolean).join(delimiter),
   OLLAMA_HOST,
   OLLAMA_MODEL,
   // 教学：读取环境变量：允许用户不改源码就切换模型地址、端口或运行模式。
@@ -38,7 +40,7 @@ const BASE_ENV = {
 };
 
 // 教学：定义常量：这个值只在当前作用域读取，不会被重新赋值。
-const WEB_BUILD_SCRIPTS = ['day05:build', 'day14:build', 'day15:build', 'day28:build', 'day30:build'];
+const WEB_BUILD_SCRIPTS = ['day05:build', 'day14:build', 'day15:build', 'day28:build', 'day30:build', 'day34:build'];
 // 教学：定义常量：这个值只在当前作用域读取，不会被重新赋值。
 const DIST_DIRS = [
   'day05-vue-web-agent/frontend/dist',
@@ -46,6 +48,7 @@ const DIST_DIRS = [
   'day15-webchat-session/dist',
   'day28-observability-dashboard/dist',
   'day30-mini-openclaw-integrated/dist',
+  'day34-image-job-queue-ui/dist',
 ];
 
 // 教学：定义常量：这个值只在当前作用域读取，不会被重新赋值。
@@ -53,6 +56,7 @@ const START_ARGS = new Map([
   ['day01:start', ['计算 (18+24)*3，只输出最终答案。']],
   ['day02:start', ['计算 (18+24)*3，只输出最终答案。']],
   ['day03:start', ['什么是 agent loop']],
+  ['day35:start', ['一个 Windows 5060 Ti 工作站正在跑本地图片模型']],
 ]);
 
 // 教学：定义常量：这个值只在当前作用域读取，不会被重新赋值。
@@ -99,7 +103,7 @@ function terminate(child) {
 // 教学：普通函数：把一段可复用逻辑命名，降低主流程阅读成本。
 function runCommand({
   label,
-  command = 'npm',
+  command = NPM_COMMAND,
   args,
   timeoutMs = SHORT_TIMEOUT_MS,
   env = {},
@@ -322,7 +326,7 @@ async function runDay05ApiSmoke() {
   // 教学：定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const port = await getFreePort();
   // 教学：启动子进程：smoke runner 用它执行 npm 脚本并捕获输出。
-  const child = spawn('npm', ['run', 'day05:start'], {
+  const child = spawn(NPM_COMMAND, ['run', 'day05:start'], {
     cwd: REPO_ROOT,
     env: { ...BASE_ENV, AGENT_PORT: String(port), AGENT_MOCK: '' },
     detached: process.platform !== 'win32',
@@ -501,9 +505,11 @@ await runStep(results, 'ollama:tags', checkOllama);
 await runStep(results, 'syntax:cli', runSyntaxCheck);
 // 教学：等待异步操作完成：下一行代码依赖这个结果。
 await runStep(results, 'npm:test', () => runNpmScript('test', [], LONG_TIMEOUT_MS));
+// 根级综合练习：串起 day35/day33/day34/day36/day38/day39/day40，但只走 mock。
+await runStep(results, 'local:multimodal', () => runNpmScript('local:multimodal', ['一个本地 agent 平台封面图'], SHORT_TIMEOUT_MS));
 
 // 教学：循环：按顺序处理多条数据或多个步骤。
-for (let day = 1; day <= 30; day += 1) {
+for (let day = 1; day <= 45; day += 1) {
   // 教学：定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const script = `day${String(day).padStart(2, '0')}:start`;
   // 教学：条件判断：根据当前状态选择不同分支，保证错误能尽早暴露。

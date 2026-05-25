@@ -1,0 +1,61 @@
+#!/usr/bin/env node
+// 学习目标：生成一个无需前端框架也能打开的本地队列 UI。
+import fs from "node:fs";
+import path from "node:path";
+import { createDemoQueue, summarizeQueue } from "./index.js";
+
+const distDir = path.resolve("dist");
+fs.mkdirSync(distDir, { recursive: true });
+
+const queue = createDemoQueue();
+const summary = summarizeQueue(queue);
+const rows = queue
+  .map(
+    (job) => `<tr>
+      <td>${job.id}</td>
+      <td>${job.status}</td>
+      <td>${job.progress}%</td>
+      <td>${job.provider}</td>
+      <td>${job.prompt}</td>
+    </tr>`
+  )
+  .join("\n");
+
+const html = `<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Day34 图片任务队列</title>
+  <style>
+    body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #f7f7f4; color: #202124; }
+    main { max-width: 960px; margin: 0 auto; padding: 32px 20px; }
+    h1 { font-size: 28px; margin: 0 0 16px; }
+    .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; margin-bottom: 18px; }
+    .stat { border: 1px solid #d7d7d0; border-radius: 8px; padding: 12px; background: #fff; }
+    .stat strong { display: block; font-size: 24px; }
+    table { width: 100%; border-collapse: collapse; background: #fff; border: 1px solid #d7d7d0; }
+    th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #ecece7; vertical-align: top; }
+    th { font-size: 13px; color: #555; background: #fafaf7; }
+    td { font-size: 14px; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Day34 图片任务队列</h1>
+    <section class="stats" aria-label="队列统计">
+      <div class="stat"><span>总数</span><strong>${summary.total}</strong></div>
+      <div class="stat"><span>排队</span><strong>${summary.queued}</strong></div>
+      <div class="stat"><span>运行</span><strong>${summary.running}</strong></div>
+      <div class="stat"><span>完成</span><strong>${summary.done}</strong></div>
+    </section>
+    <table>
+      <thead><tr><th>ID</th><th>状态</th><th>进度</th><th>Provider</th><th>Prompt</th></tr></thead>
+      <tbody>${rows}</tbody>
+    </table>
+  </main>
+</body>
+</html>`;
+
+fs.writeFileSync(path.join(distDir, "index.html"), html);
+console.log(`built ${path.join(distDir, "index.html")}`);

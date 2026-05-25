@@ -12,7 +12,7 @@
 
 ```bash
 # 用途：查看当前 Ollama 配置来源
-# 执行目录：/Users/hongsen.ren/code/github-code/llm-agent
+# 执行目录：<项目根目录>
 # 输出判断：显示 host、model、source
 # 风险：只读
 npm run day07:config
@@ -20,7 +20,7 @@ npm run day07:config
 
 ```bash
 # 用途：检查 OLLAMA_HOST 是否可访问
-# 执行目录：/Users/hongsen.ren/code/github-code/llm-agent
+# 执行目录：<项目根目录>
 # 输出判断：ok=true 时可访问；不可访问时返回错误
 # 风险：只访问 /api/tags，不生成模型回答
 npm run day07:health
@@ -28,7 +28,7 @@ npm run day07:health
 
 ```bash
 # 用途：生成 Docker 部署命令，不执行
-# 执行目录：/Users/hongsen.ren/code/github-code/llm-agent
+# 执行目录：<项目根目录>
 # 参数含义：--port 是宿主机端口，--model-dir 是模型目录
 # 输出判断：打印 docker run 命令
 # 风险：dry-run 只打印命令，不部署
@@ -37,7 +37,7 @@ npm run day07:dry-run -- --port 11434 --model-dir /data9/ollama
 
 ```bash
 # 用途：测试配置切换、dry-run 和源码不硬编码测试机地址
-# 执行目录：/Users/hongsen.ren/code/github-code/llm-agent
+# 执行目录：<项目根目录>
 # 输出判断：看到 day07 tests passed
 # 风险：只跑本地测试
 npm run day07:test

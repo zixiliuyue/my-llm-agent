@@ -50,10 +50,22 @@ flowchart TD
 OLLAMA_HOST=http://127.0.0.1:11434 OLLAMA_MODEL=qwen2.5:7b npm run ask -- "问题"
 ```
 
+Windows PowerShell：
+
+```powershell
+$env:OLLAMA_HOST="http://127.0.0.1:11434"; $env:OLLAMA_MODEL="qwen2.5:7b"; npm run ask -- "问题"
+```
+
 后续测试环境 Docker 暴露 Ollama 端口后，只改 host：
 
 ```bash
-OLLAMA_HOST=http://127.0.0.1:<port> OLLAMA_MODEL=qwen2.5:7b npm run ask -- "问题"
+OLLAMA_HOST=http://<test-host>:<port> OLLAMA_MODEL=qwen2.5:7b npm run ask -- "问题"
+```
+
+Windows PowerShell：
+
+```powershell
+$env:OLLAMA_HOST="http://<test-host>:<port>"; $env:OLLAMA_MODEL="qwen2.5:7b"; npm run ask -- "问题"
 ```
 
 测试环境注意事项：

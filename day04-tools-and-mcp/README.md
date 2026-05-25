@@ -13,7 +13,7 @@
 
 ```bash
 # 用途：列出本地工具注册表
-# 执行目录：/Users/hongsen.ren/code/github-code/llm-agent
+# 执行目录：<项目根目录>
 # 输出判断：输出工具名、schema、risk
 # 风险：只读
 npm run day04:tools -- --list
@@ -21,7 +21,7 @@ npm run day04:tools -- --list
 
 ```bash
 # 用途：调用 read-only calculator 工具
-# 执行目录：/Users/hongsen.ren/code/github-code/llm-agent
+# 执行目录：<项目根目录>
 # 参数含义：--input 是 JSON 对象
 # 输出判断：返回计算结果
 # 风险：只执行本地安全计算
@@ -30,7 +30,7 @@ npm run day04:tools -- --call calculator --input '{"expression":"2+3*4"}'
 
 ```bash
 # 用途：运行工具注册和权限边界测试
-# 执行目录：/Users/hongsen.ren/code/github-code/llm-agent
+# 执行目录：<项目根目录>
 # 输出判断：看到 day04 tests passed
 # 风险：不执行真实远程命令
 npm run day04:test

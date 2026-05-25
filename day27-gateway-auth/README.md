@@ -17,7 +17,7 @@
 
 ```bash
 # 用途：运行第 27 天主示例
-# 执行目录：/Users/hongsen.ren/code/github-code/llm-agent/day27-gateway-auth
+# 执行目录：<项目根目录>/day27-gateway-auth
 # 输出判断：stdout 输出 JSON demo 结果
 # 风险：只跑本地 mock，不调用真实模型
 npm start
@@ -25,7 +25,7 @@ npm start
 
 ```bash
 # 用途：运行第 27 天测试
-# 执行目录：/Users/hongsen.ren/code/github-code/llm-agent/day27-gateway-auth
+# 执行目录：<项目根目录>/day27-gateway-auth
 # 输出判断：看到 day27 tests passed
 # 风险：只跑本地测试
 npm test

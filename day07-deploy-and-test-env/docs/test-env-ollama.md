@@ -13,7 +13,7 @@
 
 ```bash
 # 用途：生成测试环境 Docker 命令，不执行
-# 执行目录：/Users/hongsen.ren/code/github-code/llm-agent
+# 执行目录：<项目根目录>
 # 参数含义：--port 是宿主机端口，--model-dir 是模型目录
 # 结果判断：输出 docker run 命令文本
 # 风险：dry-run 只打印命令，不部署、不拉模型
@@ -26,5 +26,10 @@ npm run day07:dry-run -- --port 11434 --model-dir /data9/ollama
 OLLAMA_HOST=http://<test-host>:11434 OLLAMA_MODEL=qwen2.5:7b npm run day01:ask -- "什么是 agent loop"
 ```
 
-执行真实远程部署前，需要先确认磁盘、端口、防火墙、访问控制和回滚方式。
+Windows PowerShell：
 
+```powershell
+$env:OLLAMA_HOST="http://<test-host>:11434"; $env:OLLAMA_MODEL="qwen2.5:7b"; npm run day01:ask -- "什么是 agent loop"
+```
+
+执行真实远程部署前，需要先确认磁盘、端口、防火墙、访问控制和回滚方式。

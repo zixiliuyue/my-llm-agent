@@ -13,7 +13,7 @@
 
 ```bash
 # 用途：用本地知识库回答问题
-# 执行目录：/Users/hongsen.ren/code/github-code/llm-agent
+# 执行目录：<项目根目录>
 # 参数含义：-- 后面是用户问题
 # 输出判断：stderr 展示命中的 chunk，stdout 输出带引用的答案
 # 风险：只读取本地 Markdown，不调用 Ollama
@@ -22,7 +22,7 @@ npm run day03:ask -- "什么是 agent loop"
 
 ```bash
 # 用途：测试 chunk、检索排序和无命中 fallback
-# 执行目录：/Users/hongsen.ren/code/github-code/llm-agent
+# 执行目录：<项目根目录>
 # 输出判断：看到 day03 tests passed
 # 风险：只跑本地测试
 npm run day03:test

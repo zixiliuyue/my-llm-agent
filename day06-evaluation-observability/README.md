@@ -13,7 +13,7 @@
 
 ```bash
 # 用途：运行 mock eval 并输出 JSON 报告
-# 执行目录：/Users/hongsen.ren/code/github-code/llm-agent
+# 执行目录：<项目根目录>
 # 输出判断：summary.failed 为 0
 # 风险：默认 mock runner，不调用 Ollama
 npm run day06:eval
@@ -21,7 +21,7 @@ npm run day06:eval
 
 ```bash
 # 用途：测试 eval case、trace 和统计字段
-# 执行目录：/Users/hongsen.ren/code/github-code/llm-agent
+# 执行目录：<项目根目录>
 # 输出判断：看到 day06 tests passed
 # 风险：只跑本地测试
 npm run day06:test
