@@ -229,3 +229,86 @@ npm run day46:test && npm run day47:test && npm run day48:test && npm run day49:
 # 风险：全部走 mock/dry-run，不修改配置、不访问数据库、不注册 MCP
 npm run day51:test && npm run day52:test && npm run day53:test && npm run day54:test && npm run day55:test
 ```
+
+## day56：完整多 Agent 工程闭环 Capstone
+
+你应该能做到：
+
+- 解释 day02 多 agent 入门和 day56 工程闭环 capstone 的差异。
+- 画出 coordinator、observability、permission、safety、sql、mcp-verifier、retro 的 handoff 顺序。
+- 说明共享 evidence board 为什么比各 agent 各说各话更适合审计。
+- 判断权限失败、高危命令、MCP 入口错误、复盘缺预防项时，闭环应该停在哪里。
+- 说清为什么模型不能直接决定权限、执行命令或执行 SQL。
+
+验收题：
+
+1. coordinator 为什么必须在权限失败时阻断 safety/sql/mcp/retro 阶段？
+2. safety-agent 为什么把 `rm -rf /` 直接 blocked，而不是 pending approval？
+3. sql-agent 为什么必须输出 rollback SQL 且 `executableByAgent=false`？
+4. mcp-verifier-agent 为什么必须验证 `/mcp`、initialize 和 `tools/list`？
+5. retro-agent 为什么发现 `token=secret` 时不能让 final report ready？
+
+推荐验证：
+
+```bash
+# 用途：验证最终完整多 Agent 工程闭环 capstone
+# 执行目录：<项目根目录>
+# 结果判断：day56 tests passed，happy path decision.status 为 ready-for-human-review
+# 风险：全部走 mock/dry-run，不访问真实 Grafana/Redis/SSH/数据库/MCP/事故系统
+npm run day56:test
+```
+
+## day57-day60：生产级 Runtime、Harness、RAG 和产品样板
+
+你应该能做到：
+
+- 解释 run、session、tool_call、evidence 为什么要持久化。
+- 说明 worker lease、取消、重试、超时、恢复、幂等和并发控制的边界。
+- 用 Harness 回放固定 run snapshot，并比较两个 prompt/model/tool 版本。
+- 设计 RAG ingestion、hybrid search、rerank、citation、权限过滤、缓存和 recall eval。
+- 用 day60 控制台讲清 run timeline、tool approval、RAG citation、evidence board 和 final report。
+
+验收题：
+
+1. day57 为什么 worker 拿任务要有 lease，而不是直接改 run 状态？
+2. day58 的 replay 和 compare 分别解决什么问题？
+3. day59 为什么权限过滤不能交给模型总结阶段？
+4. day60 为什么 final report 只能 ready-for-human-review，不能自动执行修复？
+
+推荐验证：
+
+```bash
+# 用途：验证生产级 Agent 平台补强 day57-day60
+# 执行目录：<项目根目录>
+# 结果判断：day57-day60 均打印 tests passed
+# 风险：默认内存/mock；Docker Compose 和真实服务不在默认测试中启动
+npm run day57:test && npm run day58:test && npm run day59:test && npm run day60:test
+```
+
+## day61-day65：安全、编排、灰度、路由和多模态
+
+你应该能做到：
+
+- 说明 prompt injection、tool output、secret/PII、网络、文件和 MCP/tool allowlist 的确定性策略边界。
+- 用 DAG 解释 fan-out/fan-in、共享状态冲突、partial failure、预算、超时和取消。
+- 解释 prompt/model/tool/spec 为什么都要版本化，shadow/canary/gray/rollback 如何串联。
+- 用统一 provider 接口讲清 streaming、tool calling、JSON schema、retry、timeout、rate limit、cost 和 fallback。
+- 把图片、语音、视频理解拆成 caption/OCR/object/quality/PII/EXIF/keyframe/eval。
+
+验收题：
+
+1. day61 发现工具输出含 token 时，为什么要先脱敏并记录风险？
+2. day62 两个 agent 同时写同一个 shared state key 时，coordinator 应该怎么处理？
+3. day63 哪些指标会触发 rollback-required？
+4. day64 为什么 JSON schema 校验必须在模型外部做？
+5. day65 为什么视频理解优先抽关键帧，而不是直接处理整段视频？
+
+推荐验证：
+
+```bash
+# 用途：验证安全、编排、发布、模型路由和多模态 day61-day65
+# 执行目录：<项目根目录>
+# 结果判断：day61-day65 均打印 tests passed
+# 风险：默认 mock/dry-run；不访问真实模型、网络或多媒体文件
+npm run day61:test && npm run day62:test && npm run day63:test && npm run day64:test && npm run day65:test
+```

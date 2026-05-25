@@ -1,4 +1,10 @@
 /**
+ * Day 4：自包含学习源码。
+ *
+ * 这个文件属于 day04-tools-and-mcp，不能 import 其它 day 的源码。
+ * 注释说明保留在文件顶部，帮助学习时先理解本文件职责。
+ */
+/**
  * Day 04：工具注册表与 MCP mock。
  *
  * 本文件自包含实现 calculator/current_time 等 read-only 工具，并在代码层
@@ -56,6 +62,7 @@ function runCalculator(input = {}) {
     return Number.isFinite(value)
       ? { ok: true, data: { expression, value } }
       : { ok: false, error: '计算结果不是有限数字' };
+  // 教学：catch 块：把异常转换成可理解的错误结果或退出码。
   } catch (error) {
     // 教学：返回结果：调用方会拿到这个值继续后续流程。
     return { ok: false, error: error.message };
@@ -71,6 +78,7 @@ function runCurrentTime() {
   return { ok: true, data: { iso: now.toISOString(), text: now.toLocaleString('zh-CN') } };
 }
 
+// 教学：调用函数：把当前数据交给已有逻辑处理。
 registerTool({
   name: 'calculator',
   description: '计算安全算术表达式。',
@@ -79,6 +87,7 @@ registerTool({
   execute: runCalculator,
 });
 
+// 教学：调用函数：把当前数据交给已有逻辑处理。
 registerTool({
   name: 'current_time',
   description: '读取当前时间。',
@@ -87,6 +96,7 @@ registerTool({
   execute: runCurrentTime,
 });
 
+// 教学：调用函数：把当前数据交给已有逻辑处理。
 registerTool({
   name: 'write_file_mock',
   description: '演示本地写入类工具的权限边界，不实际写文件。',
@@ -95,6 +105,7 @@ registerTool({
   execute: async (input) => ({ ok: true, data: { dryRun: true, input } }),
 });
 
+// 教学：调用函数：把当前数据交给已有逻辑处理。
 registerTool({
   name: 'remote_shell_mock',
   description: '演示远程命令类工具的权限边界，不实际执行。',

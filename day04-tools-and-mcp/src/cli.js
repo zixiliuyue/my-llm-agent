@@ -35,6 +35,7 @@ function getArg(name) {
 async function main() {
   // 教学：读取命令行参数：process.argv 前两项是 node 和脚本路径，所以业务参数通常从 slice(2) 开始。
   if (process.argv.includes('--help') || process.argv.includes('-h')) {
+    // 教学：调用函数：把当前数据交给已有逻辑处理。
     printUsage();
     // 教学：返回结果：调用方会拿到这个值继续后续流程。
     return;
@@ -58,6 +59,7 @@ async function main() {
   const toolName = getArg('--call');
   // 教学：条件判断：根据当前状态选择不同分支，保证错误能尽早暴露。
   if (!toolName) {
+    // 教学：调用函数：把当前数据交给已有逻辑处理。
     printUsage();
     // 教学：退出进程：用退出码告诉 shell 当前命令成功还是失败。
     process.exitCode = 2;
@@ -75,6 +77,7 @@ async function main() {
     try {
       // 教学：解析 JSON：把字符串还原成 JS 对象，方便后续读取字段。
       input = JSON.parse(rawInput);
+    // 教学：catch 块：把异常转换成可理解的错误结果或退出码。
     } catch (error) {
       // 教学：输出到 stderr：用于过程日志、错误或帮助信息，不污染 stdout。
       console.error(`input 必须是 JSON 对象: ${error.message}`);

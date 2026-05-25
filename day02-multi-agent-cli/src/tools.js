@@ -1,4 +1,10 @@
 /**
+ * Day 2：自包含学习源码。
+ *
+ * 这个文件属于 day02-multi-agent-cli，不能 import 其它 day 的源码。
+ * 注释说明保留在文件顶部，帮助学习时先理解本文件职责。
+ */
+/**
  * Day 02：本地工具集合。
  *
  * 多 agent 示例只需要少量 read-only 工具。这里把工具实现放在 day02 内，
@@ -41,6 +47,7 @@ function calculate(input = {}) {
     const value = Function(`"use strict"; return (${expression})`)();
     // 教学：返回结果：调用方会拿到这个值继续后续流程。
     return Number.isFinite(value) ? ok({ expression, value }) : fail('计算结果不是有限数字');
+  // 教学：catch 块：把异常转换成可理解的错误结果或退出码。
   } catch (error) {
     // 教学：返回结果：调用方会拿到这个值继续后续流程。
     return fail(error.message);

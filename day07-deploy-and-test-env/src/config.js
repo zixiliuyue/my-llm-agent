@@ -30,7 +30,9 @@ export function buildOllamaConfig(env = process.env) {
 /** 生成测试环境 Docker dry-run 命令，不实际部署。 */
 // 教学：导出函数：这是当前模块提供给测试、CLI 或其它本 day 文件使用的能力。
 export function buildDockerDryRun({
+  // 教学：更新状态：这里会改变前面定义的变量或对象字段。
   port = '11434',
+  // 教学：更新状态：这里会改变前面定义的变量或对象字段。
   modelDir = '/data9/ollama',
 } = {}) {
   // 教学：定义常量：这个值只在当前作用域读取，不会被重新赋值。
@@ -51,6 +53,7 @@ export function buildDockerDryRun({
 // 教学：导出异步函数：调用方需要 await 它，因为内部可能读文件、请求接口或等待模型。
 export async function checkOllamaHealth({
   host,
+  // 教学：更新状态：这里会改变前面定义的变量或对象字段。
   fetchImpl = globalThis.fetch,
 } = {}) {
   // 教学：定义常量：这个值只在当前作用域读取，不会被重新赋值。
@@ -73,6 +76,7 @@ export async function checkOllamaHealth({
       host: baseUrl,
       models: Array.isArray(body.models) ? body.models.map((item) => item.name).filter(Boolean) : [],
     };
+  // 教学：catch 块：把异常转换成可理解的错误结果或退出码。
   } catch (error) {
     // 教学：返回结果：调用方会拿到这个值继续后续流程。
     return { ok: false, host: baseUrl, error: error.message };

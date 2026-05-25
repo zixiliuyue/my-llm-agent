@@ -1,3 +1,9 @@
+/**
+ * Day 7：自包含学习源码。
+ *
+ * 这个文件属于 day07-deploy-and-test-env，不能 import 其它 day 的源码。
+ * 注释说明保留在文件顶部，帮助学习时先理解本文件职责。
+ */
 // 教学：导入依赖：这一行把当前文件需要用到的模块或函数拿进来。
 import assert from 'node:assert/strict';
 // 教学：读取文件：教学示例从本地 Markdown 或配置里拿数据。

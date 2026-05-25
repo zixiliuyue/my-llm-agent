@@ -1,0 +1,31 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: agent
+      POSTGRES_PASSWORD: agent
+      POSTGRES_DB: agent_runtime
+    ports:
+      - "54327:5432"
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "63797:6379"
+  api:
+    image: node:22-alpine
+    working_dir: /workspace
+    volumes:
+      - ./:/workspace
+    command: ["node", "src/cli.js"]
+    depends_on:
+      - postgres
+      - redis
+  worker:
+    image: node:22-alpine
+    working_dir: /workspace
+    volumes:
+      - ./:/workspace
+    command: ["node", "src/cli.js"]
+    depends_on:
+      - postgres
+      - redis

@@ -1,3 +1,9 @@
+/**
+ * Day 1：自包含学习源码。
+ *
+ * 这个文件属于 day01-single-agent-cli，不能 import 其它 day 的源码。
+ * 注释说明保留在文件顶部，帮助学习时先理解本文件职责。
+ */
 // 教学：导入依赖：这一行把当前文件需要用到的模块或函数拿进来。
 import assert from 'node:assert/strict';
 

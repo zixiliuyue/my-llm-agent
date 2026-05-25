@@ -4,9 +4,11 @@
  * 这个文件属于 day02-multi-agent-cli，不能 import 其它 day 的源码。
  * 注释说明保留在文件顶部，帮助学习时先理解本文件职责。
  */
+// 教学：导出类：把相关状态和方法组合成一个可复用对象。
 export class HandoffError extends Error {
   // 教学：构造函数：new 这个类时会先运行这里，保存后续方法要用的状态。
   constructor(message) {
+    // 教学：调用函数：把当前数据交给已有逻辑处理。
     super(message);
     this.name = 'HandoffError';
   }
@@ -50,16 +52,20 @@ export function extractJson(text) {
     if (inString) {
       // 教学：条件判断：根据当前状态选择不同分支，保证错误能尽早暴露。
       if (escaped) {
+        // 教学：更新状态：这里会改变前面定义的变量或对象字段。
         escaped = false;
       } else if (char === '\\') {
+        // 教学：更新状态：这里会改变前面定义的变量或对象字段。
         escaped = true;
       } else if (char === '"') {
+        // 教学：更新状态：这里会改变前面定义的变量或对象字段。
         inString = false;
       }
       continue;
     }
     // 教学：条件判断：根据当前状态选择不同分支，保证错误能尽早暴露。
     if (char === '"') {
+      // 教学：更新状态：这里会改变前面定义的变量或对象字段。
       inString = true;
       continue;
     }

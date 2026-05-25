@@ -1,4 +1,11 @@
+/**
+ * Day 39：自包含学习源码。
+ *
+ * 这个文件属于 day39-framepack-video-local，不能 import 其它 day 的源码。
+ * 注释说明保留在文件顶部，帮助学习时先理解本文件职责。
+ */
 // 学习目标：把 FramePack 作为 Windows/NVIDIA 本地视频实验 profile，而不是默认云服务。
+// 教学：导出常量：其它文件可以 import 这个值，适合放默认配置或元信息。
 export const FRAMEPACK_PROFILE = {
   id: "framepack-local",
   task: "image-to-video",
@@ -11,30 +18,43 @@ export const FRAMEPACK_PROFILE = {
   note: "适合 RTX 5060 Ti 16G 这类 Windows NVIDIA 机器做短视频实验。",
 };
 
+// 教学：普通函数：把一段可复用逻辑命名，降低主流程阅读成本。
 function hasNvidiaName(gpuName = "") {
+  // 教学：返回结果：调用方会拿到这个值继续后续流程。
   return /nvidia|rtx|geforce/i.test(gpuName);
 }
 
+// 教学：导出函数：这是当前模块提供给测试、CLI 或其它本 day 文件使用的能力。
 export function evaluateFramePackReadiness({
+  // 教学：更新状态：这里会改变前面定义的变量或对象字段。
   platform = process.platform,
+  // 教学：更新状态：这里会改变前面定义的变量或对象字段。
   gpuName = "",
+  // 教学：更新状态：这里会改变前面定义的变量或对象字段。
   vramGb = 0,
+  // 教学：更新状态：这里会改变前面定义的变量或对象字段。
   memoryGb = 0,
 } = {}) {
+  // 教学：定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const issues = [];
+  // 教学：条件判断：根据当前状态选择不同分支，保证错误能尽早暴露。
   if (platform !== "win32" && platform !== "linux") {
     issues.push("FramePack 本地实验优先 Windows/Linux，Mac 侧建议只保留 plan。");
   }
+  // 教学：条件判断：根据当前状态选择不同分支，保证错误能尽早暴露。
   if (!hasNvidiaName(gpuName)) {
     issues.push("需要 NVIDIA GPU。");
   }
+  // 教学：条件判断：根据当前状态选择不同分支，保证错误能尽早暴露。
   if (vramGb < FRAMEPACK_PROFILE.minVramGb) {
     issues.push(`显存至少建议 ${FRAMEPACK_PROFILE.minVramGb}G。`);
   }
+  // 教学：条件判断：根据当前状态选择不同分支，保证错误能尽早暴露。
   if (memoryGb > 0 && memoryGb < 32) {
     issues.push("系统内存建议 32G 或以上。");
   }
 
+  // 教学：返回结果：调用方会拿到这个值继续后续流程。
   return {
     ready: issues.length === 0,
     profile: FRAMEPACK_PROFILE,
@@ -46,22 +66,33 @@ export function evaluateFramePackReadiness({
   };
 }
 
+// 教学：导出函数：这是当前模块提供给测试、CLI 或其它本 day 文件使用的能力。
 export function buildFramePackJob({
   sourceImage,
   prompt,
+  // 教学：更新状态：这里会改变前面定义的变量或对象字段。
   seconds = 4,
+  // 教学：更新状态：这里会改变前面定义的变量或对象字段。
   endpoint = process.env.FRAMEPACK_HOST ?? FRAMEPACK_PROFILE.endpoint,
 }) {
+  // 教学：条件判断：根据当前状态选择不同分支，保证错误能尽早暴露。
   if (!sourceImage || /^https?:\/\//i.test(sourceImage)) {
+    // 教学：抛出错误：让调用方知道当前流程不能继续。
     throw new Error("sourceImage must be a local image path");
   }
+  // 教学：条件判断：根据当前状态选择不同分支，保证错误能尽早暴露。
   if (!prompt) {
+    // 教学：抛出错误：让调用方知道当前流程不能继续。
     throw new Error("prompt is required");
   }
+  // 教学：定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const url = new URL(endpoint);
+  // 教学：条件判断：根据当前状态选择不同分支，保证错误能尽早暴露。
   if (!["127.0.0.1", "localhost", "::1", "[::1]"].includes(url.hostname)) {
+    // 教学：抛出错误：让调用方知道当前流程不能继续。
     throw new Error("FramePack endpoint must be local");
   }
+  // 教学：返回结果：调用方会拿到这个值继续后续流程。
   return {
     provider: "framepack:video",
     endpoint: url.origin,
@@ -72,7 +103,9 @@ export function buildFramePackJob({
   };
 }
 
+// 教学：导出函数：这是当前模块提供给测试、CLI 或其它本 day 文件使用的能力。
 export function runDemo() {
+  // 教学：返回结果：调用方会拿到这个值继续后续流程。
   return {
     day: 39,
     title: "FramePack 本地视频 Profile",

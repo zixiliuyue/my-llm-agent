@@ -1,4 +1,10 @@
 /**
+ * Day 2：自包含学习源码。
+ *
+ * 这个文件属于 day02-multi-agent-cli，不能 import 其它 day 的源码。
+ * 注释说明保留在文件顶部，帮助学习时先理解本文件职责。
+ */
+/**
  * Day 02：多 Agent 编排入口。
  *
  * 本文件只引用当前 day 内的模块，保证 day02 可以被单独复制、修改和运行。
@@ -28,6 +34,7 @@ export async function runToolRunner(plan, onEvent = () => {}) {
   const observations = [];
   // 教学：循环：按顺序处理多条数据或多个步骤。
   for (const step of plan.steps) {
+    // 教学：调用函数：把当前数据交给已有逻辑处理。
     onEvent({ role: 'tool-runner', type: 'tool_call', tool: step.tool, id: step.id });
     // 教学：定义常量：这个值只在当前作用域读取，不会被重新赋值。
     const result = await runTool(step.tool, step.input);
@@ -40,6 +47,7 @@ export async function runToolRunner(plan, onEvent = () => {}) {
       error: result.ok ? undefined : result.error,
     };
     observations.push(observation);
+    // 教学：调用函数：把当前数据交给已有逻辑处理。
     onEvent({ role: 'tool-runner', type: 'observation', preview: preview(observation) });
   }
   // 教学：返回结果：调用方会拿到这个值继续后续流程。
@@ -50,7 +58,9 @@ export async function runToolRunner(plan, onEvent = () => {}) {
 // 教学：导出异步函数：调用方需要 await 它，因为内部可能读文件、请求接口或等待模型。
 export async function runMultiAgent({
   question,
+  // 教学：更新状态：这里会改变前面定义的变量或对象字段。
   client = createOllamaClient(),
+  // 教学：更新状态：这里会改变前面定义的变量或对象字段。
   onEvent = () => {},
 } = {}) {
   // 教学：条件判断：根据当前状态选择不同分支，保证错误能尽早暴露。
@@ -63,6 +73,7 @@ export async function runMultiAgent({
   const plannerRaw = await client.chat(roleMessages('planner', { question }));
   // 教学：定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const plan = parsePlan(plannerRaw);
+  // 教学：调用函数：把当前数据交给已有逻辑处理。
   onEvent({ role: 'planner', type: 'handoff', preview: preview(plan) });
 
   // 教学：定义常量：这个值只在当前作用域读取，不会被重新赋值。
@@ -72,6 +83,7 @@ export async function runMultiAgent({
   const criticRaw = await client.chat(roleMessages('critic', { question, plan, toolResult }));
   // 教学：定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const critique = parseCritique(criticRaw);
+  // 教学：调用函数：把当前数据交给已有逻辑处理。
   onEvent({ role: 'critic', type: 'handoff', preview: preview(critique) });
 
   // 教学：定义常量：这个值只在当前作用域读取，不会被重新赋值。
@@ -83,6 +95,7 @@ export async function runMultiAgent({
   }));
   // 教学：定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const final = parseFinal(writerRaw);
+  // 教学：调用函数：把当前数据交给已有逻辑处理。
   onEvent({ role: 'writer', type: 'final', preview: preview(final.answer) });
 
   // 教学：返回结果：调用方会拿到这个值继续后续流程。

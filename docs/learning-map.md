@@ -16,6 +16,9 @@
 | day41-day45 | 生产工程 Agent | 能把 SRE 排障、权限过滤、远程审批、MCP 观测工具和事故报告串成可审计流程。 |
 | day46-day50 | 工程现场 Agent | 能把观测诊断、权限缓存排障、安全远程执行、发布验证和 CLI manifest 接到真实工作方法。 |
 | day51-day55 | 工程质量 Agent | 能判断配置热更新、前端权限路由、SQL 修复、MCP 接入和复盘质量是否达标。 |
+| day56 | 完整多 Agent Capstone | 能把工程 Agent 串成可审计闭环，输出 handoff、evidence board 和人工审阅结论。 |
+| day57-day60 | 生产级 Agent 平台 | 能解释 Runtime、Harness、RAG 和端到端产品样板如何支撑可运行、可测量、可上线。 |
+| day61-day65 | 安全、编排、发布、路由、多模态 | 能解释安全沙盒、DAG 编排、灰度发布、多模型路由和多模态理解如何进入生产边界。 |
 
 ## 最短路径：先跑本地大模型
 
@@ -29,6 +32,9 @@
 8. day50：把常用 CLI 能力收敛成 Agent 可调用 manifest。
 9. day51：判断配置是否真的热更新，不用重启结果冒充。
 10. day54：验证 MCP 入口和工具面是否真实可用。
+11. day56：把观测、权限、审批、SQL、MCP 和复盘质量串成完整闭环。
+12. day57：理解 run/session/tool_call/evidence 持久化和 worker lease。
+13. day64：把 OpenAI/Claude/Qwen/Ollama 等 provider 纳入统一路由、降级和成本统计。
 
 推荐命令：
 
@@ -49,7 +55,8 @@ npm run doctor
 - day11-day18：补平台需要的 provider、policy、skills、plugin、MCP 结构。
 - day19-day27：补长期运行需要的 memory、jobs、channel、sandbox、auth。
 - day28-day30：最后做观测、onboarding 和集成。
-- day41-day55：按你的真实工作场景补上 SRE/权限/远程审批/MCP/事故报告/观测诊断/发布验证/CLI 接入/热更新/前端路由/SQL/复盘质量。
+- day41-day56：按你的真实工作场景补上 SRE/权限/远程审批/MCP/事故报告/观测诊断/发布验证/CLI 接入/热更新/前端路由/SQL/复盘质量和完整多 Agent capstone。
+- day57-day65：补齐岗位截图里的生产级短板，重点看 Runtime、Harness、RAG、产品样板、安全沙盒、DAG 编排、灰度发布、多模型路由和多模态理解。
 
 ## 多模态路径：Mac mock，Windows 实跑
 
@@ -83,3 +90,6 @@ npm run local:multimodal -- "一个本地 agent 平台封面图"
 - 能把 Agent 输出落到证据、权限、审批、审计和复盘，才算能进入生产工程场景。
 - 能把 Agent 调用真实工具前的 manifest、环境枚举、输出契约和风险审批写清楚，才算适合接入工作 CLI。
 - 能把配置热更新、前端权限路由、SQL 草案、MCP 入口和复盘质量都拆成可验证证据，才算具备工程迁移能力。
+- 能把多个 Agent 的 handoff 顺序、共享证据板和最终审计报告讲清楚，才算真正完成 day56 capstone。
+- 能把 Runtime、Harness、RAG、Sandbox、Release 和 Router 的边界讲清楚，才算能回答 Agent 岗位的生产级系统设计追问。
+- 能用 day60 前端控制台展示 run timeline、tool approval、citation、evidence 和 final report，才算有可演示的端到端产品原型。

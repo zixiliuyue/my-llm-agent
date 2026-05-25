@@ -270,3 +270,94 @@ npm run day55:test
 
 - ready 复盘至少要有哪些部分？
 - 为什么 token/password 即使在内部报告里也要脱敏？
+
+## 实验 18：完整多 Agent 闭环中的阻断点
+
+```bash
+# 用途：验证 day56 会在权限、高危命令、MCP 入口和复盘质量失败时给出不同阻断结论
+# 执行目录：<项目根目录>
+# 结果判断：day56 tests passed；测试覆盖 blocked-by-permission、blocked-by-safety、needs-mcp-fix、needs-retro-fix
+# 风险：只跑 mock 测试，不访问真实 Grafana/Redis/SSH/数据库/MCP/事故系统
+npm run day56:test
+```
+
+你应该能回答：
+
+- 为什么权限缓存缺失时，coordinator 不允许进入远程执行阶段？
+- 为什么 `/health` 或 `/sse` 可访问仍不能证明 MCP 可用？
+- 为什么完整闭环最后输出的是 ready-for-human-review，而不是自动执行修复？
+
+## 实验 19：Runtime worker lease 过期恢复
+
+```bash
+# 用途：验证生产级 Runtime 教学版能恢复过期 lease 并重试
+# 执行目录：<项目根目录>
+# 结果判断：day57 tests passed，测试覆盖 recoverExpiredLeases 和 retryRun
+# 风险：只跑内存 adapter，不启动 Docker/Postgres/Redis
+npm run day57:test
+```
+
+你应该能回答：
+
+- 为什么 worker 崩溃后不能让 run 永远卡在 running？
+- lease 过期恢复和手动 retry 的差异是什么？
+
+## 实验 20：Harness gate 阻止质量回退
+
+```bash
+# 用途：验证 replay/compare/golden dataset 会阻止指标回退
+# 执行目录：<项目根目录>
+# 结果判断：day58:gate 输出 pass/fail gate 报告
+# 风险：只使用固定 snapshot，不访问真实模型
+npm run day58:gate
+```
+
+你应该能回答：
+
+- 为什么 prompt 改动前后要比较 tool-call accuracy 和 groundedness？
+- golden dataset 为什么要固定输入、工具输出和期望？
+
+## 实验 21：RAG 权限过滤与增量更新
+
+```bash
+# 用途：验证 RAG 搜索不会越权，并且同一 document 更新会替换旧 chunks
+# 执行目录：<项目根目录>
+# 结果判断：day59 tests passed
+# 风险：只使用内存向量库，不连接 pgvector/Qdrant/Milvus
+npm run day59:test
+```
+
+你应该能回答：
+
+- 权限过滤应该发生在召回前、召回后，还是模型总结后？
+- 为什么 citation 必须能回到 document/chunk/source offset？
+
+## 实验 22：沙盒阻断 prompt injection 和越权工具
+
+```bash
+# 用途：验证安全沙盒会阻断 prompt injection、非法工具、非法网络和非法文件
+# 执行目录：<项目根目录>
+# 结果判断：day61 tests passed
+# 风险：只做 dry-run 策略评估，不启动容器
+npm run day61:test
+```
+
+你应该能回答：
+
+- tool output 里出现 token 时，为什么至少要脱敏和审计？
+- 为什么 allowlist 必须由宿主 runtime 强制执行？
+
+## 实验 23：灰度指标触发回滚
+
+```bash
+# 用途：验证发布灰度会按 eval、错误率、延迟和工具失败率触发 rollback
+# 执行目录：<项目根目录>
+# 结果判断：day63 tests passed
+# 风险：只模拟发布指标，不切真实流量
+npm run day63:test
+```
+
+你应该能回答：
+
+- prompt/model/tool/spec 为什么都要版本化？
+- shadow run、canary eval、gray rollout 和 rollback 分别解决什么风险？

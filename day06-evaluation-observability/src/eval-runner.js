@@ -28,6 +28,7 @@ export async function loadCases(path = resolve(PROJECT_ROOT, 'evals/cases.jsonl'
     .split('\n')
     .map((line) => line.trim())
     .filter(Boolean)
+    // 教学：处理 JSON：把对象和字符串互相转换，便于协议传输或断言。
     .map((line) => JSON.parse(line));
 }
 
@@ -101,6 +102,7 @@ export function evaluateCase(testCase, runResult) {
 // 教学：导出异步函数：调用方需要 await 它，因为内部可能读文件、请求接口或等待模型。
 export async function runEvaluations({
   cases,
+  // 教学：更新状态：这里会改变前面定义的变量或对象字段。
   runner = runMockAgent,
 } = {}) {
   // 教学：定义常量：这个值只在当前作用域读取，不会被重新赋值。

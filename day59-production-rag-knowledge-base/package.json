@@ -1,0 +1,12 @@
+{
+  "name": "day59-production-rag-knowledge-base",
+  "version": "1.0.0",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "start": "node src/cli.js",
+    "demo": "node src/cli.js",
+    "test": "node test/run.test.js",
+    "rag": "node src/cli.js --rag"
+  }
+}

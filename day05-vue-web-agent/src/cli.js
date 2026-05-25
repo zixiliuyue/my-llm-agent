@@ -1,5 +1,11 @@
 #!/usr/bin/env node
 /**
+ * Day 5：自包含学习源码。
+ *
+ * 这个文件属于 day05-vue-web-agent，不能 import 其它 day 的源码。
+ * 注释说明保留在文件顶部，帮助学习时先理解本文件职责。
+ */
+/**
  * Day 05：目录说明 CLI。
  *
  * 真正的 API server 仍然通过 `npm start` 启动；这个 CLI 用于统一

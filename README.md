@@ -1,8 +1,8 @@
-# mini-openclaw 55 天学习项目
+# mini-openclaw 65 天学习项目
 
 这个仓库从 LLM-Agent 基础逐步演化到教学版 mini-openclaw。每一天都是完全自包含的小项目：有自己的 `package.json`、`README.md`、`src/` 和 `test/`，源码不 import 其它 day，方便学习过程中随意修改某一天代码。
 
-## 55 天路线
+## 65 天路线
 
 | Day | 目录 | 主题 | 入口 |
 |---|---|---|---|
@@ -61,11 +61,21 @@
 | 53 | `day53-database-fix-sql-agent` | 数据库修复 SQL 生成 | `npm run day53:start` / `npm run day53:test` |
 | 54 | `day54-mcp-integration-verifier` | MCP 接入验真 | `npm run day54:start` / `npm run day54:test` |
 | 55 | `day55-incident-retro-quality-agent` | 事故复盘质量评估 | `npm run day55:start` / `npm run day55:test` |
+| 56 | `day56-complete-multi-agent-ops-closure` | 完整多 Agent 工程闭环 Capstone | `npm run day56:start` / `npm run day56:test` |
+| 57 | `day57-production-agent-runtime` | 生产级 Agent Runtime 教学版 | `npm run day57:start` / `npm run day57:test` |
+| 58 | `day58-agent-harness-eval-replay` | Harness、Eval、Replay、Compare 和 CI gate | `npm run day58:start` / `npm run day58:test` |
+| 59 | `day59-production-rag-knowledge-base` | 生产级 RAG / 知识库工程 | `npm run day59:start` / `npm run day59:test` |
+| 60 | `day60-agent-platform-e2e-product` | 端到端 Agent Ops 产品样板 | `npm run day60:start` / `npm run day60:test` |
+| 61 | `day61-agent-sandbox-security` | 安全沙盒、注入防御和审计 | `npm run day61:start` / `npm run day61:test` |
+| 62 | `day62-multi-agent-orchestration-runtime` | DAG 多 Agent 编排 Runtime | `npm run day62:start` / `npm run day62:test` |
+| 63 | `day63-agent-release-and-gray-control` | 发布、灰度、版本和回滚 | `npm run day63:start` / `npm run day63:test` |
+| 64 | `day64-production-model-router` | 生产级多模型 Provider Router | `npm run day64:start` / `npm run day64:test` |
+| 65 | `day65-multimodal-agent-understanding` | 多模态 Agent 理解和评估 | `npm run day65:start` / `npm run day65:test` |
 
 ## 快速验证
 
 ```bash
-# 用途：运行 day01-day55 的 mock/unit 测试
+# 用途：运行 day01-day65 的 mock/unit 测试
 # 执行目录：<项目根目录>
 # 输出判断：每个 day 打印 tests passed，最终退出码为 0
 # 风险：不调用真实模型、不部署、不执行远程命令
@@ -73,7 +83,7 @@ npm test
 ```
 
 ```bash
-# 用途：一键跑通 55 天 start 示例、单元测试、Web build 和 day05 真实模型 API
+# 用途：一键跑通 65 天 start 示例、单元测试、Web build 和 day05 真实模型 API
 # 执行目录：<项目根目录>
 # 输出判断：最后打印 examples smoke passed，所有步骤为 OK
 # 风险：会访问本地 Ollama，不执行远程命令或部署；脚本会清理生成的 dist
@@ -104,6 +114,30 @@ npm run doctor
 npm run local:multimodal -- "一个本地 agent 平台封面图"
 ```
 
+```bash
+# 用途：运行最终完整多 Agent 工程闭环 capstone
+# 执行目录：<项目根目录>
+# 输出判断：decision.status 为 ready-for-human-review，finalReport.audit.externalCalls 为 0
+# 风险：mock/dry-run，不访问 Grafana/Redis/SSH/数据库/MCP/事故系统
+npm run day56:capstone
+```
+
+```bash
+# 用途：运行新增生产级 Agent Runtime 到多模态理解的 day57-day65 回归
+# 执行目录：<项目根目录>
+# 输出判断：day57-day65 均打印 tests passed
+# 风险：默认 mock/内存实现；Docker、真实 provider、真实多模态模型都不在默认测试中启动
+npm run day57:test && npm run day58:test && npm run day59:test && npm run day60:test && npm run day61:test && npm run day62:test && npm run day63:test && npm run day64:test && npm run day65:test
+```
+
+```bash
+# 用途：构建 day60 Agent Ops 前端控制台
+# 执行目录：<项目根目录>
+# 输出判断：生成 day60-agent-platform-e2e-product/dist/index.html
+# 风险：只生成 dist 构建产物，不启动服务
+npm run day60:build
+```
+
 ## 教程补充材料
 
 | 文档 | 用途 |
@@ -113,6 +147,13 @@ npm run local:multimodal -- "一个本地 agent 平台封面图"
 | `docs/windows-5060ti-local-runbook.md` | Win10 + RTX 5060 Ti 16G 真实运行前的手动检查顺序。 |
 | `docs/failure-labs.md` | 故意制造常见错误，学习如何从输出判断下一步。 |
 | `docs/local-multimodal-e2e.md` | day31-day40 端到端 mock 链路和真实服务替换点。 |
+| `docs/complete-multi-agent-capstone.md` | day56 完整多 Agent 工程闭环协作说明。 |
+| `docs/job-requirement-gap-analysis.md` | 按两张 Agent 岗位截图要求对照当前仓库缺口。 |
+| `docs/interview-portfolio.md` | 面试视角下把岗位要求映射到仓库证据。 |
+| `docs/system-design-agent-platform.md` | Runtime、Harness、RAG、Sandbox、Release、Observability 总架构。 |
+| `docs/demo-script.md` | 5 分钟演示脚本。 |
+| `docs/resume-bullets.md` | 可放简历的项目描述。 |
+| `docs/security-threat-model.md` | Agent 平台安全威胁模型。 |
 
 ## 学习规则
 
@@ -133,7 +174,7 @@ FRAMEPACK_HOST=http://127.0.0.1:7860
 
 默认测试不依赖 Ollama。只有显式运行真实模型示例时，才会访问 `OLLAMA_HOST`。
 day31-day40 的默认测试也不依赖 ComfyUI、FramePack、SVD、FLUX 或 Wan；真实多模态实验需要你手动启动本机服务并准备模型。
-day41-day55 的默认测试只使用 mock 指标、mock 权限、dry-run 命令、mock MCP、mock 事故上下文、mock 发布快照、mock CLI manifest、mock 配置快照和 mock 前端路由，不访问真实生产系统。
+day41-day65 的默认测试只使用 mock 指标、mock 权限、dry-run 命令、mock MCP、mock 事故上下文、mock 发布快照、mock CLI manifest、mock 配置快照、mock 前端路由、mock evidence board、内存 runtime、mock RAG、mock provider 和 mock 多模态 adapter，不访问真实生产系统。
 
 Windows PowerShell 切换模型示例：
 

@@ -22,6 +22,7 @@ function printUsage() {
 async function main() {
   // 教学：读取命令行参数：process.argv 前两项是 node 和脚本路径，所以业务参数通常从 slice(2) 开始。
   if (process.argv.includes('--help') || process.argv.includes('-h')) {
+    // 教学：调用函数：把当前数据交给已有逻辑处理。
     printUsage();
     // 教学：返回结果：调用方会拿到这个值继续后续流程。
     return;

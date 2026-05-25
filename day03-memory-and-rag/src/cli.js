@@ -28,6 +28,7 @@ async function main() {
   const question = process.argv.slice(2).join(' ').trim();
   // 教学：条件判断：根据当前状态选择不同分支，保证错误能尽早暴露。
   if (!question || question === '--help' || question === '-h') {
+    // 教学：调用函数：把当前数据交给已有逻辑处理。
     printUsage();
     // 教学：退出进程：用退出码告诉 shell 当前命令成功还是失败。
     process.exitCode = question ? 0 : 2;
@@ -48,6 +49,7 @@ async function main() {
     }
     // 教学：输出到 stdout：这里是命令的正式结果，方便脚本继续处理。
     console.log(result.answer);
+  // 教学：catch 块：把异常转换成可理解的错误结果或退出码。
   } catch (error) {
     // 教学：输出到 stderr：用于过程日志、错误或帮助信息，不污染 stdout。
     console.error(`执行失败: ${error.message}`);

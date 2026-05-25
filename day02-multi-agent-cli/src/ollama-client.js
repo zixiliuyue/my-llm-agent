@@ -1,4 +1,10 @@
 /**
+ * Day 2：自包含学习源码。
+ *
+ * 这个文件属于 day02-multi-agent-cli，不能 import 其它 day 的源码。
+ * 注释说明保留在文件顶部，帮助学习时先理解本文件职责。
+ */
+/**
  * Day 02：本地 Ollama client。
  *
  * 这个文件复制了 day02 所需的最小模型调用能力，避免跨 day import。
@@ -22,6 +28,7 @@ export function createOllamaClient({
   host = process.env.OLLAMA_HOST || DEFAULT_OLLAMA_HOST,
   // 教学：读取环境变量：允许用户不改源码就切换模型地址、端口或运行模式。
   model = process.env.OLLAMA_MODEL || DEFAULT_MODEL,
+  // 教学：更新状态：这里会改变前面定义的变量或对象字段。
   fetchImpl = globalThis.fetch,
 } = {}) {
   // 教学：定义常量：这个值只在当前作用域读取，不会被重新赋值。

@@ -1,0 +1,28 @@
+openapi: 3.0.3
+info:
+  title: Day60 Agent Ops Console API
+  version: 1.0.0
+paths:
+  /health:
+    get:
+      summary: Health check
+      responses:
+        "200":
+          description: Service is healthy
+  /runs:
+    get:
+      summary: List agent runs
+      responses:
+        "200":
+          description: Run list
+    post:
+      summary: Create an agent run
+      responses:
+        "201":
+          description: Created run
+  /runs/{runId}/approvals/{approvalId}:
+    post:
+      summary: Decide a pending tool approval
+      responses:
+        "200":
+          description: Approval decision recorded
