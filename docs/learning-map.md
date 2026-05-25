@@ -19,6 +19,7 @@
 | day56 | 完整多 Agent Capstone | 能把工程 Agent 串成可审计闭环，输出 handoff、evidence board 和人工审阅结论。 |
 | day57-day60 | 生产级 Agent 平台 | 能解释 Runtime、Harness、RAG 和端到端产品样板如何支撑可运行、可测量、可上线。 |
 | day61-day65 | 安全、编排、发布、路由、多模态 | 能解释安全沙盒、DAG 编排、灰度发布、多模型路由和多模态理解如何进入生产边界。 |
+| day66-day71 | 生产环境闭环补强 | 能解释不受信任代码沙盒、HITL、真实依赖集成、OTel、CI gate 和 Agent 通信协议。 |
 
 ## 最短路径：先跑本地大模型
 
@@ -35,6 +36,8 @@
 11. day56：把观测、权限、审批、SQL、MCP 和复盘质量串成完整闭环。
 12. day57：理解 run/session/tool_call/evidence 持久化和 worker lease。
 13. day64：把 OpenAI/Claude/Qwen/Ollama 等 provider 纳入统一路由、降级和成本统计。
+14. day67：理解敏感操作前暂停、通知、webhook 决策、继续或回滚的人工闭环。
+15. day70：理解 PR 中如何自动运行 Agent eval gate。
 
 推荐命令：
 
@@ -57,6 +60,7 @@ npm run doctor
 - day28-day30：最后做观测、onboarding 和集成。
 - day41-day56：按你的真实工作场景补上 SRE/权限/远程审批/MCP/事故报告/观测诊断/发布验证/CLI 接入/热更新/前端路由/SQL/复盘质量和完整多 Agent capstone。
 - day57-day65：补齐岗位截图里的生产级短板，重点看 Runtime、Harness、RAG、产品样板、安全沙盒、DAG 编排、灰度发布、多模型路由和多模态理解。
+- day66-day71：补齐真实生产环境短板，重点看沙盒执行器、HITL、真实依赖集成、OTel 可观测、CI gate 和通信协议。
 
 ## 多模态路径：Mac mock，Windows 实跑
 
@@ -93,3 +97,4 @@ npm run local:multimodal -- "一个本地 agent 平台封面图"
 - 能把多个 Agent 的 handoff 顺序、共享证据板和最终审计报告讲清楚，才算真正完成 day56 capstone。
 - 能把 Runtime、Harness、RAG、Sandbox、Release 和 Router 的边界讲清楚，才算能回答 Agent 岗位的生产级系统设计追问。
 - 能用 day60 前端控制台展示 run timeline、tool approval、citation、evidence 和 final report，才算有可演示的端到端产品原型。
+- 能把 day66-day71 的默认 mock/dry-run 与真实 Docker、通知、消息队列、Prometheus/Jaeger、GitHub Actions 的替换点讲清楚，才算能面向生产环境继续落地。

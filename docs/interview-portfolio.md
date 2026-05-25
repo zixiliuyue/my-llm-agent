@@ -4,7 +4,7 @@
 
 ## 30 秒定位
 
-本仓库不是“只调用模型”的 demo，而是一套 65 天自包含 Agent 工程学习项目。它从 agent loop、工具调用、RAG、Web/API、MCP、权限、安全、观测、发布，逐步扩展到生产级 Runtime、Harness、端到端产品样板和多模态理解。
+本仓库不是“只调用模型”的 demo，而是一套 71 天自包含 Agent 工程学习项目。它从 agent loop、工具调用、RAG、Web/API、MCP、权限、安全、观测、发布，逐步扩展到生产级 Runtime、Harness、端到端产品样板、多模态理解、沙盒执行器、HITL、OTel、CI gate 和通信协议。
 
 ## 岗位能力映射
 
@@ -20,6 +20,12 @@
 | 发布灰度 | day49、day63 | `npm run day63:start` |
 | 多模型路由 | day12、day32、day64 | `npm run day64:start` |
 | 多模态 Agent | day31-day40、day65 | `npm run day65:start` |
+| 沙盒执行器 | day61、day66 | `npm run day66:start` |
+| HITL 人工闭环 | day43、day67 | `npm run day67:start` |
+| 真实依赖集成 | day57、day60、day68 | `npm run day68:start` |
+| OTel 可观测 | day28、day69 | `npm run day69:start` |
+| CI Eval Gate | day58、day70、`.github/workflows/agent-eval.yml` | `npm run day70:ci` |
+| Agent 通信协议 | day02、day62、day71 | `npm run day71:start` |
 
 ## 推荐展示顺序
 
@@ -30,6 +36,9 @@
 5. `npm run day60:build`：展示 Agent Ops Console。
 6. `npm run day61:start`：展示 prompt injection 和沙盒策略。
 7. `npm run day63:start`：展示灰度和回滚。
+8. `npm run day66:start`：展示不受信任代码执行器和 Docker sandbox spec。
+9. `npm run day67:start`：展示 HITL webhook 决策闭环。
+10. `npm run day69:start` / `npm run day70:ci`：展示 OTel 和 CI eval gate。
 
 ## 面试时要主动说明的边界
 

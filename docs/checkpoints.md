@@ -312,3 +312,33 @@ npm run day57:test && npm run day58:test && npm run day59:test && npm run day60:
 # 风险：默认 mock/dry-run；不访问真实模型、网络或多媒体文件
 npm run day61:test && npm run day62:test && npm run day63:test && npm run day64:test && npm run day65:test
 ```
+
+## day66-day71：沙盒执行、HITL、真实依赖、OTel、CI 和协议
+
+你应该能做到：
+
+- 解释不受信任 JS/Python 代码如何先过策略检查，再进入 VM 或 Docker sandbox。
+- 说明 HITL 为什么是暂停、通知、签名决策、继续/回滚的完整状态机。
+- 设计 Postgres、Redis、MinIO 的真实依赖集成测试和配置 schema。
+- 把结构化日志、Prometheus 指标和 Jaeger trace 接到 Agent run/tool call。
+- 把 Agent eval 接入 GitHub Actions，并输出 PR 可读报告。
+- 用 mini-acp envelope、JSON-RPC 和 pub/sub 解释多 Agent 通信边界。
+
+验收题：
+
+1. day66 为什么 Node VM 不能替代生产容器沙盒？
+2. day67 webhook 决策为什么要签名校验和防重复？
+3. day68 为什么默认测试不强依赖 Docker，但仍要保留 compose 入口？
+4. day69 traceId 为什么必须贯穿 agent.run 和 tool.call？
+5. day70 CI gate 应该看哪些指标，而不是只看单元测试？
+6. day71 correlationId 对跨 agent 追踪有什么价值？
+
+推荐验证：
+
+```bash
+# 用途：验证生产环境闭环补强 day66-day71
+# 执行目录：<项目根目录>
+# 结果判断：day66-day71 均打印 tests passed
+# 风险：默认 mock/内存/dry-run，不启动 Docker、通知、消息队列或可观测后端
+npm run day66:test && npm run day67:test && npm run day68:test && npm run day69:test && npm run day70:test && npm run day71:test
+```

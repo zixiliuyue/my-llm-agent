@@ -361,3 +361,48 @@ npm run day63:test
 
 - prompt/model/tool/spec 为什么都要版本化？
 - shadow run、canary eval、gray rollout 和 rollback 分别解决什么风险？
+
+## 实验 24：不受信任代码触发沙盒阻断
+
+```bash
+# 用途：验证 day66 会阻断 process/require/fetch 等危险代码
+# 执行目录：<项目根目录>
+# 结果判断：day66 tests passed
+# 风险：不启动 Docker，不执行 Python
+npm run day66:test
+```
+
+你应该能回答：
+
+- 为什么静态策略检查不能替代真实容器隔离？
+- VM timeout 和 Docker memory/cpu limit 分别防什么问题？
+
+## 实验 25：HITL 重复决策与拒绝回滚
+
+```bash
+# 用途：验证 day67 能防重复审批，并在拒绝后进入回滚路径
+# 执行目录：<项目根目录>
+# 结果判断：day67 tests passed
+# 风险：只使用内存通知和 mock webhook
+npm run day67:test
+```
+
+你应该能回答：
+
+- 为什么人工审批也要审计和防重放？
+- approved 和 rejected 后 run 状态应该如何变化？
+
+## 实验 26：CI Eval Gate 阻止质量回退
+
+```bash
+# 用途：验证 GitHub Actions 使用的本地 CI gate
+# 执行目录：<项目根目录>
+# 结果判断：ok=true，退出码 0；失败时输出 Markdown 报告
+# 风险：只比较 mock 评估指标
+npm run day70:ci
+```
+
+你应该能回答：
+
+- 为什么 PR gate 要比较 baseline/current？
+- passRate、toolCallAccuracy、groundedness、latency、cost 分别说明什么？

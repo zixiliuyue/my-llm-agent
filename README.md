@@ -1,8 +1,8 @@
-# mini-openclaw 65 天学习项目
+# mini-openclaw 71 天学习项目
 
 这个仓库从 LLM-Agent 基础逐步演化到教学版 mini-openclaw。每一天都是完全自包含的小项目：有自己的 `package.json`、`README.md`、`src/` 和 `test/`，源码不 import 其它 day，方便学习过程中随意修改某一天代码。
 
-## 65 天路线
+## 71 天路线
 
 | Day | 目录 | 主题 | 入口 |
 |---|---|---|---|
@@ -71,11 +71,17 @@
 | 63 | `day63-agent-release-and-gray-control` | 发布、灰度、版本和回滚 | `npm run day63:start` / `npm run day63:test` |
 | 64 | `day64-production-model-router` | 生产级多模型 Provider Router | `npm run day64:start` / `npm run day64:test` |
 | 65 | `day65-multimodal-agent-understanding` | 多模态 Agent 理解和评估 | `npm run day65:start` / `npm run day65:test` |
+| 66 | `day66-sandbox-executor` | 不受信任代码安全沙盒执行器 | `npm run day66:start` / `npm run day66:test` |
+| 67 | `day67-human-loop` | Human-in-the-Loop 审批闭环 | `npm run day67:start` / `npm run day67:test` |
+| 68 | `day68-real-dependency-integration` | Postgres/Redis/MinIO 真实依赖集成计划 | `npm run day68:start` / `npm run day68:test` |
+| 69 | `day69-observability-otel-runtime` | OTel/Prometheus/Jaeger 可观测 Runtime | `npm run day69:start` / `npm run day69:test` |
+| 70 | `day70-agent-eval-ci-gate` | GitHub Actions Agent Eval CI gate | `npm run day70:start` / `npm run day70:test` |
+| 71 | `day71-agent-communication-protocol` | Agent 通信协议与 JSON-RPC/pub-sub | `npm run day71:start` / `npm run day71:test` |
 
 ## 快速验证
 
 ```bash
-# 用途：运行 day01-day65 的 mock/unit 测试
+# 用途：运行 day01-day71 的 mock/unit 测试
 # 执行目录：<项目根目录>
 # 输出判断：每个 day 打印 tests passed，最终退出码为 0
 # 风险：不调用真实模型、不部署、不执行远程命令
@@ -83,7 +89,7 @@ npm test
 ```
 
 ```bash
-# 用途：一键跑通 65 天 start 示例、单元测试、Web build 和 day05 真实模型 API
+# 用途：一键跑通 71 天 start 示例、单元测试、Web build 和 day05 真实模型 API
 # 执行目录：<项目根目录>
 # 输出判断：最后打印 examples smoke passed，所有步骤为 OK
 # 风险：会访问本地 Ollama，不执行远程命令或部署；脚本会清理生成的 dist
@@ -131,6 +137,14 @@ npm run day57:test && npm run day58:test && npm run day59:test && npm run day60:
 ```
 
 ```bash
+# 用途：运行新增生产环境补强 day66-day71 回归
+# 执行目录：<项目根目录>
+# 输出判断：day66-day71 均打印 tests passed
+# 风险：默认 mock/内存/dry-run；不启动 Docker、Prometheus、Jaeger、消息队列或外部通知
+npm run day66:test && npm run day67:test && npm run day68:test && npm run day69:test && npm run day70:test && npm run day71:test
+```
+
+```bash
 # 用途：构建 day60 Agent Ops 前端控制台
 # 执行目录：<项目根目录>
 # 输出判断：生成 day60-agent-platform-e2e-product/dist/index.html
@@ -154,6 +168,7 @@ npm run day60:build
 | `docs/demo-script.md` | 5 分钟演示脚本。 |
 | `docs/resume-bullets.md` | 可放简历的项目描述。 |
 | `docs/security-threat-model.md` | Agent 平台安全威胁模型。 |
+| `docs/troubleshooting.md` | 本地模型、依赖、Docker、CI、权限、MCP、GPU 常见问题排查。 |
 
 ## 学习规则
 
@@ -174,7 +189,7 @@ FRAMEPACK_HOST=http://127.0.0.1:7860
 
 默认测试不依赖 Ollama。只有显式运行真实模型示例时，才会访问 `OLLAMA_HOST`。
 day31-day40 的默认测试也不依赖 ComfyUI、FramePack、SVD、FLUX 或 Wan；真实多模态实验需要你手动启动本机服务并准备模型。
-day41-day65 的默认测试只使用 mock 指标、mock 权限、dry-run 命令、mock MCP、mock 事故上下文、mock 发布快照、mock CLI manifest、mock 配置快照、mock 前端路由、mock evidence board、内存 runtime、mock RAG、mock provider 和 mock 多模态 adapter，不访问真实生产系统。
+day41-day71 的默认测试只使用 mock 指标、mock 权限、dry-run 命令、mock MCP、mock 事故上下文、mock 发布快照、mock CLI manifest、mock 配置快照、mock 前端路由、mock evidence board、内存 runtime、mock RAG、mock provider、mock 多模态 adapter、内存 HITL、内存 broker 和 dry-run sandbox，不访问真实生产系统。
 
 Windows PowerShell 切换模型示例：
 

@@ -2,7 +2,7 @@
 /**
  * 一键 smoke runner。
  *
- * 这个脚本用于把 65 天示例按固定顺序跑一遍。它只做本地验证：
+ * 这个脚本用于把 71 天示例按固定顺序跑一遍。它只做本地验证：
  * 真实模型调用只访问 OLLAMA_HOST，远程部署、Docker 和危险命令都不执行。
  */
 // 教学：导入依赖：这一行把当前文件需要用到的模块或函数拿进来。
@@ -510,7 +510,7 @@ await runStep(results, 'npm:test', () => runNpmScript('test', [], LONG_TIMEOUT_M
 await runStep(results, 'local:multimodal', () => runNpmScript('local:multimodal', ['一个本地 agent 平台封面图'], SHORT_TIMEOUT_MS));
 
 // 教学：循环：按顺序处理多条数据或多个步骤。
-  for (let day = 1; day <= 65; day += 1) {
+  for (let day = 1; day <= 71; day += 1) {
   // 教学：定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const script = `day${String(day).padStart(2, '0')}:start`;
   // 教学：条件判断：根据当前状态选择不同分支，保证错误能尽早暴露。

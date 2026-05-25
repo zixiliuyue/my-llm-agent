@@ -54,6 +54,12 @@
 | 多模型 Provider 路由 | day12、day31、day32、day64 | 已覆盖基础路由、本地 provider 和生产级 fallback/cost |
 | 本地多模态生成与评估 | day31-day40 | 已覆盖本地生成、队列、资产和视频模型评估 |
 | 多模态理解 | day65 | 已覆盖 caption、OCR、质量、PII/EXIF、语音、视频关键帧和 eval |
+| 沙盒执行器 | day61、day66 | 已覆盖策略和执行器 dry-run/VM/容器规格 |
+| HITL 人工闭环 | day43、day67 | 已覆盖审批链和 webhook 决策状态机 |
+| 真实依赖集成测试 | day57、day60、day68 | 已覆盖 Compose 草案、配置 schema、Postgres/Redis/MinIO 计划 |
+| OTel/Prometheus/Jaeger | day28、day69 | 已覆盖 dashboard 入门和 Runtime 日志/指标/trace exporter |
+| CI Eval Gate | day58、day70、`.github/workflows/agent-eval.yml` | 已覆盖 harness gate 和 GitHub Actions workflow |
+| Agent 通信协议 | day02、day62、day71 | 已覆盖多 agent 入门、DAG 编排和 mini-acp/JSON-RPC/pub-sub |
 
 ## day57-day65 补齐结果
 
@@ -69,6 +75,17 @@
 | day64 | OpenAI/Claude/Qwen/Ollama 统一 provider、streaming、tool calling、JSON schema、retry、timeout、rate limit、cost、fallback | 多模型 Provider 生产路由 |
 | day65 | 图片 caption/OCR/object/quality/NSFW/PII/EXIF、语音转写、视频关键帧、多模态 eval | 多模态 Agent 理解 |
 
+## day66-day71 补齐结果
+
+| Day | 新增能力 | 对应岗位要求 |
+|---|---|---|
+| day66 | 不受信任 JS/Python 代码检查、Node VM timeout、Docker sandbox dry-run spec、CPU/内存/网络/文件隔离参数 | 真实安全沙盒、代码解释器限制 |
+| day67 | HITL 暂停、通知、webhook payload、签名校验、防重复、继续或回滚状态机 | 端到端人工审批闭环 |
+| day68 | dotenv/schema 配置、Docker Compose/Testcontainers 风格计划、Postgres/Redis/MinIO health check 和断言 | 真实依赖集成测试、生产配置管理 |
+| day69 | 结构化日志、Prometheus 指标、Jaeger/OTel trace payload、tool call latency/error 指标 | 完整可观测性堆栈 |
+| day70 | baseline/current eval compare、Markdown 报告、CI 退出码、GitHub Actions workflow | Agent 评估与持续集成 |
+| day71 | mini-acp envelope、JSON-RPC request/response、pub/sub broker、correlationId 和审计 | 多 Agent 通信协议 |
+
 ## 仍然需要诚实说明的边界
 
 - day57 和 day60 提供 Docker Compose 草案，但默认测试仍使用内存 adapter；如果要证明真实生产部署，还需要实际 API server、Postgres schema migration、Redis worker 和压测结果。
@@ -76,10 +93,15 @@
 - day61 是 dry-run 沙盒策略；真实隔离还需要容器 runtime、egress proxy、seccomp/AppArmor、secret manager 和宿主审计。
 - day64 默认 mock provider；真实 OpenAI/Claude/Qwen/Ollama 接入需要密钥管理、真实 streaming、错误分类和 provider 观测。
 - day65 默认 mock 多模态 adapter；真实模型需要 Windows 5060 Ti 机器上的本地 vision/audio/video 服务替换。
+- day66 默认 Node VM + Docker dry-run，不等价于生产 nsjail/gVisor/Docker 动态容器执行。
+- day68 默认不启动真实 Docker；要证明真实依赖集成，需要在 Docker 可用环境跑 compose 或 Testcontainers。
+- day69 默认内存 exporter；真实 Jaeger/Prometheus/OpenTelemetry Collector 需要单独部署。
+- day70 使用 mock baseline/current；真实 CI 应从固定 golden dataset 和历史 artifact 读取指标。
+- day71 默认内存 broker；真实生产需要 NATS/Redis/Kafka/gRPC 的连接、鉴权、重试和死信队列。
 - 仓库仍以 Node/npm 教学为主，Python/Go/Java 的生产 worker 示例还可以作为后续 P2 扩展。
 
 ## 当前结论
 
-day01-day56 能证明“理解 Agent 工程化主线”；day57-day65 进一步补上两张岗位截图最关注的生产级证据：Runtime、Harness、RAG、端到端产品、安全、编排、发布、多模型路由和多模态理解。
+day01-day56 能证明“理解 Agent 工程化主线”；day57-day65 补上岗位截图最关注的生产级证据；day66-day71 继续补齐真实生产环境常见追问：真实依赖、OTel、CI、沙盒执行器、HITL 和通信协议。
 
 现在这个仓库已经可以作为面试展示入口，但展示时要说清：默认测试是 mock/内存/dry-run，真实服务能力通过 day57/day60 Docker 草案、day59 pgvector 草案、day64 provider 替换点和 day65 本地多模态替换点继续落地。

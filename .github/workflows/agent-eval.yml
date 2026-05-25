@@ -1,0 +1,28 @@
+name: Agent Eval Gate
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  eval:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Run unit tests
+        run: npm test
+
+      - name: Run agent harness gate
+        run: npm run day58:gate
+
+      - name: Run CI eval comparison
+        run: npm run day70:ci

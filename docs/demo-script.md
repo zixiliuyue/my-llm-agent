@@ -2,7 +2,7 @@
 
 ## 0:00 - 0:30 项目定位
 
-这是一个 65 天自包含 Agent 工程学习仓库，从 agent loop 到生产级 Runtime、Harness、RAG、端到端产品样板、安全沙盒、发布灰度、多模型路由和多模态理解。
+这是一个 71 天自包含 Agent 工程学习仓库，从 agent loop 到生产级 Runtime、Harness、RAG、端到端产品样板、安全沙盒、发布灰度、多模型路由、多模态理解、HITL、OTel、CI gate 和通信协议。
 
 ## 0:30 - 1:15 环境与跨平台
 
@@ -53,3 +53,16 @@ npm run day65:start
 ## 4:30 - 5:00 总结
 
 这套项目的重点是把 Agent 能力放进工程系统：证据、权限、审批、可观测、评估、回滚和复盘。默认 mock 是为了可复现和安全，真实服务通过 Docker/provider/本地模型替换点接入。
+
+## 扩展演示：生产环境追问
+
+```bash
+npm run day66:start
+npm run day67:start
+npm run day68:start
+npm run day69:start
+npm run day70:ci
+npm run day71:start
+```
+
+讲解点：不受信任代码沙盒、HITL webhook、Postgres/Redis/MinIO 集成计划、Prometheus/Jaeger/OTel、GitHub Actions eval gate、JSON-RPC/pub-sub 通信协议。

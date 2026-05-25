@@ -15,8 +15,12 @@ flowchart LR
   Worker --> RAG["RAG Service"]
   Runtime --> Harness["Harness / Replay / Eval"]
   Runtime --> Observability["Logs / Metrics / Trace"]
+  Runtime --> HITL["Human Approval / Webhook"]
+  Worker --> SandboxExec["Sandbox Executor"]
+  Worker --> Broker["Agent Protocol Broker"]
   Release["Release Control"] --> Router
   Release --> Harness
+  CI["GitHub Actions"] --> Harness
   Console["Agent Ops Console"] --> API
 ```
 
@@ -33,6 +37,12 @@ flowchart LR
 | Release | day63 | prompt/model/tool/spec 版本、shadow、canary、gray、rollback。 |
 | Model Router | day64 | provider 统一接口、streaming、tool calling、JSON schema、retry、timeout、cost、fallback。 |
 | Multimodal | day65 | 图片、语音、视频理解和多模态 eval。 |
+| Sandbox Executor | day66 | 不受信任代码静态检查、VM timeout、Docker dry-run spec。 |
+| Human Loop | day67 | 暂停执行、通知、webhook 决策、继续或回滚。 |
+| Real Dependencies | day68 | Postgres、Redis、MinIO、dotenv/schema 配置和集成测试计划。 |
+| OTel Runtime | day69 | 结构化日志、Prometheus 指标、Jaeger/OTel trace。 |
+| CI Gate | day70 | baseline/current eval compare、Markdown 报告、GitHub Actions。 |
+| Protocol | day71 | mini-acp envelope、JSON-RPC、pub/sub、correlationId。 |
 
 ## 数据模型
 
@@ -59,4 +69,5 @@ flowchart LR
 # 结果判断：所有新增 day 打印 tests passed
 # 风险：默认 mock/内存，不启动真实 Docker 或模型服务
 npm run day57:test && npm run day58:test && npm run day59:test && npm run day60:test && npm run day61:test && npm run day62:test && npm run day63:test && npm run day64:test && npm run day65:test
+npm run day66:test && npm run day67:test && npm run day68:test && npm run day69:test && npm run day70:test && npm run day71:test
 ```

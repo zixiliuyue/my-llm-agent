@@ -15,6 +15,9 @@
 | Agent -> File | read/write path | file allowlist、临时 workspace、只读 rootfs |
 | Agent -> MCP | endpoint、tool name | `/mcp` initialize、`tools/list`、tool allowlist |
 | Release -> Traffic | gray percent、candidate version | canary eval、metrics gate、rollback |
+| Agent -> Code Executor | generated JS/Python | static policy、VM timeout、Docker dry-run spec、CPU/memory/network/file limits |
+| Human -> Approval Webhook | decision payload | signature check、anti-replay、idempotent decision |
+| Agent -> Broker | envelope、topic、method | mini-acp validation、JSON-RPC schema、correlationId audit |
 
 ## 主要威胁
 
@@ -37,6 +40,9 @@
 - day55：复盘质量检查和敏感字段脱敏。
 - day57：Runtime 状态机、重试、恢复和 evidence。
 - day61：安全沙盒、prompt injection、tool output trust boundary、PII/secret scanning、allowlist 和 audit。
+- day66：不受信任代码执行器、VM timeout、Docker dry-run spec、资源限制。
+- day67：HITL webhook 决策签名、防重复、继续和回滚状态。
+- day71：Agent 通信协议 envelope、JSON-RPC、pub/sub 和 correlationId。
 - day63：版本、灰度、canary 和 rollback。
 
 ## 安全验收命令

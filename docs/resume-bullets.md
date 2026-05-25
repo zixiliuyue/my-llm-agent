@@ -2,13 +2,14 @@
 
 ## 中文版本
 
-- 设计并实现 65 天自包含 LLM Agent 工程学习项目，从 agent loop、工具调用、RAG、MCP、Web/API、可观测与权限审批，扩展到生产级 Runtime、Harness、端到端 Agent Ops Console、安全沙盒、灰度发布、多模型路由和多模态理解。
+- 设计并实现 71 天自包含 LLM Agent 工程学习项目，从 agent loop、工具调用、RAG、MCP、Web/API、可观测与权限审批，扩展到生产级 Runtime、Harness、端到端 Agent Ops Console、安全沙盒、灰度发布、多模型路由、多模态理解、HITL、OTel、CI gate 和通信协议。
 - 实现教学版生产 Agent Runtime，覆盖 run/session/tool_call/evidence 状态模型、worker lease、取消、重试、超时、恢复、幂等和并发控制，并提供 Docker Compose 演示草案。
 - 构建 Agent Harness，支持固定 run snapshot replay、prompt/model/tool 版本 compare、golden dataset、tool-call accuracy、groundedness、latency/cost/recovery rate 指标和 CI gate。
 - 实现生产 RAG pipeline 教学版，覆盖 Markdown/HTML/PDF placeholder 解析、chunk、deterministic embedding、hybrid search、rerank、citation、权限过滤、缓存、增量更新、删除和 recall eval。
 - 构建端到端 Agent Ops 产品样板，串联用户目标、agent run、tool approval、RAG citation、evidence board、eval report 和 incident final report，并提供静态前端控制台。
 - 设计 Agent 安全沙盒策略，覆盖 prompt injection、tool output trust boundary、PII/secret scanning、网络/文件/tool/MCP allowlist、dry-run 容器规格和 audit log。
 - 实现多模型 Provider Router，统一 OpenAI/Claude/Qwen/Ollama 接口，支持 streaming、tool calling、JSON schema、retry、timeout、rate limit、token/cost 统计和 fallback。
+- 补齐生产环境闭环：不受信任代码沙盒执行器、Human-in-the-Loop webhook 审批、Postgres/Redis/MinIO 集成测试计划、OpenTelemetry/Prometheus/Jaeger 可观测、GitHub Actions eval gate 和 Agent 通信协议。
 
 ## English Version
 
@@ -17,6 +18,7 @@
 - Built an Agent Harness for replay, version comparison, golden datasets, tool-call accuracy, groundedness, latency/cost/recovery metrics, and CI quality gates.
 - Designed a production-style RAG pipeline with parsing, chunking, deterministic embeddings, hybrid search, reranking, citations, permission filtering, caching, incremental updates, deletion, and recall evaluation.
 - Created an end-to-end Agent Ops prototype with run timeline, human approval, RAG citations, evidence board, eval report, incident final report, and a static operations console.
+- Extended the platform with sandboxed code execution, human-in-the-loop webhooks, real dependency integration plans, OpenTelemetry-style traces and metrics, GitHub Actions eval gates, and JSON-RPC/pub-sub agent communication protocols.
 
 ## 面试展开点
 
