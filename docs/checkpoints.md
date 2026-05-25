@@ -173,3 +173,59 @@ npm run day36:test && npm run day37:test && npm run day38:test && npm run day39:
 # 风险：全部走 mock/dry-run，不访问真实生产系统
 npm run day41:test && npm run day42:test && npm run day43:test && npm run day44:test && npm run day45:test
 ```
+
+## day46-day50：观测、权限缓存、远程执行、发布验证和 CLI 接入
+
+你应该能做到：
+
+- 区分 Grafana/Prometheus 观测链路故障和业务服务故障。
+- 说明 Redis 用户权限缓存、ACL snapshot 和真实用户身份如何一起影响访问结果。
+- 判断远程命令是直接 blocked、pending approval 还是只读 dry-run。
+- 用发布后检查项判断 pass、watch 或 rollback。
+- 把 CLI 命令描述成 Agent 可调用 manifest，而不是让模型自由拼命令。
+
+验收题：
+
+1. day46 为什么 Grafana 403 不能直接判定业务服务挂了？
+2. day47 为什么 `api_token` 不能作为最终用户身份？
+3. day48 为什么服务重启必须进入审批，而读日志可以 dry-run？
+4. day49 什么情况下应该 watch，而不是立刻 rollback？
+5. day50 为什么不允许 Agent 传入任意 `baseUrl`？
+
+推荐验证：
+
+```bash
+# 用途：验证工程现场 Agent 案例 day46-day50
+# 执行目录：<项目根目录>
+# 结果判断：day46-day50 均打印 tests passed
+# 风险：全部走 mock/dry-run，不访问真实生产系统、不执行 CLI
+npm run day46:test && npm run day47:test && npm run day48:test && npm run day49:test && npm run day50:test
+```
+
+## day51-day55：热更新、前端路由、SQL、MCP 验真和复盘质量
+
+你应该能做到：
+
+- 判断配置是否真的 reload，而不是靠进程重启后版本一致蒙混过关。
+- 检查菜单、hidden route、`activeMenu`、权限树、i18n 和跳转入口是否一致。
+- 只生成数据库修复 SQL、回滚 SQL 和风险说明，不直接执行。
+- 区分服务 URL 可访问和真实 MCP 协议可用。
+- 评估事故复盘是否包含时间线、影响面、根因、证据、修复、预防项和脱敏。
+
+验收题：
+
+1. day51 为什么进程启动时间是热更新诊断的关键证据？
+2. day52 为什么 hidden route 要配置 `activeMenu`？
+3. day53 为什么 SQL 草案要先 `SELECT ... FOR UPDATE`？
+4. day54 为什么 `/health` 和 `/sse` 都不能直接当 MCP 入口？
+5. day55 为什么缺少预防项的复盘不能算 ready？
+
+推荐验证：
+
+```bash
+# 用途：验证工程质量 Agent 案例 day51-day55
+# 执行目录：<项目根目录>
+# 结果判断：day51-day55 均打印 tests passed
+# 风险：全部走 mock/dry-run，不修改配置、不访问数据库、不注册 MCP
+npm run day51:test && npm run day52:test && npm run day53:test && npm run day54:test && npm run day55:test
+```

@@ -150,3 +150,123 @@ npm run day45:test
 
 - 事故报告为什么不能直接复制原始日志？
 - 后续动作为什么要包含 owner 和 due？
+
+## 实验 10：Grafana 权限故障被误判成业务故障
+
+```bash
+# 用途：验证观测诊断会优先识别 Grafana 权限或 render 契约问题
+# 执行目录：<项目根目录>
+# 结果判断：day46 tests passed
+# 风险：只跑 mock 测试，不访问真实 Grafana
+npm run day46:test
+```
+
+你应该能回答：
+
+- Grafana 403、Prometheus 数据旧、render 返回 HTML 分别说明什么？
+- 为什么 Agent 不能只看图表空白就判断服务挂了？
+
+## 实验 11：权限缓存缺失导致访问失败
+
+```bash
+# 用途：验证权限缓存排障能识别 user permission cache missing
+# 执行目录：<项目根目录>
+# 结果判断：day47 tests passed
+# 风险：只跑 mock 测试，不访问 Redis 或业务接口
+npm run day47:test
+```
+
+你应该能回答：
+
+- admin 预热全集和当前用户过滤分别在什么阶段发生？
+- `api_token` 兼容为什么不能覆盖真实用户身份？
+
+## 实验 12：发布后只做只读验证
+
+```bash
+# 用途：验证发布验证 Agent 能区分 pass/watch/rollback
+# 执行目录：<项目根目录>
+# 结果判断：day49 tests passed
+# 风险：只跑 mock 测试，不部署、不回滚
+npm run day49:test
+```
+
+你应该能回答：
+
+- health 失败和前端 hash 不一致的处理级别为什么不同？
+- 发布验证为什么不能自动回滚？
+
+## 实验 13：配置靠重启生效被误判成热更新
+
+```bash
+# 用途：验证配置热更新诊断会识别 restart-masked-reload
+# 执行目录：<项目根目录>
+# 结果判断：day51 tests passed
+# 风险：只跑 mock 测试，不修改配置、不重启服务
+npm run day51:test
+```
+
+你应该能回答：
+
+- 为什么 runtime 版本等于文件版本仍然不够？
+- 配置 mtime、reload log、process started at 分别证明什么？
+
+## 实验 14：前端 hidden route 缺少 activeMenu
+
+```bash
+# 用途：验证前端权限路由检查能发现 hidden route、i18n 和跳转权限问题
+# 执行目录：<项目根目录>
+# 结果判断：day52 tests passed
+# 风险：只跑 mock 测试，不改前端代码
+npm run day52:test
+```
+
+你应该能回答：
+
+- 为什么页面能打开不代表菜单和权限链正确？
+- hidden route、permission_routes、i18n key 和 jump target 分别要检查什么？
+
+## 实验 15：SQL Agent 只生成不执行
+
+```bash
+# 用途：验证 SQL Agent 生成事务 SQL 和回滚 SQL
+# 执行目录：<项目根目录>
+# 结果判断：day53 tests passed
+# 风险：只生成文本，不连接数据库、不执行 SQL
+npm run day53:test
+```
+
+你应该能回答：
+
+- 为什么必须有回滚 SQL？
+- 为什么没有 id 列表时应该拒绝生成 UPDATE？
+
+## 实验 16：MCP URL 可访问但协议不可用
+
+```bash
+# 用途：验证 MCP 接入验真不会把 /health 或 /sse 当成 MCP
+# 执行目录：<项目根目录>
+# 结果判断：day54 tests passed
+# 风险：只跑 mock 测试，不注册 MCP
+npm run day54:test
+```
+
+你应该能回答：
+
+- initialize 和 tools/list 分别证明什么？
+- resources 为空为什么不能单独证明 MCP 不可用？
+
+## 实验 17：事故复盘缺预防项或泄露敏感字段
+
+```bash
+# 用途：验证复盘质量评估能发现缺失章节和敏感字段泄露
+# 执行目录：<项目根目录>
+# 结果判断：day55 tests passed
+# 风险：只跑 mock 测试，不访问事故系统
+npm run day55:test
+```
+
+你应该能回答：
+
+- ready 复盘至少要有哪些部分？
+- 为什么 token/password 即使在内部报告里也要脱敏？

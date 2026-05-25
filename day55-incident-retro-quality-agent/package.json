@@ -1,0 +1,11 @@
+{
+  "name": "day55-incident-retro-quality-agent",
+  "version": "1.0.0",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "start": "node src/cli.js",
+    "demo": "node src/cli.js",
+    "test": "node test/run.test.js"
+  }
+}

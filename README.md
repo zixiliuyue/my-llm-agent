@@ -1,8 +1,8 @@
-# mini-openclaw 45 天学习项目
+# mini-openclaw 55 天学习项目
 
 这个仓库从 LLM-Agent 基础逐步演化到教学版 mini-openclaw。每一天都是完全自包含的小项目：有自己的 `package.json`、`README.md`、`src/` 和 `test/`，源码不 import 其它 day，方便学习过程中随意修改某一天代码。
 
-## 45 天路线
+## 55 天路线
 
 | Day | 目录 | 主题 | 入口 |
 |---|---|---|---|
@@ -51,11 +51,21 @@
 | 43 | `day43-remote-command-approval` | 远程命令审批链 | `npm run day43:start` / `npm run day43:test` |
 | 44 | `day44-mcp-observability-server` | MCP 观测工具 server | `npm run day44:start` / `npm run day44:test` |
 | 45 | `day45-agent-incident-report` | Agent 事故报告 | `npm run day45:start` / `npm run day45:test` |
+| 46 | `day46-observability-diagnosis-agent` | Grafana/Prometheus 观测诊断 | `npm run day46:start` / `npm run day46:test` |
+| 47 | `day47-permission-cache-debugger` | 权限缓存排障 | `npm run day47:start` / `npm run day47:test` |
+| 48 | `day48-safe-remote-execution-agent` | 安全远程执行审批 | `npm run day48:start` / `npm run day48:test` |
+| 49 | `day49-release-verification-agent` | 测试环境发布验证 | `npm run day49:start` / `npm run day49:test` |
+| 50 | `day50-cli-tool-manifest-agent` | CLI 工具接入 manifest | `npm run day50:start` / `npm run day50:test` |
+| 51 | `day51-config-hot-reload-diagnosis-agent` | 配置热更新诊断 | `npm run day51:start` / `npm run day51:test` |
+| 52 | `day52-frontend-permission-route-checker` | 前端权限路由检查 | `npm run day52:start` / `npm run day52:test` |
+| 53 | `day53-database-fix-sql-agent` | 数据库修复 SQL 生成 | `npm run day53:start` / `npm run day53:test` |
+| 54 | `day54-mcp-integration-verifier` | MCP 接入验真 | `npm run day54:start` / `npm run day54:test` |
+| 55 | `day55-incident-retro-quality-agent` | 事故复盘质量评估 | `npm run day55:start` / `npm run day55:test` |
 
 ## 快速验证
 
 ```bash
-# 用途：运行 day01-day45 的 mock/unit 测试
+# 用途：运行 day01-day55 的 mock/unit 测试
 # 执行目录：<项目根目录>
 # 输出判断：每个 day 打印 tests passed，最终退出码为 0
 # 风险：不调用真实模型、不部署、不执行远程命令
@@ -63,7 +73,7 @@ npm test
 ```
 
 ```bash
-# 用途：一键跑通 45 天 start 示例、单元测试、Web build 和 day05 真实模型 API
+# 用途：一键跑通 55 天 start 示例、单元测试、Web build 和 day05 真实模型 API
 # 执行目录：<项目根目录>
 # 输出判断：最后打印 examples smoke passed，所有步骤为 OK
 # 风险：会访问本地 Ollama，不执行远程命令或部署；脚本会清理生成的 dist
@@ -123,7 +133,7 @@ FRAMEPACK_HOST=http://127.0.0.1:7860
 
 默认测试不依赖 Ollama。只有显式运行真实模型示例时，才会访问 `OLLAMA_HOST`。
 day31-day40 的默认测试也不依赖 ComfyUI、FramePack、SVD、FLUX 或 Wan；真实多模态实验需要你手动启动本机服务并准备模型。
-day41-day45 的默认测试只使用 mock 指标、mock 权限、dry-run 命令、mock MCP 和 mock 事故上下文，不访问真实生产系统。
+day41-day55 的默认测试只使用 mock 指标、mock 权限、dry-run 命令、mock MCP、mock 事故上下文、mock 发布快照、mock CLI manifest、mock 配置快照和 mock 前端路由，不访问真实生产系统。
 
 Windows PowerShell 切换模型示例：
 

@@ -4,14 +4,14 @@
 
 ## 1. 项目定位
 
-- 这是 45 天 mini-openclaw 学习项目：day01-day30 得到教学版本地 agent 平台，day31-day40 扩展本地多模态能力评估，day41-day45 补齐 SRE/权限/远程审批/MCP/事故报告等生产工程案例。
+- 这是 55 天 mini-openclaw 学习项目：day01-day30 得到教学版本地 agent 平台，day31-day40 扩展本地多模态能力评估，day41-day55 补齐 SRE/权限/远程审批/MCP/事故报告/观测诊断/发布验证/CLI 接入/热更新/前端路由/SQL/复盘质量等生产工程案例。
 - 当前路线按职业画像服务“平台工程 / SRE / 全栈工具链 / AI 工程化落地”学习目标：重点不是模型炫技，而是把 Agent 接入真实工程链路，并保持证据、权限、审批、审计、回滚和复盘边界。
 - day01-day04 是 Agent 核心：agent loop、协议解析、工具调用、多 agent 协作和 MCP mock。
 - day05-day10 是 API/Web/状态：Web API、eval、trace、session、HTTP/WebSocket gateway。
 - day11-day18 是平台骨架：workspace、provider router、tool policy、skills、plugin manifest、MCP adapter。
 - day19-day30 是工程化控制面和集成：memory、background jobs、channel、device pairing、sandbox、queue、auth、observability、onboarding、mini-openclaw integrated。
 - day31-day40 是本地多模态：Mac mock 与 Windows 10 + RTX 5060 Ti 16G 实跑共用源码；覆盖 Ollama、ComfyUI、图片队列、资产、SDXL/FLUX、SVD/FramePack/Wan 评估。
-- day41-day45 是生产工程 Agent：SRE 排障、权限感知工具、远程命令审批、MCP 观测工具 server、事故报告生成。
+- day41-day55 是生产工程 Agent：SRE 排障、权限感知工具、远程命令审批、MCP 观测工具 server、事故报告、观测诊断、权限缓存排障、安全远程执行、发布验证、CLI manifest、配置热更新诊断、前端权限路由检查、SQL 生成、MCP 接入验真和复盘质量评估。
 - 默认使用中文解释，代码注释也必须使用中文。
 - 每个 day 完全自包含：源码不 import 其它 day，不共享 core，不要求先修好前一天才能运行当天测试。
 - 普通任务每次只推进一个 day；用户明确要求全量补齐时，可以批量更新多个 day。
@@ -33,7 +33,7 @@
 ## 3. 常用命令
 
 ```bash
-# 用途：运行 45 天所有不依赖真实模型的测试
+# 用途：运行 55 天所有不依赖真实模型的测试
 # 执行目录：<项目根目录>
 # 结果判断：所有 dayXX tests passed，退出码为 0
 # 风险：只跑本地测试，不调用 Ollama
@@ -57,7 +57,7 @@ npm run doctor
 ```
 
 ```bash
-# 用途：一键跑通 day01-day45 start 示例、单元测试、Web build、day05 API 和本地多模态 mock
+# 用途：一键跑通 day01-day55 start 示例、单元测试、Web build、day05 API 和本地多模态 mock
 # 执行目录：<项目根目录>
 # 结果判断：最后打印 examples smoke passed
 # 风险：会访问本地 Ollama；不执行远程命令、不部署；脚本会清理生成的 dist
@@ -73,11 +73,11 @@ npm run local:multimodal -- "一个本地 agent 平台封面图"
 ```
 
 ```bash
-# 用途：运行生产工程 Agent 案例 day41-day45
+# 用途：运行生产工程 Agent 案例 day41-day55
 # 执行目录：<项目根目录>
-# 结果判断：day41-day45 均打印 tests passed
+# 结果判断：day41-day55 均打印 tests passed
 # 风险：全部走 mock/dry-run，不访问真实生产系统
-npm run day41:test && npm run day42:test && npm run day43:test && npm run day44:test && npm run day45:test
+npm run day41:test && npm run day42:test && npm run day43:test && npm run day44:test && npm run day45:test && npm run day46:test && npm run day47:test && npm run day48:test && npm run day49:test && npm run day50:test && npm run day51:test && npm run day52:test && npm run day53:test && npm run day54:test && npm run day55:test
 ```
 
 ## 4. 项目规则
@@ -90,7 +90,7 @@ npm run day41:test && npm run day42:test && npm run day43:test && npm run day44:
 - 不跨 day import；允许复制少量 helper 以保持学习隔离。
 - day31-day40 必须保持 local-only：provider 地址默认只接受 localhost/127.0.0.1；测试不依赖真实 Ollama、ComfyUI、FramePack、SVD、FLUX 或 Wan。
 - day35 的职责是 prompt optimizer：Ollama 只优化 prompt，不生成图片；图片生成交给 `comfy:image` handoff。
-- day41-day45 必须保持生产工程边界：SRE 诊断先证据后假设；权限工具先过滤再调用；远程命令只做 dry-run/审批链；MCP server 只做 mock；事故报告必须脱敏。
+- day41-day55 必须保持生产工程边界：SRE/观测诊断先证据后假设；权限工具和权限缓存排障先过滤再调用；远程命令只做 dry-run/审批链；MCP server 只做 mock；事故报告和复盘必须脱敏；发布验证只做只读结论；CLI manifest 只规划命令不执行；SQL Agent 只生成 SQL 和回滚 SQL。
 - 权限类案例优先采用“后台 admin 预热资源全集 + 当前用户查询时过滤”的模型，避免 Agent 直接绕过业务权限。
 - MCP 相关案例先确认真实协议入口和工具可用性；不要把根 URL、`/health` 或 `/sse` 直接当成 MCP 入口。
 - 新增可见教程材料时优先同步 `README.md`、对应 day README 和 `docs/learning-map.md` / `docs/checkpoints.md` / `docs/failure-labs.md`。
@@ -101,7 +101,7 @@ npm run day41:test && npm run day42:test && npm run day43:test && npm run day44:
 - 修改根脚本后运行根目录 `npm test`。
 - 修改 Web day 后运行对应 `npm run dayXX:build`，并用 mock 模式打开页面验证非空。
 - 修改 day31-day40 多模态链路后，至少运行 `npm run local:multimodal -- "一个本地 agent 平台封面图"`。
-- 修改 day41-day45 生产工程案例后，至少运行 `npm run day41:test && npm run day42:test && npm run day43:test && npm run day44:test && npm run day45:test`。
+- 修改 day41-day55 生产工程案例后，至少运行 `npm run day41:test && npm run day42:test && npm run day43:test && npm run day44:test && npm run day45:test && npm run day46:test && npm run day47:test && npm run day48:test && npm run day49:test && npm run day50:test && npm run day51:test && npm run day52:test && npm run day53:test && npm run day54:test && npm run day55:test`。
 - 修改 `scripts/run-all-examples.mjs`、根 `package.json` 或跨 day 路线后，优先运行 `npm test`；Ollama 可用时再运行 `npm run examples:smoke`。
 - `npm run examples:smoke` 会访问本地 Ollama 和 day05 API；如果 Ollama 未启动，应先用 `npm run doctor` 给出原因，不要把 smoke 失败误判为 day 代码失败。
 - AGENTS-only 更新只需要验证 AGENTS 文档结构和 diff；不要顺手跑 build、部署或格式化全仓。
@@ -116,6 +116,16 @@ npm run day41:test && npm run day42:test && npm run day43:test && npm run day44:
 - day43 远程命令审批链是教学 dry-run，不得改成真实 SSH/SCP/systemctl/supervisorctl 执行。灾难性命令如 `rm -rf /`、裸盘写入、格式化、全局权限破坏、数据库 drop 应直接 blocked，而不是进入审批。
 - day44 MCP 观测工具 server 是 JSON-RPC mock，不注册全局 MCP、不访问真实 Grafana/Prometheus/日志系统；接真实系统前必须补鉴权、权限过滤、审计和错误脱敏。
 - day45 事故报告必须从结构化证据生成；报告内 token/password 等敏感字段必须脱敏，不能直接复制原始日志。
+- day46 观测诊断必须先判断 Grafana/Prometheus/log/trace 链路是否可信，再判断业务服务；Grafana 403、旧数据或 HTML 错页不能直接当业务故障。
+- day47 权限缓存排障必须保持 admin 预热全集和当前用户过滤分离；`api_token` 只能作为兼容信号，不能覆盖真实用户身份。
+- day48 安全远程执行审批必须双层过滤；灾难性命令直接 blocked，服务生命周期和数据库命令必须 pending approval。
+- day49 发布验证只读判断 pass/watch/rollback，不自动部署、不自动回滚、不重启服务。
+- day50 CLI manifest 只能使用固定环境枚举和已声明工具；不允许 free-form base URL，不执行真实 CLI。
+- day51 配置热更新诊断必须同时看配置版本、runtime 版本、reload 日志和进程启动时间；不能把重启后的版本一致当热更新成功。
+- day52 前端权限路由检查必须同时看菜单、hidden route、`activeMenu`、权限树、i18n 和跳转目标。
+- day53 数据库修复 SQL Agent 只生成事务 SQL、`SELECT ... FOR UPDATE` 和回滚 SQL，不连接数据库、不执行 SQL。
+- day54 MCP 接入验真必须验证真实 `/mcp`、initialize 和 `tools/list`；不要把 `/health`、`/sse` 或根 URL 当 MCP 入口。
+- day55 事故复盘质量评估必须检查时间线、影响面、根因、证据、修复、预防项和脱敏。
 
 ## 7. 已沉淀教程材料
 
@@ -131,7 +141,7 @@ npm run day41:test && npm run day42:test && npm run day43:test && npm run day44:
 提交信息使用中文，优先：
 
 ```text
-feat: 扩展 mini-openclaw 四十五天学习项目
+feat: 扩展 mini-openclaw 五十五天学习项目
 fix: 修复 dayXX 自包含测试
 chore: 整理 mini-openclaw 学习脚本
 ```
