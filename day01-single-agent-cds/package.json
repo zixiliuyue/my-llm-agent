@@ -1,0 +1,18 @@
+{
+  "name": "llm-agent-day01-single-agent-cli",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Day 01: a zero-dependency local Ollama single-agent tutorial CLI.",
+  "scripts": {
+    "start": "node src/cli.js",
+    "ask": "node src/cli.js",
+    "cds": "node src/cli.js",
+    "check": "node src/check.js",
+    "test": "node test/protocol.test.js",
+    "demo": "node src/cli.js --help"
+  },
+  "engines": {
+    "node": ">=18.17"
+  }
+}

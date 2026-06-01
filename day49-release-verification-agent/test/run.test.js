@@ -5,38 +5,38 @@
  * 注释说明保留在文件顶部，帮助学习时先理解本文件职责。
  */
 // 学习目标：验证发布后检查能区分通过、观察和回滚。
-// 教学：导入依赖：这一行把当前文件需要用到的模块或函数拿进来。
+// 导入依赖：这一行把当前文件需要用到的模块或函数拿进来。
 import assert from "node:assert/strict";
-// 教学：导入依赖：这一行把当前文件需要用到的模块或函数拿进来。
+// 导入依赖：这一行把当前文件需要用到的模块或函数拿进来。
 import { collectReleaseChecks, createMockReleaseSnapshot, decideRelease } from "../src/index.js";
 
-// 教学：定义常量：这个值只在当前作用域读取，不会被重新赋值。
+// 定义常量：这个值只在当前作用域读取，不会被重新赋值。
 const pass = decideRelease(createMockReleaseSnapshot());
-// 教学：测试断言：把预期行为写死，防止后续修改破坏边界。
+// 测试断言：把预期行为写死，防止后续修改破坏边界。
 assert.equal(pass.decision, "pass");
-// 教学：测试断言：把预期行为写死，防止后续修改破坏边界。
+// 测试断言：把预期行为写死，防止后续修改破坏边界。
 assert.equal(pass.rollbackPlan, null);
 
-// 教学：定义常量：这个值只在当前作用域读取，不会被重新赋值。
+// 定义常量：这个值只在当前作用域读取，不会被重新赋值。
 const rollback = decideRelease(createMockReleaseSnapshot({
   health: { ready: false, statusCode: 503, latencyMs: 3000 },
 }));
-// 教学：测试断言：把预期行为写死，防止后续修改破坏边界。
+// 测试断言：把预期行为写死，防止后续修改破坏边界。
 assert.equal(rollback.decision, "rollback");
-// 教学：测试断言：把预期行为写死，防止后续修改破坏边界。
+// 测试断言：把预期行为写死，防止后续修改破坏边界。
 assert.ok(rollback.rollbackPlan);
 
-// 教学：定义常量：这个值只在当前作用域读取，不会被重新赋值。
+// 定义常量：这个值只在当前作用域读取，不会被重新赋值。
 const watch = decideRelease(createMockReleaseSnapshot({
   frontend: { expectedHash: "app.new.js", loadedHash: "app.old.js" },
 }));
-// 教学：测试断言：把预期行为写死，防止后续修改破坏边界。
+// 测试断言：把预期行为写死，防止后续修改破坏边界。
 assert.equal(watch.decision, "watch");
 
-// 教学：定义常量：这个值只在当前作用域读取，不会被重新赋值。
+// 定义常量：这个值只在当前作用域读取，不会被重新赋值。
 const checks = collectReleaseChecks(createMockReleaseSnapshot({ deployedVersion: "old" }));
-// 教学：测试断言：把预期行为写死，防止后续修改破坏边界。
+// 测试断言：把预期行为写死，防止后续修改破坏边界。
 assert.equal(checks.find((item) => item.id === "version").ok, false);
 
-// 教学：输出到 stdout：这里是命令的正式结果，方便脚本继续处理。
+// 输出到 stdout：这里是命令的正式结果，方便脚本继续处理。
 console.log("day49 tests passed");

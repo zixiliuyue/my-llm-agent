@@ -5,9 +5,9 @@
  * 注释说明保留在文件顶部，帮助学习时先理解本文件职责。
  */
 // 学习目标：把发布后验证拆成版本、健康检查、日志、前端资源和 smoke 结果。
-// 教学：导出函数：这是当前模块提供给测试、CLI 或其它本 day 文件使用的能力。
+// 导出函数：这是当前模块提供给测试、CLI 或其它本 day 文件使用的能力。
 export function createMockReleaseSnapshot(overrides = {}) {
-  // 教学：返回结果：调用方会拿到这个值继续后续流程。
+  // 返回结果：调用方会拿到这个值继续后续流程。
   return {
     service: overrides.service ?? "gpmm_backend",
     environment: overrides.environment ?? "sit",
@@ -36,9 +36,9 @@ export function createMockReleaseSnapshot(overrides = {}) {
   };
 }
 
-// 教学：导出函数：这是当前模块提供给测试、CLI 或其它本 day 文件使用的能力。
+// 导出函数：这是当前模块提供给测试、CLI 或其它本 day 文件使用的能力。
 export function collectReleaseChecks(snapshot = createMockReleaseSnapshot()) {
-  // 教学：返回结果：调用方会拿到这个值继续后续流程。
+  // 返回结果：调用方会拿到这个值继续后续流程。
   return [
     { id: "version", ok: snapshot.deployedVersion === snapshot.expectedVersion, detail: `${snapshot.deployedVersion} vs ${snapshot.expectedVersion}` },
     { id: "health", ok: snapshot.health.ready && snapshot.health.statusCode === 200, detail: `status=${snapshot.health.statusCode} latency=${snapshot.health.latencyMs}` },
@@ -48,17 +48,17 @@ export function collectReleaseChecks(snapshot = createMockReleaseSnapshot()) {
   ];
 }
 
-// 教学：导出函数：这是当前模块提供给测试、CLI 或其它本 day 文件使用的能力。
+// 导出函数：这是当前模块提供给测试、CLI 或其它本 day 文件使用的能力。
 export function decideRelease(snapshot = createMockReleaseSnapshot()) {
-  // 教学：定义常量：这个值只在当前作用域读取，不会被重新赋值。
+  // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const checks = collectReleaseChecks(snapshot);
-  // 教学：定义常量：这个值只在当前作用域读取，不会被重新赋值。
+  // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const failed = checks.filter((item) => !item.ok);
-  // 教学：定义常量：这个值只在当前作用域读取，不会被重新赋值。
+  // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const hardFailure = failed.some((item) => ["version", "health", "smoke", "logs"].includes(item.id));
-  // 教学：定义常量：这个值只在当前作用域读取，不会被重新赋值。
+  // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const decision = hardFailure ? "rollback" : failed.length ? "watch" : "pass";
-  // 教学：返回结果：调用方会拿到这个值继续后续流程。
+  // 返回结果：调用方会拿到这个值继续后续流程。
   return {
     day: 49,
     title: "测试环境发布验证 Agent",
@@ -83,8 +83,8 @@ export function decideRelease(snapshot = createMockReleaseSnapshot()) {
   };
 }
 
-// 教学：导出函数：这是当前模块提供给测试、CLI 或其它本 day 文件使用的能力。
+// 导出函数：这是当前模块提供给测试、CLI 或其它本 day 文件使用的能力。
 export function runDemo() {
-  // 教学：返回结果：调用方会拿到这个值继续后续流程。
+  // 返回结果：调用方会拿到这个值继续后续流程。
   return decideRelease(createMockReleaseSnapshot());
 }

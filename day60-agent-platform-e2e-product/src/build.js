@@ -5,20 +5,20 @@
  * 生成一个无依赖的静态 Agent Ops Console，用于面试展示 run 列表、timeline、tool call、
  * approval、RAG citation、eval report 和 incident final report。
  */
-// 教学：导入依赖：这一行把当前文件需要用到的模块或函数拿进来。
+// 导入依赖：这一行把当前文件需要用到的模块或函数拿进来。
 import { mkdirSync, writeFileSync } from "node:fs";
-// 教学：导入依赖：这一行把当前文件需要用到的模块或函数拿进来。
+// 导入依赖：这一行把当前文件需要用到的模块或函数拿进来。
 import { resolve } from "node:path";
-// 教学：导入依赖：这一行把当前文件需要用到的模块或函数拿进来。
+// 导入依赖：这一行把当前文件需要用到的模块或函数拿进来。
 import { runProductDemo } from "./index.js";
 
-// 教学：定义常量：这个值只在当前作用域读取，不会被重新赋值。
+// 定义常量：这个值只在当前作用域读取，不会被重新赋值。
 const demo = runProductDemo();
-// 教学：定义常量：这个值只在当前作用域读取，不会被重新赋值。
+// 定义常量：这个值只在当前作用域读取，不会被重新赋值。
 const outDir = resolve("dist");
 mkdirSync(outDir, { recursive: true });
 
-// 教学：定义常量：这个值只在当前作用域读取，不会被重新赋值。
+// 定义常量：这个值只在当前作用域读取，不会被重新赋值。
 const html = `<!doctype html>
 <html lang="zh-CN">
 <head>
@@ -94,5 +94,5 @@ const html = `<!doctype html>
 </html>`;
 
 writeFileSync(resolve(outDir, "index.html"), html);
-// 教学：输出到 stdout：这里是命令的正式结果，方便脚本继续处理。
+// 输出到 stdout：这里是命令的正式结果，方便脚本继续处理。
 console.log(JSON.stringify({ ok: true, file: "dist/index.html", bytes: html.length }, null, 2));

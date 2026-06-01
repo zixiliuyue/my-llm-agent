@@ -5,41 +5,41 @@
  * NSFW/PII/EXIF 清理、关键帧分析和多模态 eval。默认 mock adapter，真实模型只需替换 adapter。
  */
 
-// 教学：定义常量：这个值只在当前作用域读取，不会被重新赋值。
+// 定义常量：这个值只在当前作用域读取，不会被重新赋值。
 const PII_PATTERNS = [
   { type: "email", pattern: /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g },
   { type: "phone", pattern: /\b1[3-9]\d{9}\b/g },
 ];
 
-// 教学：普通函数：把一段可复用逻辑命名，降低主流程阅读成本。
+// 普通函数：把一段可复用逻辑命名，降低主流程阅读成本。
 function redactText(text) {
-  // 教学：定义常量：这个值只在当前作用域读取，不会被重新赋值。
+  // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const findings = [];
-  // 教学：定义变量：这个值后面会被更新，所以使用 let。
+  // 定义变量：这个值后面会被更新，所以使用 let。
   let output = text;
-  // 教学：循环：按顺序处理多条数据或多个步骤。
+  // 循环：按顺序处理多条数据或多个步骤。
   for (const rule of PII_PATTERNS) {
     output = output.replace(rule.pattern, (match) => {
       findings.push({ type: rule.type, sample: match.slice(0, 6) });
-      // 教学：返回结果：调用方会拿到这个值继续后续流程。
+      // 返回结果：调用方会拿到这个值继续后续流程。
       return `[REDACTED:${rule.type}]`;
     });
   }
-  // 教学：返回结果：调用方会拿到这个值继续后续流程。
+  // 返回结果：调用方会拿到这个值继续后续流程。
   return { text: output, findings };
 }
 
 /** 默认 mock 多模态 adapter；真实实现可替换成本地 vision/audio/video 模型。 */
-// 教学：普通函数：把一段可复用逻辑命名，降低主流程阅读成本。
+// 普通函数：把一段可复用逻辑命名，降低主流程阅读成本。
 export function createMockMultimodalAdapter() {
-  // 教学：返回结果：调用方会拿到这个值继续后续流程。
+  // 返回结果：调用方会拿到这个值继续后续流程。
   return {
     analyzeImage(asset) {
-      // 教学：定义常量：这个值只在当前作用域读取，不会被重新赋值。
+      // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
       const ocr = asset.ocrText || "Agent run timeline approval evidence";
-      // 教学：定义常量：这个值只在当前作用域读取，不会被重新赋值。
+      // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
       const redacted = redactText(ocr);
-      // 教学：返回结果：调用方会拿到这个值继续后续流程。
+      // 返回结果：调用方会拿到这个值继续后续流程。
       return {
         caption: asset.caption || "A screenshot of an agent operations console",
         ocrText: redacted.text,
@@ -51,9 +51,9 @@ export function createMockMultimodalAdapter() {
       };
     },
     analyzeAudio(asset) {
-      // 教学：定义常量：这个值只在当前作用域读取，不会被重新赋值。
+      // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
       const transcript = redactText(asset.transcript || "请总结 agent runtime 的失败恢复策略");
-      // 教学：返回结果：调用方会拿到这个值继续后续流程。
+      // 返回结果：调用方会拿到这个值继续后续流程。
       return {
         transcript: transcript.text,
         piiFindings: transcript.findings,
@@ -63,9 +63,9 @@ export function createMockMultimodalAdapter() {
       };
     },
     analyzeVideo(asset) {
-      // 教学：定义常量：这个值只在当前作用域读取，不会被重新赋值。
+      // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
       const frames = extractKeyframes(asset);
-      // 教学：返回结果：调用方会拿到这个值继续后续流程。
+      // 返回结果：调用方会拿到这个值继续后续流程。
       return {
         durationSec: asset.durationSec || 12,
         keyframes: frames,
@@ -77,17 +77,17 @@ export function createMockMultimodalAdapter() {
 }
 
 /** 图片质量评分：真实系统可换成 blur/brightness/contrast 模型。 */
-// 教学：普通函数：把一段可复用逻辑命名，降低主流程阅读成本。
+// 普通函数：把一段可复用逻辑命名，降低主流程阅读成本。
 export function scoreImageQuality(asset) {
-  // 教学：定义常量：这个值只在当前作用域读取，不会被重新赋值。
+  // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const blur = asset.blur ?? 0.18;
-  // 教学：定义常量：这个值只在当前作用域读取，不会被重新赋值。
+  // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const brightness = asset.brightness ?? 0.72;
-  // 教学：定义常量：这个值只在当前作用域读取，不会被重新赋值。
+  // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const textCoverage = asset.textCoverage ?? 0.42;
-  // 教学：定义常量：这个值只在当前作用域读取，不会被重新赋值。
+  // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const score = 1 - blur * 0.5 - Math.abs(0.65 - brightness) * 0.3 + Math.min(textCoverage, 0.5) * 0.2;
-  // 教学：返回结果：调用方会拿到这个值继续后续流程。
+  // 返回结果：调用方会拿到这个值继续后续流程。
   return {
     score: Number(Math.max(0, Math.min(1, score)).toFixed(3)),
     blur,
@@ -98,15 +98,15 @@ export function scoreImageQuality(asset) {
 }
 
 /** 关键帧抽取：教学版按时间戳采样，真实系统可用 scene detection。 */
-// 教学：普通函数：把一段可复用逻辑命名，降低主流程阅读成本。
+// 普通函数：把一段可复用逻辑命名，降低主流程阅读成本。
 export function extractKeyframes(videoAsset, count = 3) {
-  // 教学：定义常量：这个值只在当前作用域读取，不会被重新赋值。
+  // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const duration = videoAsset.durationSec || 12;
-  // 教学：返回结果：调用方会拿到这个值继续后续流程。
+  // 返回结果：调用方会拿到这个值继续后续流程。
   return Array.from({ length: count }, (_, index) => {
-    // 教学：定义常量：这个值只在当前作用域读取，不会被重新赋值。
+    // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
     const timestampSec = Number(((duration / (count + 1)) * (index + 1)).toFixed(2));
-    // 教学：返回结果：调用方会拿到这个值继续后续流程。
+    // 返回结果：调用方会拿到这个值继续后续流程。
     return {
       id: `frame-${index + 1}`,
       timestampSec,
@@ -117,46 +117,46 @@ export function extractKeyframes(videoAsset, count = 3) {
 }
 
 /** 统一分析入口：根据 mediaType 选择 adapter 能力。 */
-// 教学：普通函数：把一段可复用逻辑命名，降低主流程阅读成本。
+// 普通函数：把一段可复用逻辑命名，降低主流程阅读成本。
 export function inspectMediaAsset(asset, adapter = createMockMultimodalAdapter()) {
-  // 教学：条件判断：根据当前状态选择不同分支，保证错误能尽早暴露。
+  // 条件判断：根据当前状态选择不同分支，保证错误能尽早暴露。
   if (asset.mediaType === "image") return { mediaType: "image", ...adapter.analyzeImage(asset) };
-  // 教学：条件判断：根据当前状态选择不同分支，保证错误能尽早暴露。
+  // 条件判断：根据当前状态选择不同分支，保证错误能尽早暴露。
   if (asset.mediaType === "audio") return { mediaType: "audio", ...adapter.analyzeAudio(asset) };
-  // 教学：条件判断：根据当前状态选择不同分支，保证错误能尽早暴露。
+  // 条件判断：根据当前状态选择不同分支，保证错误能尽早暴露。
   if (asset.mediaType === "video") return { mediaType: "video", ...adapter.analyzeVideo(asset) };
-  // 教学：抛出错误：让调用方知道当前流程不能继续。
+  // 抛出错误：让调用方知道当前流程不能继续。
   throw new Error(`unsupported mediaType ${asset.mediaType}`);
 }
 
 /** 多模态 eval：检查 caption、OCR、PII 清理、质量和关键帧覆盖。 */
-// 教学：普通函数：把一段可复用逻辑命名，降低主流程阅读成本。
+// 普通函数：把一段可复用逻辑命名，降低主流程阅读成本。
 export function evaluateMultimodalUnderstanding(results) {
-  // 教学：定义常量：这个值只在当前作用域读取，不会被重新赋值。
+  // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const checks = results.map((result) => {
-    // 教学：条件判断：根据当前状态选择不同分支，保证错误能尽早暴露。
+    // 条件判断：根据当前状态选择不同分支，保证错误能尽早暴露。
     if (result.mediaType === "image") {
-      // 教学：返回结果：调用方会拿到这个值继续后续流程。
+      // 返回结果：调用方会拿到这个值继续后续流程。
       return {
         mediaType: "image",
         passed: Boolean(result.caption) && result.quality.usableForEval && result.nsfw === false && result.exifRemoved === true,
       };
     }
-    // 教学：条件判断：根据当前状态选择不同分支，保证错误能尽早暴露。
+    // 条件判断：根据当前状态选择不同分支，保证错误能尽早暴露。
     if (result.mediaType === "audio") {
-      // 教学：返回结果：调用方会拿到这个值继续后续流程。
+      // 返回结果：调用方会拿到这个值继续后续流程。
       return {
         mediaType: "audio",
         passed: Boolean(result.transcript) && result.quality !== "noisy",
       };
     }
-    // 教学：返回结果：调用方会拿到这个值继续后续流程。
+    // 返回结果：调用方会拿到这个值继续后续流程。
     return {
       mediaType: "video",
       passed: result.keyframes.length >= 3 && result.motionRisk === "ok",
     };
   });
-  // 教学：返回结果：调用方会拿到这个值继续后续流程。
+  // 返回结果：调用方会拿到这个值继续后续流程。
   return {
     checks,
     passRate: Number((checks.filter((check) => check.passed).length / checks.length).toFixed(3)),
@@ -165,33 +165,33 @@ export function evaluateMultimodalUnderstanding(results) {
 }
 
 /** CLI demo：同时分析图片、语音和视频。 */
-// 教学：普通函数：把一段可复用逻辑命名，降低主流程阅读成本。
+// 普通函数：把一段可复用逻辑命名，降低主流程阅读成本。
 export function runDemo() {
-  // 教学：定义常量：这个值只在当前作用域读取，不会被重新赋值。
+  // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const adapter = createMockMultimodalAdapter();
-  // 教学：定义常量：这个值只在当前作用域读取，不会被重新赋值。
+  // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const image = inspectMediaAsset({
     mediaType: "image",
     ocrText: "owner ops@example.com approval evidence",
     blur: 0.15,
     nsfw: false,
   }, adapter);
-  // 教学：定义常量：这个值只在当前作用域读取，不会被重新赋值。
+  // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const audio = inspectMediaAsset({
     mediaType: "audio",
     transcript: "请检查 agent run timeline 和 evidence board",
     noiseDb: 35,
   }, adapter);
-  // 教学：定义常量：这个值只在当前作用域读取，不会被重新赋值。
+  // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const video = inspectMediaAsset({
     mediaType: "video",
     durationSec: 18,
     frameCaptions: ["run list", "approval panel", "final report"],
   }, adapter);
-  // 教学：定义常量：这个值只在当前作用域读取，不会被重新赋值。
+  // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const evaluation = evaluateMultimodalUnderstanding([image, audio, video]);
 
-  // 教学：返回结果：调用方会拿到这个值继续后续流程。
+  // 返回结果：调用方会拿到这个值继续后续流程。
   return {
     day: 65,
     title: "multimodal-agent-understanding",

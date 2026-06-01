@@ -18,19 +18,19 @@
  * 构建结果写入 dist/index.html，dist 已在根 .gitignore 中排除。
  */
 // mkdir/writeFile 是异步文件 API，用来创建 dist 目录并写入 HTML 文件。
-// 教学：导入依赖：这一行把当前文件需要用到的模块或函数拿进来。
+// 导入依赖：这一行把当前文件需要用到的模块或函数拿进来。
 import { mkdir, writeFile } from 'node:fs/promises';
-// 教学：导入依赖：这一行把当前文件需要用到的模块或函数拿进来。
+// 导入依赖：这一行把当前文件需要用到的模块或函数拿进来。
 import { resolve } from 'node:path';
-// 教学：导入依赖：这一行把当前文件需要用到的模块或函数拿进来。
+// 导入依赖：这一行把当前文件需要用到的模块或函数拿进来。
 import { runDemo } from './index.js';
 
 /** 根据 mock demo 结果生成一个最小可读的 HTML 页面。 */
-// 教学：普通函数：把一段可复用逻辑命名，降低主流程阅读成本。
+// 普通函数：把一段可复用逻辑命名，降低主流程阅读成本。
 function renderHtml(result) {
-  // 教学：定义常量：这个值只在当前作用域读取，不会被重新赋值。
+  // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const items = result.events.map((event) => '<li><strong>' + event.name + '</strong><span>' + event.status + '</span></li>').join('');
-  // 教学：返回结果：调用方会拿到这个值继续后续流程。
+  // 返回结果：调用方会拿到这个值继续后续流程。
   return '<!doctype html>' +
     '<html lang="zh-CN"><head><meta charset="utf-8" />' +
     '<meta name="viewport" content="width=device-width, initial-scale=1" />' +
@@ -43,15 +43,15 @@ function renderHtml(result) {
     '</section></main></body></html>';
 }
 
-// 教学：定义常量：这个值只在当前作用域读取，不会被重新赋值。
+// 定义常量：这个值只在当前作用域读取，不会被重新赋值。
 const result = runDemo();
-// 教学：定义常量：这个值只在当前作用域读取，不会被重新赋值。
+// 定义常量：这个值只在当前作用域读取，不会被重新赋值。
 const distDir = resolve('dist');
 // recursive=true 表示 dist 不存在就创建，存在也不报错。
-// 教学：等待异步操作完成：下一行代码依赖这个结果。
+// 等待异步操作完成：下一行代码依赖这个结果。
 await mkdir(distDir, { recursive: true });
 // 把完整 HTML 写入 dist/index.html，浏览器可直接打开查看。
-// 教学：等待异步操作完成：下一行代码依赖这个结果。
+// 等待异步操作完成：下一行代码依赖这个结果。
 await writeFile(resolve(distDir, 'index.html'), renderHtml(result));
-// 教学：输出到 stderr：用于过程日志、错误或帮助信息，不污染 stdout。
+// 输出到 stderr：用于过程日志、错误或帮助信息，不污染 stdout。
 console.error('built dist/index.html');

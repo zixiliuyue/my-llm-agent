@@ -6,7 +6,7 @@
  */
 // 学习目标：用确定性快照实现 Agent Harness 的回放、比较、评测和 CI 门禁。
 
-// 教学：定义常量：这个值只在当前作用域读取，不会被重新赋值。
+// 定义常量：这个值只在当前作用域读取，不会被重新赋值。
 export const GOLDEN_DATASET = [
   {
     id: "case-tool-call",
@@ -24,22 +24,22 @@ export const GOLDEN_DATASET = [
   },
 ];
 
-// 教学：普通函数：把一段可复用逻辑命名，降低主流程阅读成本。
+// 普通函数：把一段可复用逻辑命名，降低主流程阅读成本。
 function includesAll(actual = [], expected = []) {
-  // 教学：返回结果：调用方会拿到这个值继续后续流程。
+  // 返回结果：调用方会拿到这个值继续后续流程。
   return expected.every((item) => actual.includes(item));
 }
 
-// 教学：导出函数：这是当前模块提供给测试、CLI 或其它本 day 文件使用的能力。
+// 导出函数：这是当前模块提供给测试、CLI 或其它本 day 文件使用的能力。
 export function replayRun(snapshot) {
-  // 教学：定义常量：这个值只在当前作用域读取，不会被重新赋值。
+  // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const events = [
     { type: "input", value: snapshot.input },
     ...snapshot.modelResponses.map((content, index) => ({ type: "model_response", index, content })),
     ...snapshot.toolCalls.map((tool) => ({ type: "tool_call", name: tool.name, status: tool.status })),
     { type: "final", answer: snapshot.finalAnswer },
   ];
-  // 教学：返回结果：调用方会拿到这个值继续后续流程。
+  // 返回结果：调用方会拿到这个值继续后续流程。
   return {
     runId: snapshot.runId,
     promptVersion: snapshot.promptVersion,
@@ -49,13 +49,13 @@ export function replayRun(snapshot) {
   };
 }
 
-// 教学：导出函数：这是当前模块提供给测试、CLI 或其它本 day 文件使用的能力。
+// 导出函数：这是当前模块提供给测试、CLI 或其它本 day 文件使用的能力。
 export function scoreRun(snapshot, goldenCase) {
-  // 教学：定义常量：这个值只在当前作用域读取，不会被重新赋值。
+  // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const tools = snapshot.toolCalls.map((tool) => tool.name);
-  // 教学：定义常量：这个值只在当前作用域读取，不会被重新赋值。
+  // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const citations = snapshot.citations ?? [];
-  // 教学：定义常量：这个值只在当前作用域读取，不会被重新赋值。
+  // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const checks = [
     { id: "tool-call-accuracy", ok: includesAll(tools, goldenCase.expectedTools) },
     { id: "groundedness", ok: includesAll(citations, goldenCase.requiredCitations) },
@@ -63,9 +63,9 @@ export function scoreRun(snapshot, goldenCase) {
     { id: "cost", ok: snapshot.costUsd <= 0.02 },
     { id: "recovery", ok: snapshot.recoveredFromError === true || !goldenCase.id.includes("recovery") },
   ];
-  // 教学：定义常量：这个值只在当前作用域读取，不会被重新赋值。
+  // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const passed = checks.filter((check) => check.ok).length;
-  // 教学：返回结果：调用方会拿到这个值继续后续流程。
+  // 返回结果：调用方会拿到这个值继续后续流程。
   return {
     caseId: goldenCase.id,
     score: passed / checks.length,
@@ -74,15 +74,15 @@ export function scoreRun(snapshot, goldenCase) {
   };
 }
 
-// 教学：导出函数：这是当前模块提供给测试、CLI 或其它本 day 文件使用的能力。
+// 导出函数：这是当前模块提供给测试、CLI 或其它本 day 文件使用的能力。
 export function compareRuns(baseline, candidate) {
-  // 教学：定义常量：这个值只在当前作用域读取，不会被重新赋值。
+  // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const latencyDeltaMs = candidate.latencyMs - baseline.latencyMs;
-  // 教学：定义常量：这个值只在当前作用域读取，不会被重新赋值。
+  // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const costDeltaUsd = Number((candidate.costUsd - baseline.costUsd).toFixed(4));
-  // 教学：定义常量：这个值只在当前作用域读取，不会被重新赋值。
+  // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const changedTools = candidate.toolCalls.map((tool) => tool.name).join(",") !== baseline.toolCalls.map((tool) => tool.name).join(",");
-  // 教学：返回结果：调用方会拿到这个值继续后续流程。
+  // 返回结果：调用方会拿到这个值继续后续流程。
   return {
     baseline: baseline.runId,
     candidate: candidate.runId,
@@ -93,9 +93,9 @@ export function compareRuns(baseline, candidate) {
   };
 }
 
-// 教学：导出函数：这是当前模块提供给测试、CLI 或其它本 day 文件使用的能力。
+// 导出函数：这是当前模块提供给测试、CLI 或其它本 day 文件使用的能力。
 export function createMockSnapshots() {
-  // 教学：返回结果：调用方会拿到这个值继续后续流程。
+  // 返回结果：调用方会拿到这个值继续后续流程。
   return [
     {
       runId: "run-a",
@@ -128,20 +128,20 @@ export function createMockSnapshots() {
   ];
 }
 
-// 教学：导出函数：这是当前模块提供给测试、CLI 或其它本 day 文件使用的能力。
+// 导出函数：这是当前模块提供给测试、CLI 或其它本 day 文件使用的能力。
 export function evaluateSuite({ snapshots = createMockSnapshots(), dataset = GOLDEN_DATASET } = {}) {
-  // 教学：定义常量：这个值只在当前作用域读取，不会被重新赋值。
+  // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const results = dataset.map((goldenCase) => {
-    // 教学：定义常量：这个值只在当前作用域读取，不会被重新赋值。
+    // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
     const snapshot = snapshots.find((item) => item.caseId === goldenCase.id);
-    // 教学：条件判断：根据当前状态选择不同分支，保证错误能尽早暴露。
+    // 条件判断：根据当前状态选择不同分支，保证错误能尽早暴露。
     if (!snapshot) return { caseId: goldenCase.id, ok: false, score: 0, checks: [{ id: "snapshot-present", ok: false }] };
-    // 教学：返回结果：调用方会拿到这个值继续后续流程。
+    // 返回结果：调用方会拿到这个值继续后续流程。
     return scoreRun(snapshot, goldenCase);
   });
-  // 教学：定义常量：这个值只在当前作用域读取，不会被重新赋值。
+  // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const passRate = results.filter((item) => item.ok).length / results.length;
-  // 教学：返回结果：调用方会拿到这个值继续后续流程。
+  // 返回结果：调用方会拿到这个值继续后续流程。
   return {
     results,
     passRate,
@@ -149,11 +149,11 @@ export function evaluateSuite({ snapshots = createMockSnapshots(), dataset = GOL
   };
 }
 
-// 教学：导出函数：这是当前模块提供给测试、CLI 或其它本 day 文件使用的能力。
+// 导出函数：这是当前模块提供给测试、CLI 或其它本 day 文件使用的能力。
 export function runGate({ threshold = 1 } = {}) {
-  // 教学：定义常量：这个值只在当前作用域读取，不会被重新赋值。
+  // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const suite = evaluateSuite();
-  // 教学：返回结果：调用方会拿到这个值继续后续流程。
+  // 返回结果：调用方会拿到这个值继续后续流程。
   return {
     day: 58,
     title: "Agent Harness Eval Replay Gate",
@@ -163,11 +163,11 @@ export function runGate({ threshold = 1 } = {}) {
   };
 }
 
-// 教学：导出函数：这是当前模块提供给测试、CLI 或其它本 day 文件使用的能力。
+// 导出函数：这是当前模块提供给测试、CLI 或其它本 day 文件使用的能力。
 export function runDemo() {
-  // 教学：定义常量：这个值只在当前作用域读取，不会被重新赋值。
+  // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const snapshots = createMockSnapshots();
-  // 教学：返回结果：调用方会拿到这个值继续后续流程。
+  // 返回结果：调用方会拿到这个值继续后续流程。
   return {
     day: 58,
     title: "Agent Harness Eval Replay",
