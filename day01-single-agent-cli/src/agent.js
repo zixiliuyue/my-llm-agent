@@ -112,7 +112,7 @@ export async function runAgent({
   for (let step = 1; step <= maxSteps; step += 1) {
     // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
     const content = await client.chat(messages);
-    console.log(`maxSteps ${messages} [step ${step}] 模型回答: ${content}`);
+    console.log(`111 maxSteps ${messages} [step ${step}] 模型回答: ${content}`);
     onStep({ type: 'model_response', step, preview: preview(content) });
 
     // 定义变量：这个值后面会被更新，所以使用 let。

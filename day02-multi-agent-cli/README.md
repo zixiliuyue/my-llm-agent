@@ -1,11 +1,11 @@
 # Day 02：多 Agent CLI 协作
 
-第二天把 day01 的单体 agent loop 拆成 planner、tool-runner、critic、writer 四个角色。重点是理解 agent 之间如何交接，而不是简单多调用几次模型。
+第二天把 day01 的单体 agent loop 拆成 planner、tool-runner、critic(评论家)、writer 四个角色。重点是理解 agent 之间如何交接，而不是简单多调用几次模型。
 
 ## 概念
 
 - planner：只拆任务，不执行工具。
-- tool-runner：只执行工具并产出 observation。
+- tool-runner：只执行工具并产出 observation(观察)。
 - critic：只检查 observation 是否足够回答问题。
 - writer：只基于已有上下文写 final。
 
@@ -18,6 +18,15 @@
 # 输出判断：stderr 展示各 agent 交接，stdout 输出最终答案
 # 风险：会调用 OLLAMA_HOST 指向的模型
 npm run day02:ask -- "计算 (18+24)*3"
+```
+
+```bash
+# 用途：在 day02 子目录内直接运行同一个示例
+# 执行目录：day02-multi-agent-cli
+# 参数含义：-- 后面是用户问题
+# 输出判断：stderr 展示各 agent 交接，stdout 输出最终答案
+# 风险：会调用 OLLAMA_HOST 指向的模型
+npm run ask -- "计算 (18+24)*3"
 ```
 
 ```bash

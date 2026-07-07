@@ -54,6 +54,7 @@ async function main() {
 
   // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const models = await listOllamaModels({ host });
+  console.log(models);
   // 条件判断：根据当前状态选择不同分支，保证错误能尽早暴露。
   if (!models.ok) {
     // 输出到 stderr：用于过程日志、错误或帮助信息，不污染 stdout。

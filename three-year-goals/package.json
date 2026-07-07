@@ -1,0 +1,15 @@
+{
+  "name": "three-year-goals-learning-project",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "面向未来三年的平台工程与 AI 工程学习项目。",
+  "scripts": {
+    "start": "node src/cli.js",
+    "demo": "node src/cli.js",
+    "test": "node test/run.test.js"
+  },
+  "engines": {
+    "node": ">=18.17"
+  }
+}

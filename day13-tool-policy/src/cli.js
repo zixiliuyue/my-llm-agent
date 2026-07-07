@@ -57,5 +57,5 @@ if (!validation.ok) {
   console.error('day13 demo ok: ' + result.lesson.title);
   // JSON.stringify 第三个参数 2 表示缩进 2 个空格，方便人阅读。
   // 输出到 stdout：这里是命令的正式结果，方便脚本继续处理。
-  console.log(JSON.stringify(result, null, 2));
+  console.log('JSON.stringify', JSON.stringify(result, null, 2));
 }

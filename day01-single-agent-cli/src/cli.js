@@ -39,28 +39,28 @@ function logStep(event) {
   // 条件判断：根据当前状态选择不同分支，保证错误能尽早暴露。
   if (event.type === 'model_response') {
     // 输出到 stderr：用于过程日志、错误或帮助信息，不污染 stdout。
-    console.error(`[step ${event.step}] 模型返回: ${event.preview}`);
+    console.error(`[step model_response ${event.step}] 模型返回: ${event.preview}`);
     // 返回结果：调用方会拿到这个值继续后续流程。
     return;
   }
   // 条件判断：根据当前状态选择不同分支，保证错误能尽早暴露。
   if (event.type === 'tool_call') {
     // 输出到 stderr：用于过程日志、错误或帮助信息，不污染 stdout。
-    console.error(`[step ${event.step}] 调用工具: ${event.tool}`);
+    console.error(`[step  tool_call ${event.step}] 调用工具: ${event.tool}`);
     // 返回结果：调用方会拿到这个值继续后续流程。
     return;
   }
   // 条件判断：根据当前状态选择不同分支，保证错误能尽早暴露。
   if (event.type === 'observation') {
     // 输出到 stderr：用于过程日志、错误或帮助信息，不污染 stdout。
-    console.error(`[step ${event.step}] 工具结果: ${event.preview}`);
+    console.error(`[step observation ${event.step}] 工具结果: ${event.preview}`);
     // 返回结果：调用方会拿到这个值继续后续流程。
     return;
   }
   // 条件判断：根据当前状态选择不同分支，保证错误能尽早暴露。
   if (event.type === 'retry') {
     // 输出到 stderr：用于过程日志、错误或帮助信息，不污染 stdout。
-    console.error(`[step ${event.step}] 协议错误，回填给模型重试: ${event.message}`);
+    console.error(`[step retry ${event.step}] 协议错误，回填给模型重试: ${event.message}`);
   }
 }
 
@@ -69,6 +69,7 @@ function logStep(event) {
 async function main() {
   // 读取命令行参数：process.argv 前两项是 node 和脚本路径，所以业务参数通常从 slice(2) 开始。
   const question = process.argv.slice(2).join(' ').trim();
+  console.log('main question', question);
   // 条件判断：根据当前状态选择不同分支，保证错误能尽早暴露。
   if (!question || question === '--help' || question === '-h') {
     printUsage();
@@ -77,7 +78,7 @@ async function main() {
     // 返回结果：调用方会拿到这个值继续后续流程。
     return;
   }
-
+  console.log('question question question', question);
   // try 块：把可能失败的代码包起来，方便 catch 给出更清晰的错误。
   try {
     // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
@@ -86,7 +87,7 @@ async function main() {
       onStep: logStep,
     });
     // 输出到 stdout：这里是命令的正式结果，方便脚本继续处理。
-    console.log(answer);
+    console.log('answer answer answer', answer);
   } catch (error) {
     // 输出到 stderr：用于过程日志、错误或帮助信息，不污染 stdout。
     console.error(`执行失败: ${error.message}`);

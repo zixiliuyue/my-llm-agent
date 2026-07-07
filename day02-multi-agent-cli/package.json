@@ -6,6 +6,8 @@
   "description": "Day 02: self-contained mini-openclaw example.",
   "scripts": {
     "start": "node src/cli.js",
+    "ask": "node src/cli.js",
+    "day02:ask": "node src/cli.js",
     "demo": "node src/cli.js --help",
     "test": "node test/multi-agent.test.js"
   },

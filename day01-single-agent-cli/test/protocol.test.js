@@ -83,6 +83,7 @@ const recovered = await runAgent({
     '{"type":"final","answer":"已根据协议恢复。"}',
   ]),
 });
+console.log('recovered ', recovered);
 // 测试断言：如果实际值不符合预期，测试会立即失败。
 assert.equal(recovered, '已根据协议恢复。');
 
