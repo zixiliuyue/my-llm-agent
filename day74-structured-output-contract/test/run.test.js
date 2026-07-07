@@ -1,9 +1,7 @@
 /**
  * Day 74 测试：验证 schema 校验、工具参数校验和自动修复回路。
  */
-// 导入依赖：这一行把当前文件需要用到的模块或函数拿进来。
 import assert from "node:assert/strict";
-// 导入依赖：这一行把当前文件需要用到的模块或函数拿进来。
 import { validateSchema, validateToolCall, buildRepairPrompt, produceWithRepair, runDemo } from "../src/index.js";
 
 // 定义常量：一个对象契约,用于基础校验。
@@ -77,5 +75,4 @@ assert.equal(demo.repaired.ok, true);
 assert.equal(demo.toolCalls.badCall.callable, false);
 assert.equal(demo.toolCalls.goodCall.callable, true);
 
-// 输出到 stdout：这里是命令的正式结果,方便脚本继续处理。
 console.log("day74 tests passed");

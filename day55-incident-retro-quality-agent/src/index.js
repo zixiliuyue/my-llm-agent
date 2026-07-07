@@ -5,12 +5,9 @@
  * 注释说明保留在文件顶部，帮助学习时先理解本文件职责。
  */
 // 学习目标：用结构化规则评估事故复盘质量，而不是只看文字是否像报告。
-// 定义常量：这个值只在当前作用域读取，不会被重新赋值。
 const REQUIRED_SECTIONS = ["timeline", "impact", "rootCause", "evidence", "fix", "prevention"];
 
-// 导出函数：这是当前模块提供给测试、CLI 或其它本 day 文件使用的能力。
 export function createMockRetroReport(overrides = {}) {
-  // 返回结果：调用方会拿到这个值继续后续流程。
   return {
     incidentId: overrides.incidentId ?? "INC-2026-0525-002",
     timeline: overrides.timeline ?? [
@@ -26,27 +23,19 @@ export function createMockRetroReport(overrides = {}) {
   };
 }
 
-// 普通函数：把一段可复用逻辑命名，降低主流程阅读成本。
 function hasSensitiveLeak(text) {
-  // 返回结果：调用方会拿到这个值继续后续流程。
   return /(token|password|client_secret|api_key)=((?!<redacted>)[^\s]+)/i.test(String(text || ""));
 }
 
-// 导出函数：这是当前模块提供给测试、CLI 或其它本 day 文件使用的能力。
 export function evaluateRetroQuality(report = createMockRetroReport()) {
-  // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const missing = [];
-  // 循环：按顺序处理多条数据或多个步骤。
   for (const section of REQUIRED_SECTIONS) {
-    // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
     const value = report[section];
-    // 条件判断：根据当前状态选择不同分支，保证错误能尽早暴露。
     if (Array.isArray(value) ? value.length === 0 : !value) {
       missing.push(section);
     }
   }
 
-  // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const checks = [
     { id: "timeline", ok: Array.isArray(report.timeline) && report.timeline.length >= 2 },
     { id: "impact", ok: Boolean(report.impact?.durationMin && report.impact?.scope) },
@@ -56,11 +45,8 @@ export function evaluateRetroQuality(report = createMockRetroReport()) {
     { id: "prevention", ok: Array.isArray(report.prevention) && report.prevention.length > 0 },
     { id: "redaction", ok: !hasSensitiveLeak(report.rawText) },
   ];
-  // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const score = checks.filter((item) => item.ok).length;
-  // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const status = score === checks.length ? "ready" : score >= 5 ? "needs-polish" : "incomplete";
-  // 返回结果：调用方会拿到这个值继续后续流程。
   return {
     day: 55,
     title: "事故复盘质量评估 Agent",
@@ -77,8 +63,6 @@ export function evaluateRetroQuality(report = createMockRetroReport()) {
   };
 }
 
-// 导出函数：这是当前模块提供给测试、CLI 或其它本 day 文件使用的能力。
 export function runDemo() {
-  // 返回结果：调用方会拿到这个值继续后续流程。
   return evaluateRetroQuality(createMockRetroReport());
 }

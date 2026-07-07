@@ -36,11 +36,19 @@
 ## 3. 常用命令
 
 ```bash
-# 用途：运行 71 天所有不依赖真实模型的测试
+# 用途：运行所有不依赖真实模型的 day 单元测试（遍历 day* 目录，逐个跑并汇总）
 # 执行目录：<项目根目录>
-# 结果判断：所有 dayXX tests passed，退出码为 0
+# 结果判断：最后打印 all day tests passed，退出码为 0；已知未就绪 day 以 WARN 隔离、不计入失败
 # 风险：只跑本地测试，不调用 Ollama
 npm test
+```
+
+```bash
+# 用途：校验每个 day 的结构规范（package.json/src/test/README + 必需 scripts + README 五段 + tests passed 标记）
+# 执行目录：<项目根目录>
+# 结果判断：打印 structure check passed，退出码为 0；error 阻断、warn 只提醒
+# 风险：只做静态文件/文本检查，不执行任何 day 代码
+npm run test:structure
 ```
 
 ```bash
@@ -176,4 +184,10 @@ fix: 修复 dayXX 自包含测试
 chore: 整理 mini-openclaw 学习脚本
 ```
 
-每天的代码都要加中文注释，按照这个文件的标准 day01-single-agent-cli/src/cli.js 加入注释
+每天的代码都要有中文注释，但注释解释“为什么”，不是把语法翻译一遍。
+
+注释原则（避免制造噪音）：
+
+- 保留：文件顶部学习目标、导出函数用途、安全边界/协议解析/状态写入/权限判断的原因、易错点和取舍说明。
+- 删除：只描述语法本身、不含业务信息的逐行套话（如“定义常量：这个值只在当前作用域读取”“返回结果：调用方会拿到这个值”）。这类注释是噪音，违反“砍掉一切不改变决策的信息”。
+- 校验：可用 `node scripts/clean-noise-comments.mjs --dry-run` 检查是否又引入了固定套话行。

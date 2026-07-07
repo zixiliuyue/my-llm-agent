@@ -5,50 +5,34 @@
  * 注释说明保留在文件顶部，帮助学习时先理解本文件职责。
  */
 // 学习目标：用只读方式描述本机运行大模型、多模态工具前需要检查的环境。
-// 导入依赖：这一行把当前文件需要用到的模块或函数拿进来。
 import os from "node:os";
-// 导入依赖：这一行把当前文件需要用到的模块或函数拿进来。
 import path from "node:path";
 
-// 定义常量：这个值只在当前作用域读取，不会被重新赋值。
 const DEFAULT_OLLAMA_HOST = "http://127.0.0.1:11434";
-// 定义常量：这个值只在当前作用域读取，不会被重新赋值。
 const DEFAULT_COMFYUI_HOST = "http://127.0.0.1:8188";
 
 // 判断地址是否只指向本机，避免学习项目误把任务发到云端或远程机器。
-// 导出函数：这是当前模块提供给测试、CLI 或其它本 day 文件使用的能力。
 export function isLocalHttpUrl(value) {
-  // try 块：把可能失败的代码包起来，方便 catch 给出更清晰的错误。
   try {
-    // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
     const url = new URL(value);
-    // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
     const localHosts = new Set(["127.0.0.1", "localhost", "::1", "[::1]"]);
-    // 返回结果：调用方会拿到这个值继续后续流程。
     return (url.protocol === "http:" || url.protocol === "https:") && localHosts.has(url.hostname);
   } catch {
-    // 返回结果：调用方会拿到这个值继续后续流程。
     return false;
   }
 }
 
-// 普通函数：把一段可复用逻辑命名，降低主流程阅读成本。
 function normalizeModelDirs(inputDirs = []) {
-  // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const home = os.homedir();
-  // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const defaults = [
     path.join(home, ".ollama", "models"),
     path.join(home, "ComfyUI", "models"),
   ];
-  // 返回结果：调用方会拿到这个值继续后续流程。
   return [...new Set([...inputDirs, ...defaults])];
 }
 
 // 生成演示输入；真实命令检查由根 doctor 负责，本 day 保持纯函数便于测试。
-// 导出函数：这是当前模块提供给测试、CLI 或其它本 day 文件使用的能力。
 export function createDemoInput(overrides = {}) {
-  // 返回结果：调用方会拿到这个值继续后续流程。
   return {
     platform: overrides.platform ?? process.platform,
     arch: overrides.arch ?? process.arch,
@@ -63,21 +47,14 @@ export function createDemoInput(overrides = {}) {
   };
 }
 
-// 普通函数：把一段可复用逻辑命名，降低主流程阅读成本。
 function nodeVersionStatus(version) {
-  // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const major = Number(String(version).split(".")[0]);
-  // 返回结果：调用方会拿到这个值继续后续流程。
   return major >= 18 ? "ok" : "warn";
 }
 
-// 普通函数：把一段可复用逻辑命名，降低主流程阅读成本。
 function gpuAdvice(input) {
-  // 条件判断：根据当前状态选择不同分支，保证错误能尽早暴露。
   if (input.gpu?.vendor === "nvidia") {
-    // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
     const vram = Number(input.gpu.vramGb ?? 0);
-    // 返回结果：调用方会拿到这个值继续后续流程。
     return {
       status: vram >= 16 ? "ok" : "warn",
       message:
@@ -86,15 +63,12 @@ function gpuAdvice(input) {
           : "NVIDIA 显存偏小，建议先跑 7B 文本模型和低分辨率图片工作流。",
     };
   }
-  // 条件判断：根据当前状态选择不同分支，保证错误能尽早暴露。
   if (input.platform === "darwin" && input.arch === "arm64") {
-    // 返回结果：调用方会拿到这个值继续后续流程。
     return {
       status: "ok",
       message: "Apple Silicon 适合本地 7B 文本模型和轻量图片队列，视频实验建议转到 NVIDIA Windows。"
     };
   }
-  // 返回结果：调用方会拿到这个值继续后续流程。
   return {
     status: "warn",
     message: "未发现明确 GPU 信息，先使用 mock 或 CPU 轻量实验。"
@@ -102,11 +76,8 @@ function gpuAdvice(input) {
 }
 
 // 输出统一检查报告；这里不执行安装、不下载模型、不访问网络。
-// 导出函数：这是当前模块提供给测试、CLI 或其它本 day 文件使用的能力。
 export function inspectLocalRuntime(input = createDemoInput()) {
-  // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const gpu = gpuAdvice(input);
-  // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const checks = [
     {
       id: "node",
@@ -146,7 +117,6 @@ export function inspectLocalRuntime(input = createDemoInput()) {
     }
   ];
 
-  // 返回结果：调用方会拿到这个值继续后续流程。
   return {
     ok: checks.every((item) => item.status !== "error"),
     localOnly: true,
@@ -156,11 +126,8 @@ export function inspectLocalRuntime(input = createDemoInput()) {
 }
 
 // 演示入口返回 JSON，便于根 examples:smoke 聚合运行。
-// 导出函数：这是当前模块提供给测试、CLI 或其它本 day 文件使用的能力。
 export function runDemo(overrides = {}) {
-  // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const input = createDemoInput(overrides);
-  // 返回结果：调用方会拿到这个值继续后续流程。
   return {
     day: 31,
     title: "本地运行环境检测",

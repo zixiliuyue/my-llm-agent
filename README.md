@@ -87,11 +87,19 @@
 ## 快速验证
 
 ```bash
-# 用途：运行 day01-day75 的 mock/unit 测试
+# 用途：运行所有 day 的 mock/unit 测试（遍历 day* 目录逐个跑并汇总）
 # 执行目录：<项目根目录>
-# 输出判断：每个 day 打印 tests passed，最终退出码为 0
+# 输出判断：最后打印 all day tests passed，退出码为 0；已知未就绪 day 以 WARN 隔离
 # 风险：不调用真实模型、不部署、不执行远程命令
 npm test
+```
+
+```bash
+# 用途：校验每个 day 的结构规范（文件齐全、必需 scripts、README 段落、tests passed 标记）
+# 执行目录：<项目根目录>
+# 输出判断：打印 structure check passed，退出码为 0；error 阻断、warn 只提醒
+# 风险：只做静态检查，不执行任何 day 代码
+npm run test:structure
 ```
 
 ```bash

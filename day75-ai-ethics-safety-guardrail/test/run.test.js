@@ -1,9 +1,7 @@
 /**
  * Day 75 测试：验证输入护栏、输出护栏和端到端护栏管道。
  */
-// 导入依赖：这一行把当前文件需要用到的模块或函数拿进来。
 import assert from "node:assert/strict";
-// 导入依赖：这一行把当前文件需要用到的模块或函数拿进来。
 import { inputGuard, outputGuard, runGuardedPipeline, runDemo } from "../src/index.js";
 
 // 测试断言：正常输入应放行。
@@ -56,5 +54,4 @@ assert.equal(demo.revisedOutput.revised, true);
 // 测试断言：审计记录应覆盖三次调用的多个阶段。
 assert.ok(demo.audit.length >= 3);
 
-// 输出到 stdout：这里是命令的正式结果,方便脚本继续处理。
 console.log("day75 tests passed");

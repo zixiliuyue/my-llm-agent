@@ -34,7 +34,6 @@ const BIAS_PATTERNS = [
  * 输入护栏:对用户请求做风险意图分类。
  * 命中任一高风险类别就建议 block,并给出脱敏后的理由(不回显原始危险请求全文)。
  */
-// 导出函数：这是当前模块提供给测试、CLI 或其它本 day 文件使用的能力。
 export function inputGuard(userInput) {
   // 定义常量：逐类别匹配,收集命中的风险类别。
   const hits = INPUT_RISK_CATEGORIES.filter((cat) => cat.patterns.some((p) => p.test(userInput)));
@@ -57,7 +56,6 @@ export function inputGuard(userInput) {
  * toxicity 命中直接拦截(block);bias 命中做改写(revise),而不是简单拒绝,
  * 因为 bias 往往是“表述不当”而非“意图恶意”,改写比拒答更有用。
  */
-// 导出函数：这是当前模块提供给测试、CLI 或其它本 day 文件使用的能力。
 export function outputGuard(modelOutput) {
   // 定义常量：toxicity 命中列表。
   const toxic = TOXICITY_PATTERNS.some((p) => p.test(modelOutput));
@@ -99,7 +97,6 @@ export function outputGuard(modelOutput) {
  * generate 是 (userInput) => modelOutput 的函数,真实系统里就是一次 LLM 生成。
  * 无论放行还是拦截,都写一条审计记录,便于事后复盘和合规审查。
  */
-// 导出函数：这是当前模块提供给测试、CLI 或其它本 day 文件使用的能力。
 export function runGuardedPipeline({ userInput, generate, audit = [] }) {
   // 定义常量：先过输入护栏。
   const input = inputGuard(userInput);
@@ -133,7 +130,6 @@ export function runGuardedPipeline({ userInput, generate, audit = [] }) {
 }
 
 /** CLI demo：跑三条请求——正常、输入违规、输出带偏见。 */
-// 普通函数：把一段可复用逻辑命名,降低主流程阅读成本。
 export function runDemo() {
   // 定义常量：一个 mock 模型——正常问题正常答,遇到“谁适合编程”时故意产出带偏见的答案。
   const generate = (input) => {

@@ -10,16 +10,12 @@ export const DEFAULT_LOCAL_OLLAMA_HOST = 'http://127.0.0.1:11434';
 export const DEFAULT_MODEL = 'qwen2.5:7b';
 
 /** 规范化 Ollama 地址，避免结尾斜杠影响 API 拼接。 */
-// 导出函数：这是当前模块提供给测试、CLI 或其它本 day 文件使用的能力。
 export function normalizeHost(host = DEFAULT_LOCAL_OLLAMA_HOST) {
-  // 返回结果：调用方会拿到这个值继续后续流程。
   return String(host || DEFAULT_LOCAL_OLLAMA_HOST).replace(/\/+$/, '');
 }
 
 /** 从环境变量生成 Ollama 配置，避免把地址写死在源码里。 */
-// 读取环境变量：允许用户不改源码就切换模型地址、端口或运行模式。
 export function buildOllamaConfig(env = process.env) {
-  // 返回结果：调用方会拿到这个值继续后续流程。
   return {
     host: normalizeHost(env.OLLAMA_HOST || DEFAULT_LOCAL_OLLAMA_HOST),
     model: env.OLLAMA_MODEL || DEFAULT_MODEL,
@@ -28,18 +24,14 @@ export function buildOllamaConfig(env = process.env) {
 }
 
 /** 生成测试环境 Docker dry-run 命令，不实际部署。 */
-// 导出函数：这是当前模块提供给测试、CLI 或其它本 day 文件使用的能力。
 export function buildDockerDryRun({
   // 更新状态：这里会改变前面定义的变量或对象字段。
   port = '11434',
   // 更新状态：这里会改变前面定义的变量或对象字段。
   modelDir = '/data9/ollama',
 } = {}) {
-  // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const safePort = String(port).trim() || '11434';
-  // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const safeModelDir = String(modelDir).trim() || '/data9/ollama';
-  // 返回结果：调用方会拿到这个值继续后续流程。
   return [
     'docker run -d \\',
     '  --name ollama-agent-learning \\',
@@ -56,29 +48,21 @@ export async function checkOllamaHealth({
   // 更新状态：这里会改变前面定义的变量或对象字段。
   fetchImpl = globalThis.fetch,
 } = {}) {
-  // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const baseUrl = normalizeHost(host);
-  // try 块：把可能失败的代码包起来，方便 catch 给出更清晰的错误。
   try {
     // /api/tags 是 Ollama 的只读模型列表接口：健康检查用它确认服务在线。
     // 发起 HTTP 请求：这里会访问本地 API 或 Ollama 服务。
     const response = await fetchImpl(`${baseUrl}/api/tags`);
-    // 条件判断：根据当前状态选择不同分支，保证错误能尽早暴露。
     if (!response.ok) {
-      // 返回结果：调用方会拿到这个值继续后续流程。
       return { ok: false, host: baseUrl, error: `HTTP ${response.status}` };
     }
-    // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
     const body = await response.json();
-    // 返回结果：调用方会拿到这个值继续后续流程。
     return {
       ok: true,
       host: baseUrl,
       models: Array.isArray(body.models) ? body.models.map((item) => item.name).filter(Boolean) : [],
     };
-  // catch 块：把异常转换成可理解的错误结果或退出码。
   } catch (error) {
-    // 返回结果：调用方会拿到这个值继续后续流程。
     return { ok: false, host: baseUrl, error: error.message };
   }
 }

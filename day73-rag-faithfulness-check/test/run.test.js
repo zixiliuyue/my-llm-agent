@@ -1,9 +1,7 @@
 /**
  * Day 73 测试：验证拆句、单句证据支撑判定和整体 faithfulness 聚合。
  */
-// 导入依赖：这一行把当前文件需要用到的模块或函数拿进来。
 import assert from "node:assert/strict";
-// 导入依赖：这一行把当前文件需要用到的模块或函数拿进来。
 import { splitSentences, checkSentenceSupport, evaluateFaithfulness, runDemo } from "../src/index.js";
 
 // 定义常量：拆句应正确切分中英文句子。
@@ -48,5 +46,4 @@ assert.equal(demo.day, 73);
 // 测试断言：忠于证据的答案 faithfulness 应高于夹带幻觉的答案。
 assert.ok(demo.faithful.faithfulness > demo.hallucinated.faithfulness);
 
-// 输出到 stdout：这里是命令的正式结果,方便脚本继续处理。
 console.log("day73 tests passed");

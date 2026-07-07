@@ -11,7 +11,6 @@
  */
 
 /** 把一段答案粗切成句子,中英文标点都作为分隔符。 */
-// 普通函数：把一段可复用逻辑命名,降低主流程阅读成本。
 export function splitSentences(text) {
   // 返回结果：按句末标点切分,去掉空白句。
   return String(text || "")
@@ -26,7 +25,6 @@ export function splitSentences(text) {
  * 重合度永远算不准。字符级 bigram(相邻两字)对中英文都稳健,是教学里最省事的近似。
  * 真实系统应换成分词器 + 向量相似度或 NLI 模型。
  */
-// 普通函数：把一段可复用逻辑命名,降低主流程阅读成本。
 function toTokens(sentence) {
   // 定义常量：先去掉标点和空白,只保留连续实义字符。
   const cleaned = String(sentence)
@@ -52,7 +50,6 @@ function toTokens(sentence) {
  * 模拟 NLI entailment:计算句子关键词在“任一证据片段”中的最大重合比例,
  * 超过阈值视为 supported,否则视为幻觉候选。
  */
-// 导出函数：这是当前模块提供给测试、CLI 或其它本 day 文件使用的能力。
 export function checkSentenceSupport({ sentence, evidences, threshold = 0.5 }) {
   // 定义常量：待校验句子的关键词集合。
   const tokens = toTokens(sentence);
@@ -93,7 +90,6 @@ export function checkSentenceSupport({ sentence, evidences, threshold = 0.5 }) {
  * 对整条答案做 faithfulness 评估。
  * 拆句 -> 逐句判定 -> 聚合成分数和拒答建议。
  */
-// 导出函数：这是当前模块提供给测试、CLI 或其它本 day 文件使用的能力。
 export function evaluateFaithfulness({ answer, evidences, threshold = 0.5, minFaithfulness = 0.8 }) {
   // 定义常量：把答案拆成句子。
   const sentences = splitSentences(answer);
@@ -125,7 +121,6 @@ export function evaluateFaithfulness({ answer, evidences, threshold = 0.5, minFa
 }
 
 /** CLI demo：分别评估一条“忠于证据”和一条“夹带幻觉”的答案。 */
-// 普通函数：把一段可复用逻辑命名,降低主流程阅读成本。
 export function runDemo() {
   // 定义常量：模拟 day59 RAG 检索回来的证据片段。
   const evidences = [

@@ -18,21 +18,15 @@ export const VIDEO_FIRST_STEP_PROFILE = {
   note: "作为短视频第一步评估，先用单张本地图片生成短片段。",
 };
 
-// 导出函数：这是当前模块提供给测试、CLI 或其它本 day 文件使用的能力。
 export function parseSize(size) {
-  // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const match = /^(\d+)x(\d+)$/.exec(size);
-  // 条件判断：根据当前状态选择不同分支，保证错误能尽早暴露。
   if (!match) {
-    // 抛出错误：让调用方知道当前流程不能继续。
     throw new Error(`invalid video size: ${size}`);
   }
-  // 返回结果：调用方会拿到这个值继续后续流程。
   return { width: Number(match[1]), height: Number(match[2]) };
 }
 
 // 生成短视频计划，不执行真实推理。
-// 导出函数：这是当前模块提供给测试、CLI 或其它本 day 文件使用的能力。
 export function buildImageToVideoPlan({
   sourceImage,
   // 更新状态：这里会改变前面定义的变量或对象字段。
@@ -42,14 +36,10 @@ export function buildImageToVideoPlan({
   // 更新状态：这里会改变前面定义的变量或对象字段。
   motion = "low",
 }) {
-  // 条件判断：根据当前状态选择不同分支，保证错误能尽早暴露。
   if (!sourceImage || /^https?:\/\//i.test(sourceImage)) {
-    // 抛出错误：让调用方知道当前流程不能继续。
     throw new Error("sourceImage must be a local image path");
   }
-  // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const parsedSize = parseSize(size);
-  // 返回结果：调用方会拿到这个值继续后续流程。
   return {
     provider: "local:video",
     profile: VIDEO_FIRST_STEP_PROFILE.id,
@@ -62,18 +52,14 @@ export function buildImageToVideoPlan({
   };
 }
 
-// 导出函数：这是当前模块提供给测试、CLI 或其它本 day 文件使用的能力。
 export function recommendVideoFirstStep({ platform = "darwin", gpuVendor = "apple", vramGb = 0 } = {}) {
-  // 条件判断：根据当前状态选择不同分支，保证错误能尽早暴露。
   if (platform === "win32" && gpuVendor === "nvidia" && vramGb >= 16) {
-    // 返回结果：调用方会拿到这个值继续后续流程。
     return {
       canTry: true,
       profile: VIDEO_FIRST_STEP_PROFILE.id,
       note: "Windows + RTX 5060 Ti 16G 可以从 SVD 图生短视频开始，但先控制帧数和分辨率。",
     };
   }
-  // 返回结果：调用方会拿到这个值继续后续流程。
   return {
     canTry: false,
     profile: VIDEO_FIRST_STEP_PROFILE.id,
@@ -81,9 +67,7 @@ export function recommendVideoFirstStep({ platform = "darwin", gpuVendor = "appl
   };
 }
 
-// 导出函数：这是当前模块提供给测试、CLI 或其它本 day 文件使用的能力。
 export function runDemo() {
-  // 返回结果：调用方会拿到这个值继续后续流程。
   return {
     day: 38,
     title: "本地短视频第一步",

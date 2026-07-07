@@ -158,10 +158,8 @@ export function checkApproval(toolName, approvalContext = {}) {
  *
  * overrides 是给测试或 CLI 临时覆盖字段用的对象；例如传入 message 可以模拟用户输入。
  */
-// 导出函数：这是当前模块提供给测试、CLI 或其它本 day 文件使用的能力。
 export function createDemoInput(overrides = {}) {
   // 返回对象就是本 day 的最小请求形状，字段都显式写出来方便学习。
-  // 返回结果：调用方会拿到这个值继续后续流程。
   return {
     // requestId 模拟一次请求或一次 agent run 的唯一标识。
     requestId: "day13-demo",
@@ -187,7 +185,6 @@ export function createDemoInput(overrides = {}) {
  *
  * input 默认来自 createDemoInput；测试可以传自定义 input 验证流程是否稳定。
  */
-// 导出函数：这是当前模块提供给测试、CLI 或其它本 day 文件使用的能力。
 export function runDemo(input = createDemoInput()) {
   // 对每个工具进行风险评估和审批检查
   const toolResults = input.tools?.map((tool, index) => {
@@ -206,7 +203,6 @@ export function runDemo(input = createDemoInput()) {
   }) || [];
   console.log('toolResults toolResults:', toolResults);
   // events 是教学版事件流，用数组按顺序描述今天的关键步骤。
-  // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const events = toolResults.map(result => ({
     step: result.step,
     name: `${result.name} (${result.riskLevel} risk)`,
@@ -224,7 +220,6 @@ export function runDemo(input = createDemoInput()) {
   const pendingCount = toolResults.filter(r => r.pendingApproval).length;
 
   // 返回统一结构，方便每一天用同一套测试方式验证。
-  // 返回结果：调用方会拿到这个值继续后续流程。
   return {
     // ok=true 表示 demo 流程成功，没有触发校验错误。
     ok: true,
@@ -258,16 +253,12 @@ export function runDemo(input = createDemoInput()) {
  *
  * result 是 runDemo 返回的对象；函数返回 {ok:false,error} 时 CLI 会退出非 0。
  */
-// 导出函数：这是当前模块提供给测试、CLI 或其它本 day 文件使用的能力。
 export function validateDemo(result) {
   // 没有结果或 ok 不是 true，说明核心流程没有成功执行。
-  // 条件判断：根据当前状态选择不同分支，保证错误能尽早暴露。
   if (!result || result.ok !== true) return { ok: false, error: 'demo 没有成功执行' };
   // events 必须是非空数组，因为本项目用事件流教学 agent 平台行为。
-  // 条件判断：根据当前状态选择不同分支，保证错误能尽早暴露。
   if (!Array.isArray(result.events) || result.events.length === 0) return { ok: false, error: 'demo 没有产生事件' };
   // safeMode 必须保持 true，防止教学 demo 意外执行真实外部动作。
-  // 条件判断：根据当前状态选择不同分支，保证错误能尽早暴露。
   if (result.summary.safeMode !== true) return { ok: false, error: 'demo 必须保持 safeMode' };
   // 必须包含工具评估结果
   if (!result.toolResults) return { ok: false, error: 'demo 缺少工具评估结果' };
@@ -276,6 +267,5 @@ export function validateDemo(result) {
     return { ok: false, error: '统计信息不一致' };
   }
   // 所有检查通过，返回 ok=true 给 CLI 和测试使用。
-  // 返回结果：调用方会拿到这个值继续后续流程。
   return { ok: true };
 }

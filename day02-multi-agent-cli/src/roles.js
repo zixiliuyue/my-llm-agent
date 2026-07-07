@@ -24,9 +24,7 @@ export const rolePrompts = {
 };
 
 /** 生成不同 agent 角色的 system/user 消息。 */
-// 导出函数：这是当前模块提供给测试、CLI 或其它本 day 文件使用的能力。
 export function roleMessages(role, payload) {
-  // 返回结果：调用方会拿到这个值继续后续流程。
   return [
     { role: 'system', content: rolePrompts[role] },
     // 序列化对象：把 JS 对象转成 JSON 字符串，便于写入请求体或 stdout。

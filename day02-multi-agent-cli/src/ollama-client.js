@@ -15,25 +15,18 @@ export const DEFAULT_OLLAMA_HOST = 'http://127.0.0.1:11434';
 export const DEFAULT_MODEL = 'qwen2.5:7b';
 
 /** 去掉 host 末尾的斜杠，避免拼接 URL 时出现双斜杠。 */
-// 普通函数：把一段可复用逻辑命名，降低主流程阅读成本。
 function normalizeHost(host) {
-  // 返回结果：调用方会拿到这个值继续后续流程。
   return String(host || DEFAULT_OLLAMA_HOST).replace(/\/+$/, '');
 }
 
 /** 创建一个只包含 chat 方法的最小 Ollama client。 */
-// 导出函数：这是当前模块提供给测试、CLI 或其它本 day 文件使用的能力。
 export function createOllamaClient({
-  // 读取环境变量：允许用户不改源码就切换模型地址、端口或运行模式。
   host = process.env.OLLAMA_HOST || DEFAULT_OLLAMA_HOST,
-  // 读取环境变量：允许用户不改源码就切换模型地址、端口或运行模式。
   model = process.env.OLLAMA_MODEL || DEFAULT_MODEL,
   // 更新状态：这里会改变前面定义的变量或对象字段。
   fetchImpl = globalThis.fetch,
 } = {}) {
-  // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const baseUrl = normalizeHost(host);
-  // 返回结果：调用方会拿到这个值继续后续流程。
   return {
     host: baseUrl,
     model,
@@ -61,21 +54,14 @@ export function createOllamaClient({
           },
         }),
       });
-      // 条件判断：根据当前状态选择不同分支，保证错误能尽早暴露。
       if (!response.ok) {
-        // 抛出错误：让调用方知道当前流程不能继续。
         throw new Error(`Ollama 请求失败: HTTP ${response.status}`);
       }
-      // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
       const data = await response.json();
-      // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
       const content = data?.message?.content;
-      // 条件判断：根据当前状态选择不同分支，保证错误能尽早暴露。
       if (typeof content !== 'string' || !content.trim()) {
-        // 抛出错误：让调用方知道当前流程不能继续。
         throw new Error('Ollama 返回格式不符合预期');
       }
-      // 返回结果：调用方会拿到这个值继续后续流程。
       return content;
     },
   };

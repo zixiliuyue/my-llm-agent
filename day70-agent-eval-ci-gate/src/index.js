@@ -5,7 +5,6 @@
  * 比较 baseline/current 指标，并给出 pass/fail gate。
  */
 
-// 定义常量：这个值只在当前作用域读取，不会被重新赋值。
 export const DEFAULT_BASELINE = {
   version: "main",
   metrics: {
@@ -17,7 +16,6 @@ export const DEFAULT_BASELINE = {
   },
 };
 
-// 定义常量：这个值只在当前作用域读取，不会被重新赋值。
 export const DEFAULT_CURRENT = {
   version: "pr",
   metrics: {
@@ -30,9 +28,7 @@ export const DEFAULT_CURRENT = {
 };
 
 /** 比较新旧评估指标，生成 gate 判断。 */
-// 普通函数：把一段可复用逻辑命名，降低主流程阅读成本。
 export function compareEvalReports(baseline, current, thresholds = defaultThresholds()) {
-  // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const rows = [
     compareHigherBetter("passRate", baseline, current, thresholds.minPassRate),
     compareHigherBetter("toolCallAccuracy", baseline, current, thresholds.minToolCallAccuracy),
@@ -40,7 +36,6 @@ export function compareEvalReports(baseline, current, thresholds = defaultThresh
     compareLowerBetter("avgLatencyMs", baseline, current, thresholds.maxLatencyRegressionRatio),
     compareLowerBetter("costUsd", baseline, current, thresholds.maxCostRegressionRatio),
   ];
-  // 返回结果：调用方会拿到这个值继续后续流程。
   return {
     ok: rows.every((row) => row.ok),
     rows,
@@ -49,32 +44,21 @@ export function compareEvalReports(baseline, current, thresholds = defaultThresh
   };
 }
 
-// 普通函数：把一段可复用逻辑命名，降低主流程阅读成本。
 function compareHigherBetter(name, baseline, current, minimum) {
-  // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const base = baseline.metrics[name];
-  // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const now = current.metrics[name];
-  // 返回结果：调用方会拿到这个值继续后续流程。
   return { metric: name, baseline: base, current: now, delta: Number((now - base).toFixed(4)), ok: now >= minimum };
 }
 
-// 普通函数：把一段可复用逻辑命名，降低主流程阅读成本。
 function compareLowerBetter(name, baseline, current, maxRatio) {
-  // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const base = baseline.metrics[name];
-  // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const now = current.metrics[name];
-  // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const ratio = base === 0 ? 1 : now / base;
-  // 返回结果：调用方会拿到这个值继续后续流程。
   return { metric: name, baseline: base, current: now, delta: Number((now - base).toFixed(4)), ratio: Number(ratio.toFixed(3)), ok: ratio <= maxRatio };
 }
 
 /** CI gate 默认阈值。 */
-// 普通函数：把一段可复用逻辑命名，降低主流程阅读成本。
 export function defaultThresholds() {
-  // 返回结果：调用方会拿到这个值继续后续流程。
   return {
     minPassRate: 0.9,
     minToolCallAccuracy: 0.9,
@@ -85,9 +69,7 @@ export function defaultThresholds() {
 }
 
 /** 生成 PR 可读 Markdown 报告。 */
-// 普通函数：把一段可复用逻辑命名，降低主流程阅读成本。
 export function renderMarkdownReport(comparison) {
-  // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const lines = [
     "# Agent Eval CI Report",
     "",
@@ -96,18 +78,14 @@ export function renderMarkdownReport(comparison) {
     "| Metric | Baseline | Current | Delta | Status |",
     "|---|---:|---:|---:|---|",
   ];
-  // 循环：按顺序处理多条数据或多个步骤。
   for (const row of comparison.rows) {
     lines.push(`| ${row.metric} | ${row.baseline} | ${row.current} | ${row.delta} | ${row.ok ? "PASS" : "FAIL"} |`);
   }
-  // 返回结果：调用方会拿到这个值继续后续流程。
   return `${lines.join("\n")}\n`;
 }
 
 /** GitHub Actions workflow 内容；仓库根目录也会放真实 workflow 文件。 */
-// 普通函数：把一段可复用逻辑命名，降低主流程阅读成本。
 export function createGithubActionsWorkflow() {
-  // 返回结果：调用方会拿到这个值继续后续流程。
   return `name: Agent Eval Gate
 on:
   pull_request:
@@ -128,11 +106,8 @@ jobs:
 }
 
 /** CI 执行入口。 */
-// 普通函数：把一段可复用逻辑命名，降低主流程阅读成本。
 export function runCiGate({ baseline = DEFAULT_BASELINE, current = DEFAULT_CURRENT } = {}) {
-  // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const comparison = compareEvalReports(baseline, current);
-  // 返回结果：调用方会拿到这个值继续后续流程。
   return {
     day: 70,
     title: "agent-eval-ci-gate",
@@ -143,11 +118,8 @@ export function runCiGate({ baseline = DEFAULT_BASELINE, current = DEFAULT_CURRE
 }
 
 /** CLI demo：输出 gate 结果和 workflow 草案。 */
-// 普通函数：把一段可复用逻辑命名，降低主流程阅读成本。
 export function runDemo() {
-  // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const gate = runCiGate();
-  // 返回结果：调用方会拿到这个值继续后续流程。
   return {
     ...gate,
     localOnly: true,

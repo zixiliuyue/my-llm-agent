@@ -21,7 +21,6 @@ export const DEFAULT_RUBRIC = [
  * 输入 rubric 维度 + 待评回答,输出 1-5 分和理由。
  * 教学重点不是这段规则多聪明,而是“判断”被隔离在一个可替换的函数里。
  */
-// 普通函数：把一段可复用逻辑命名,降低主流程阅读成本。
 function mockJudgeModel({ dimension, answer, reference }) {
   // 定义变量：初始给中间分,再根据信号加减,最终裁剪到 1-5。
   let score = 3;
@@ -65,7 +64,6 @@ function mockJudgeModel({ dimension, answer, reference }) {
  * 单个裁判对一条回答按整套 rubric 打分。
  * 返回每个维度的分数 + 加权总分,总分归一化到 0-1 便于跨用例比较。
  */
-// 导出函数：这是当前模块提供给测试、CLI 或其它本 day 文件使用的能力。
 export function judgeAnswer({ answer, reference, rubric = DEFAULT_RUBRIC, judgeModel = mockJudgeModel }) {
   // 定义常量：逐维度调用裁判模型,收集打分明细。
   const dimensions = rubric.map((dimension) => {
@@ -96,7 +94,6 @@ export function judgeAnswer({ answer, reference, rubric = DEFAULT_RUBRIC, judgeM
  * 缓解手段:用多个裁判(可不同模型/温度)分别打分,取中位数降低离群裁判影响。
  * 这段聚合逻辑是确定性的,必须写代码,不能让模型“自己商量”。
  */
-// 导出函数：这是当前模块提供给测试、CLI 或其它本 day 文件使用的能力。
 export function ensembleJudge({ answer, reference, rubric = DEFAULT_RUBRIC, judges }) {
   // 定义常量：每个裁判独立打一次分,得到一组归一化总分。
   const votes = judges.map((judgeModel, index) => {
@@ -124,7 +121,6 @@ export function ensembleJudge({ answer, reference, rubric = DEFAULT_RUBRIC, judg
  * 与 golden 标签对齐:判断自动评测结论是否和人工标注一致。
  * 这是评测“评测器本身”的一步——只有 judge 与人工标签对齐,自动分数才可信。
  */
-// 导出函数：这是当前模块提供给测试、CLI 或其它本 day 文件使用的能力。
 export function alignWithGolden({ consensus, threshold = 0.6, goldenLabel }) {
   // 定义常量：自动判定 pass/fail,阈值以上视为“合格回答”。
   const autoPass = consensus >= threshold;
@@ -140,7 +136,6 @@ export function alignWithGolden({ consensus, threshold = 0.6, goldenLabel }) {
 }
 
 /** CLI demo：对两条候选回答做多裁判评测,并与 golden 标签对齐。 */
-// 普通函数：把一段可复用逻辑命名,降低主流程阅读成本。
 export function runDemo() {
   // 定义常量：构造三个裁判(模拟三次 judge 调用),其中一个故意偏严格。
   const strictJudge = ({ dimension, answer, reference }) => {

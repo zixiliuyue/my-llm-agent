@@ -11,36 +11,23 @@ const MIN_NODE_MAJOR = 18;
 const MIN_NODE_MINOR = 17;
 
 /** 打印当前 CLI 的用法说明，帮助学习者直接运行当天示例。 */
-// 普通函数：把一段可复用逻辑命名，降低主流程阅读成本。
 function printUsage() {
-  // 输出到 stderr：用于过程日志、错误或帮助信息，不污染 stdout。
   console.error('用法:');
-  // 输出到 stderr：用于过程日志、错误或帮助信息，不污染 stdout。
   console.error('  在项目根目录: npm run day02:ask -- "你的问题"');
-  // 输出到 stderr：用于过程日志、错误或帮助信息，不污染 stdout。
   console.error('  在 day02 目录:  npm run ask -- "你的问题"');
-  // 输出到 stderr：用于过程日志、错误或帮助信息，不污染 stdout。
   console.error('');
-  // 输出到 stderr：用于过程日志、错误或帮助信息，不污染 stdout。
   console.error('示例:');
-  // 输出到 stderr：用于过程日志、错误或帮助信息，不污染 stdout。
   console.error('  npm run ask -- "计算 (18+24)*3"');
-  // 输出到 stderr：用于过程日志、错误或帮助信息，不污染 stdout。
   console.error('');
-  // 输出到 stderr：用于过程日志、错误或帮助信息，不污染 stdout。
   console.error('环境变量:');
-  // 输出到 stderr：用于过程日志、错误或帮助信息，不污染 stdout。
   console.error('  OLLAMA_HOST  默认 http://127.0.0.1:11434');
-  // 输出到 stderr：用于过程日志、错误或帮助信息，不污染 stdout。
   console.error('  OLLAMA_MODEL 默认 qwen2.5:7b');
 }
 
 /** 把当前 Node 版本解析成数字，便于给出可理解的报错。 */
-// 普通函数：把一段可复用逻辑命名，降低主流程阅读成本。
 function parseNodeVersion() {
   // 解构赋值：把版本字符串按点拆开后取出主版本和次版本。
   const [major = '0', minor = '0'] = process.versions.node.split('.');
-  // 返回结果：调用方会拿到这个值继续后续流程。
   return {
     major: Number.parseInt(major, 10) || 0,
     minor: Number.parseInt(minor, 10) || 0,
@@ -48,19 +35,14 @@ function parseNodeVersion() {
 }
 
 /** 明确校验最低 Node 版本，避免学习者看到难懂的底层语法错误。 */
-// 普通函数：把一段可复用逻辑命名，降低主流程阅读成本。
 function ensureSupportedNode() {
-  // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const current = parseNodeVersion();
-  // 条件判断：根据当前状态选择不同分支，保证错误能尽早暴露。
   if (
     current.major > MIN_NODE_MAJOR ||
     (current.major === MIN_NODE_MAJOR && current.minor >= MIN_NODE_MINOR)
   ) {
-    // 返回结果：调用方会拿到这个值继续后续流程。
     return;
   }
-  // 抛出错误：让调用方知道当前流程不能继续。
   throw new Error(
     `day02 需要 Node >= ${MIN_NODE_MAJOR}.${MIN_NODE_MINOR}，当前是 ${process.versions.node}。` +
       '请先执行 `nvm use 18.20.8`，或切到任意 >=18.17 的 Node 后重试。',
@@ -68,57 +50,40 @@ function ensureSupportedNode() {
 }
 
 /** 把多 agent 交接事件输出到 stderr，便于观察角色协作过程。 */
-// 普通函数：把一段可复用逻辑命名，降低主流程阅读成本。
 function logEvent(event) {
-  // 条件判断：根据当前状态选择不同分支，保证错误能尽早暴露。
   if (event.type === 'tool_call') {
-    // 输出到 stderr：用于过程日志、错误或帮助信息，不污染 stdout。
     console.error(`[${event.role}] 调用工具 ${event.tool} (${event.id})`);
-    // 返回结果：调用方会拿到这个值继续后续流程。
     return;
   }
-  // 输出到 stderr：用于过程日志、错误或帮助信息，不污染 stdout。
   console.error(`[${event.role}] ${event.type}: ${event.preview}`);
 }
 
 /** CLI 主入口，负责解析参数、调用当天示例并处理错误。 */
-// 异步函数：里面会 await 异步操作，所以调用时也要等待结果。
 async function main() {
   // 尽早做版本校验：避免在旧 Node 上先触发 ESM/top-level await 等难懂报错。
   ensureSupportedNode();
   // 读取命令行参数：process.argv 前两项是 node 和脚本路径，所以业务参数通常从 slice(2) 开始。
   const question = process.argv.slice(2).join(' ').trim();
-  // 条件判断：根据当前状态选择不同分支，保证错误能尽早暴露。
   if (!question || question === '--help' || question === '-h') {
     // 调用函数：把当前数据交给已有逻辑处理。
     printUsage();
-    // 退出进程：用退出码告诉 shell 当前命令成功还是失败。
     process.exitCode = question ? 0 : 2;
-    // 返回结果：调用方会拿到这个值继续后续流程。
     return;
   }
 
-  // try 块：把可能失败的代码包起来，方便 catch 给出更清晰的错误。
   try {
     // 运行时再加载主逻辑：这样旧 Node 能先收到明确版本提示，而不是直接语法报错。
     const { runMultiAgent } = await import('./multi-agent.js');
-    // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
     const result = await runMultiAgent({ question, onEvent: logEvent });
-    // 输出到 stdout：这里是命令的正式结果，方便脚本继续处理。
     console.log(result.answer);
-  // catch 块：把异常转换成可理解的错误结果或退出码。
   } catch (error) {
-    // 输出到 stderr：用于过程日志、错误或帮助信息，不污染 stdout。
     console.error(`执行失败: ${error.message}`);
-    // 退出进程：用退出码告诉 shell 当前命令成功还是失败。
     process.exitCode = 1;
   }
 }
 
 // 启动异步主流程：避免旧 Node 因顶层 await 直接语法失败。
 main().catch((error) => {
-  // 输出到 stderr：用于过程日志、错误或帮助信息，不污染 stdout。
   console.error(`执行失败: ${error.message}`);
-  // 退出进程：用退出码告诉 shell 当前命令成功还是失败。
   process.exitCode = 1;
 });

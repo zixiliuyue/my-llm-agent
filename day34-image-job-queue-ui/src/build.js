@@ -6,22 +6,15 @@
  * 注释说明保留在文件顶部，帮助学习时先理解本文件职责。
  */
 // 学习目标：生成一个无需前端框架也能打开的本地队列 UI。
-// 导入依赖：这一行把当前文件需要用到的模块或函数拿进来。
 import fs from "node:fs";
-// 导入依赖：这一行把当前文件需要用到的模块或函数拿进来。
 import path from "node:path";
-// 导入依赖：这一行把当前文件需要用到的模块或函数拿进来。
 import { createDemoQueue, summarizeQueue } from "./index.js";
 
-// 定义常量：这个值只在当前作用域读取，不会被重新赋值。
 const distDir = path.resolve("dist");
 fs.mkdirSync(distDir, { recursive: true });
 
-// 定义常量：这个值只在当前作用域读取，不会被重新赋值。
 const queue = createDemoQueue();
-// 定义常量：这个值只在当前作用域读取，不会被重新赋值。
 const summary = summarizeQueue(queue);
-// 定义常量：这个值只在当前作用域读取，不会被重新赋值。
 const rows = queue
   .map(
     (job) => `<tr>
@@ -34,7 +27,6 @@ const rows = queue
   )
   .join("\n");
 
-// 定义常量：这个值只在当前作用域读取，不会被重新赋值。
 const html = `<!doctype html>
 <html lang="zh-CN">
 <head>
@@ -72,5 +64,4 @@ const html = `<!doctype html>
 </html>`;
 
 fs.writeFileSync(path.join(distDir, "index.html"), html);
-// 输出到 stdout：这里是命令的正式结果，方便脚本继续处理。
 console.log(`built ${path.join(distDir, "index.html")}`);

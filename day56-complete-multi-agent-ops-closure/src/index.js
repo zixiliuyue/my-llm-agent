@@ -5,7 +5,6 @@
  * 注释说明保留在文件顶部，帮助学习时先理解本文件职责。
  */
 // 学习目标：把观测、权限、审批、SQL、MCP 和复盘质量串成完整多 Agent 工程闭环。
-// 定义常量：这个值只在当前作用域读取，不会被重新赋值。
 const RETRO_REQUIRED_SECTIONS = ["timeline", "impact", "rootCause", "evidence", "fix", "prevention"];
 
 // 导出常量：其它文件可以 import 这个值，适合放默认配置或元信息。
@@ -40,15 +39,10 @@ export const CAPSTONE_AGENTS = [
   },
 ];
 
-// 普通函数：把一段可复用逻辑命名，降低主流程阅读成本。
 function deepMerge(base, overrides = {}) {
-  // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const output = Array.isArray(base) ? [...base] : { ...base };
-  // 循环：按顺序处理多条数据或多个步骤。
   for (const [key, value] of Object.entries(overrides)) {
-    // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
     const current = output[key];
-    // 条件判断：根据当前状态选择不同分支，保证错误能尽早暴露。
     if (
       value &&
       typeof value === "object" &&
@@ -62,13 +56,10 @@ function deepMerge(base, overrides = {}) {
       output[key] = value;
     }
   }
-  // 返回结果：调用方会拿到这个值继续后续流程。
   return output;
 }
 
-// 导出函数：这是当前模块提供给测试、CLI 或其它本 day 文件使用的能力。
 export function createMockCapstoneInput(overrides = {}) {
-  // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const base = {
     runId: "day56-mock-run-001",
     goal: "排查配置中心发布后查询变慢，生成人工可审计修复建议。",
@@ -160,13 +151,10 @@ export function createMockCapstoneInput(overrides = {}) {
       rawText: "token=<redacted> password=<redacted>",
     },
   };
-  // 返回结果：调用方会拿到这个值继续后续流程。
   return deepMerge(base, overrides);
 }
 
-// 导出函数：这是当前模块提供给测试、CLI 或其它本 day 文件使用的能力。
 export function runCoordinator(input = createMockCapstoneInput()) {
-  // 返回结果：调用方会拿到这个值继续后续流程。
   return {
     agent: "coordinator-agent",
     goal: input.goal,
@@ -182,20 +170,15 @@ export function runCoordinator(input = createMockCapstoneInput()) {
   };
 }
 
-// 普通函数：把一段可复用逻辑命名，降低主流程阅读成本。
 function createAgentStates() {
-  // 返回结果：调用方会拿到这个值继续后续流程。
   return new Map(CAPSTONE_AGENTS.map((agent) => [agent.id, { status: "pending", summary: "" }]));
 }
 
-// 普通函数：把一段可复用逻辑命名，降低主流程阅读成本。
 function markAgent(states, id, status, summary) {
   states.set(id, { status, summary });
 }
 
-// 普通函数：把一段可复用逻辑命名，降低主流程阅读成本。
 function materializeAgents(states) {
-  // 返回结果：调用方会拿到这个值继续后续流程。
   return CAPSTONE_AGENTS.map((agent) => ({
     ...agent,
     status: states.get(agent.id)?.status ?? "pending",
@@ -203,39 +186,30 @@ function materializeAgents(states) {
   }));
 }
 
-// 普通函数：把一段可复用逻辑命名，降低主流程阅读成本。
 function handoff(from, to, status, summary, evidenceRefs = []) {
-  // 返回结果：调用方会拿到这个值继续后续流程。
   return { from, to, status, summary, evidenceRefs };
 }
 
-// 导出函数：这是当前模块提供给测试、CLI 或其它本 day 文件使用的能力。
 export function runObservabilityAgent(snapshot = createMockCapstoneInput().observability) {
-  // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const grafanaTrusted =
     snapshot.grafana?.statusCode === 200 &&
     snapshot.grafana?.contentType === "application/json" &&
     // 调用函数：把当前数据交给已有逻辑处理。
     Number(snapshot.grafana?.freshnessSec) <= 120;
-  // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const prometheusTrusted =
     snapshot.prometheus?.statusCode === 200 &&
     // 调用函数：把当前数据交给已有逻辑处理。
     Number(snapshot.prometheus?.freshnessSec) <= 120 &&
     // 调用函数：把当前数据交给已有逻辑处理。
     Number(snapshot.prometheus?.resultCount) > 0;
-  // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const logsTrusted = Boolean(snapshot.logs?.available && snapshot.logs.samples?.length);
-  // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const tracesTrusted = Boolean(snapshot.traces?.available && snapshot.traces.traceId);
-  // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const checks = [
     { id: "grafana", ok: grafanaTrusted, evidence: snapshot.grafana },
     { id: "prometheus", ok: prometheusTrusted, evidence: snapshot.prometheus },
     { id: "logs", ok: logsTrusted, evidence: snapshot.logs },
     { id: "traces", ok: tracesTrusted, evidence: snapshot.traces },
   ];
-  // 返回结果：调用方会拿到这个值继续后续流程。
   return {
     agent: "observability-agent",
     status: checks.every((item) => item.ok) ? "trusted" : "degraded",
@@ -246,23 +220,15 @@ export function runObservabilityAgent(snapshot = createMockCapstoneInput().obser
   };
 }
 
-// 导出函数：这是当前模块提供给测试、CLI 或其它本 day 文件使用的能力。
 export function resolveEffectiveUser(headers = {}) {
-  // 返回结果：调用方会拿到这个值继续后续流程。
   return headers.currentUser || headers["x-current-user"] || headers["X-Current-User"] || null;
 }
 
-// 导出函数：这是当前模块提供给测试、CLI 或其它本 day 文件使用的能力。
 export function runPermissionAgent(snapshot = createMockCapstoneInput().permission) {
-  // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const effectiveUser = resolveEffectiveUser(snapshot.headers);
-  // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const cacheProjects = new Set(snapshot.redisUserPermission?.projects ?? []);
-  // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const aclProjects = new Set(snapshot.aclSnapshot?.users?.[effectiveUser] ?? []);
-  // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const project = snapshot.project;
-  // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const checks = [
     { id: "effective-user", ok: Boolean(effectiveUser), detail: effectiveUser ?? "missing" },
     { id: "permission-cache", ok: Boolean(snapshot.redisUserPermission), detail: snapshot.redisUserPermission?.refreshedAt ?? "missing" },
@@ -270,9 +236,7 @@ export function runPermissionAgent(snapshot = createMockCapstoneInput().permissi
     { id: "cache-allows-project", ok: cacheProjects.has(project), detail: project },
     { id: "acl-allows-project", ok: aclProjects.has(project), detail: project },
   ];
-  // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const failed = checks.find((item) => !item.ok);
-  // 返回结果：调用方会拿到这个值继续后续流程。
   return {
     agent: "permission-agent",
     status: failed ? "blocked" : "allowed",
@@ -286,11 +250,8 @@ export function runPermissionAgent(snapshot = createMockCapstoneInput().permissi
   };
 }
 
-// 导出函数：这是当前模块提供给测试、CLI 或其它本 day 文件使用的能力。
 export function classifyCommand(command = "") {
-  // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const normalized = String(command).trim().replace(/\s+/g, " ");
-  // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const catastrophic = [
     /\brm\s+-rf\s+\/(?:\s|$)/i,
     /\bmkfs(?:\.|\s)/i,
@@ -300,9 +261,7 @@ export function classifyCommand(command = "") {
     /\bTRUNCATE\s+TABLE\b/i,
     /\bredis-cli\s+FLUSHALL\b/i,
   ];
-  // 条件判断：根据当前状态选择不同分支，保证错误能尽早暴露。
   if (catastrophic.some((pattern) => pattern.test(normalized))) {
-    // 返回结果：调用方会拿到这个值继续后续流程。
     return {
       status: "blocked",
       reason: "catastrophic-command",
@@ -311,16 +270,13 @@ export function classifyCommand(command = "") {
     };
   }
 
-  // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const approvalRequired = [
     /\bsystemctl\s+(restart|stop|start|reload)\b/i,
     /\bsupervisorctl\s+(restart|stop|start)\b/i,
     /\bkubectl\s+(delete|rollout restart|scale)\b/i,
     /\bmysql\b|\bpsql\b/i,
   ].some((pattern) => pattern.test(normalized));
-  // 条件判断：根据当前状态选择不同分支，保证错误能尽早暴露。
   if (approvalRequired) {
-    // 返回结果：调用方会拿到这个值继续后续流程。
     return {
       status: "pending-approval",
       reason: "state-changing-command",
@@ -329,7 +285,6 @@ export function classifyCommand(command = "") {
     };
   }
 
-  // 返回结果：调用方会拿到这个值继续后续流程。
   return {
     status: "dry-run",
     reason: "read-only-or-unknown-command",
@@ -338,11 +293,8 @@ export function classifyCommand(command = "") {
   };
 }
 
-// 导出函数：这是当前模块提供给测试、CLI 或其它本 day 文件使用的能力。
 export function runSafetyAgent(snapshot = createMockCapstoneInput().safety) {
-  // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const classification = classifyCommand(snapshot.command);
-  // 返回结果：调用方会拿到这个值继续后续流程。
   return {
     agent: "safety-agent",
     target: snapshot.target,
@@ -361,22 +313,16 @@ export function runSafetyAgent(snapshot = createMockCapstoneInput().safety) {
   };
 }
 
-// 普通函数：把一段可复用逻辑命名，降低主流程阅读成本。
 function assertSqlIdentifier(value, label) {
-  // 条件判断：根据当前状态选择不同分支，保证错误能尽早暴露。
   if (!/^[A-Za-z_][A-Za-z0-9_]*$/.test(String(value))) {
-    // 抛出错误：让调用方知道当前流程不能继续。
     throw new Error(`${label} must be a simple SQL identifier`);
   }
 }
 
-// 普通函数：把一段可复用逻辑命名，降低主流程阅读成本。
 function escapeSqlValue(value) {
-  // 返回结果：调用方会拿到这个值继续后续流程。
   return String(value).replaceAll("'", "''");
 }
 
-// 导出函数：这是当前模块提供给测试、CLI 或其它本 day 文件使用的能力。
 export function runSqlAgent(request = createMockCapstoneInput().sql) {
   // 调用函数：把当前数据交给已有逻辑处理。
   assertSqlIdentifier(request.table, "table");
@@ -384,9 +330,7 @@ export function runSqlAgent(request = createMockCapstoneInput().sql) {
   assertSqlIdentifier(request.idColumn, "idColumn");
   // 调用函数：把当前数据交给已有逻辑处理。
   assertSqlIdentifier(request.statusColumn, "statusColumn");
-  // 条件判断：根据当前状态选择不同分支，保证错误能尽早暴露。
   if (!Array.isArray(request.ids) || request.ids.length === 0) {
-    // 返回结果：调用方会拿到这个值继续后续流程。
     return {
       agent: "sql-agent",
       status: "rejected",
@@ -398,11 +342,8 @@ export function runSqlAgent(request = createMockCapstoneInput().sql) {
     };
   }
 
-  // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const ids = request.ids.map((id) => Number(id));
-  // 条件判断：根据当前状态选择不同分支，保证错误能尽早暴露。
   if (ids.some((id) => !Number.isInteger(id) || id <= 0)) {
-    // 返回结果：调用方会拿到这个值继续后续流程。
     return {
       agent: "sql-agent",
       status: "rejected",
@@ -414,20 +355,15 @@ export function runSqlAgent(request = createMockCapstoneInput().sql) {
     };
   }
 
-  // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const idList = ids.join(", ");
-  // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const fromStatus = escapeSqlValue(request.fromStatus);
-  // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const toStatus = escapeSqlValue(request.toStatus);
-  // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const sql = [
     "START TRANSACTION;",
     `SELECT ${request.idColumn}, ${request.statusColumn} FROM ${request.table} WHERE ${request.idColumn} IN (${idList}) FOR UPDATE;`,
     `UPDATE ${request.table} SET ${request.statusColumn} = '${toStatus}' WHERE ${request.idColumn} IN (${idList}) AND ${request.statusColumn} = '${fromStatus}';`,
     "-- 人工确认 affected rows 和业务窗口后再 COMMIT；否则 ROLLBACK。",
   ].join("\n");
-  // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const rollbackSql = [
     "START TRANSACTION;",
     `SELECT ${request.idColumn}, ${request.statusColumn} FROM ${request.table} WHERE ${request.idColumn} IN (${idList}) FOR UPDATE;`,
@@ -435,7 +371,6 @@ export function runSqlAgent(request = createMockCapstoneInput().sql) {
     "COMMIT;",
   ].join("\n");
 
-  // 返回结果：调用方会拿到这个值继续后续流程。
   return {
     agent: "sql-agent",
     status: "drafted",
@@ -450,13 +385,9 @@ export function runSqlAgent(request = createMockCapstoneInput().sql) {
   };
 }
 
-// 导出函数：这是当前模块提供给测试、CLI 或其它本 day 文件使用的能力。
 export function runMcpVerifierAgent(probe = createMockCapstoneInput().mcp) {
-  // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const endpoint = `${probe.baseUrl}${probe.candidatePath}`;
-  // 条件判断：根据当前状态选择不同分支，保证错误能尽早暴露。
   if (probe.candidatePath !== "/mcp") {
-    // 返回结果：调用方会拿到这个值继续后续流程。
     return {
       agent: "mcp-verifier-agent",
       endpoint,
@@ -471,14 +402,12 @@ export function runMcpVerifierAgent(probe = createMockCapstoneInput().mcp) {
     };
   }
 
-  // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const checks = [
     { id: "endpoint-path", ok: true, expected: "/mcp", actual: probe.candidatePath },
     { id: "http-reachable", ok: Number(probe.httpStatus) >= 200 && Number(probe.httpStatus) < 300 },
     { id: "initialize", ok: Boolean(probe.initializeOk) },
     { id: "tools-list", ok: Boolean(probe.toolsListOk && probe.tools?.length) },
   ];
-  // 返回结果：调用方会拿到这个值继续后续流程。
   return {
     agent: "mcp-verifier-agent",
     endpoint,
@@ -491,26 +420,18 @@ export function runMcpVerifierAgent(probe = createMockCapstoneInput().mcp) {
   };
 }
 
-// 导出函数：这是当前模块提供给测试、CLI 或其它本 day 文件使用的能力。
 export function hasSensitiveLeak(text) {
-  // 返回结果：调用方会拿到这个值继续后续流程。
   return /(token|password|client_secret|api_key)=((?!<redacted>)[^\s]+)/i.test(String(text || ""));
 }
 
-// 导出函数：这是当前模块提供给测试、CLI 或其它本 day 文件使用的能力。
 export function runRetroAgent(report = createMockCapstoneInput().retro) {
-  // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const missing = [];
-  // 循环：按顺序处理多条数据或多个步骤。
   for (const section of RETRO_REQUIRED_SECTIONS) {
-    // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
     const value = report[section];
-    // 条件判断：根据当前状态选择不同分支，保证错误能尽早暴露。
     if (Array.isArray(value) ? value.length === 0 : !value) {
       missing.push(section);
     }
   }
-  // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const checks = [
     { id: "timeline", ok: Array.isArray(report.timeline) && report.timeline.length >= 2 },
     { id: "impact", ok: Boolean(report.impact?.durationMin && report.impact?.scope) },
@@ -520,11 +441,8 @@ export function runRetroAgent(report = createMockCapstoneInput().retro) {
     { id: "prevention", ok: Array.isArray(report.prevention) && report.prevention.length > 0 },
     { id: "redaction", ok: !hasSensitiveLeak(report.rawText) },
   ];
-  // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const passed = checks.filter((item) => item.ok).length;
-  // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const status = passed === checks.length ? "ready" : passed >= 5 ? "needs-polish" : "incomplete";
-  // 返回结果：调用方会拿到这个值继续后续流程。
   return {
     agent: "retro-agent",
     status,
@@ -534,9 +452,7 @@ export function runRetroAgent(report = createMockCapstoneInput().retro) {
   };
 }
 
-// 普通函数：把一段可复用逻辑命名，降低主流程阅读成本。
 function buildFinalReport(input, evidenceBoard, decision) {
-  // 返回结果：调用方会拿到这个值继续后续流程。
   return {
     incidentId: input.incidentId,
     readyForHumanReview: decision.status === "ready-for-human-review",
@@ -560,19 +476,12 @@ function buildFinalReport(input, evidenceBoard, decision) {
   };
 }
 
-// 导出函数：这是当前模块提供给测试、CLI 或其它本 day 文件使用的能力。
 export function runCompleteMultiAgentClosure(input = createMockCapstoneInput()) {
-  // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const runId = input.runId ?? "day56-mock-run";
-  // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const agentStates = createAgentStates();
-  // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const handoffs = [];
-  // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const evidenceBoard = {};
-  // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const unresolvedRisks = [];
-  // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const coordinator = runCoordinator(input);
 
   // 调用函数：把当前数据交给已有逻辑处理。
@@ -580,41 +489,33 @@ export function runCompleteMultiAgentClosure(input = createMockCapstoneInput()) 
   handoffs.push(handoff("user", "coordinator-agent", "accepted", input.goal));
   handoffs.push(handoff("coordinator-agent", "observability-agent", "sent", "先确认观测证据是否可信。"));
 
-  // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const observability = runObservabilityAgent(input.observability);
   evidenceBoard.observability = observability;
   // 调用函数：把当前数据交给已有逻辑处理。
   markAgent(agentStates, "observability-agent", "completed", observability.summary);
-  // 条件判断：根据当前状态选择不同分支，保证错误能尽早暴露。
   if (observability.status !== "trusted") {
     unresolvedRisks.push("观测链路存在降级证据，最终结论需要人工复核。");
   }
   handoffs.push(handoff("observability-agent", "permission-agent", "sent", "带着可信证据进入权限核验。", ["observability"]));
 
-  // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const permission = runPermissionAgent(input.permission);
   evidenceBoard.permission = permission;
   // 调用函数：把当前数据交给已有逻辑处理。
   markAgent(agentStates, "permission-agent", permission.status === "allowed" ? "completed" : "blocked", permission.summary);
-  // 条件判断：根据当前状态选择不同分支，保证错误能尽早暴露。
   if (permission.status !== "allowed") {
-    // 循环：按顺序处理多条数据或多个步骤。
     for (const agent of ["safety-agent", "sql-agent", "mcp-verifier-agent", "retro-agent"]) {
       // 调用函数：把当前数据交给已有逻辑处理。
       markAgent(agentStates, agent, "skipped", "权限未通过，执行类阶段停止。");
     }
-    // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
     const decision = {
       status: "blocked-by-permission",
       blockedBy: ["permission-agent"],
       approvalRequired: false,
       summary: "权限缓存、ACL 或真实用户身份不完整，coordinator 不允许进入远程执行和 SQL 阶段。",
     };
-    // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
     const finalReport = buildFinalReport(input, evidenceBoard, decision);
     // 调用函数：把当前数据交给已有逻辑处理。
     markAgent(agentStates, "coordinator-agent", "completed", "已输出权限阻断结论。");
-    // 返回结果：调用方会拿到这个值继续后续流程。
     return {
       day: 56,
       title: "完整多 Agent 工程闭环 Capstone",
@@ -630,30 +531,24 @@ export function runCompleteMultiAgentClosure(input = createMockCapstoneInput()) 
   }
 
   handoffs.push(handoff("permission-agent", "safety-agent", "sent", "权限已核验，进入远程命令审批判断。", ["permission"]));
-  // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const safety = runSafetyAgent(input.safety);
   evidenceBoard.safety = safety;
   // 调用函数：把当前数据交给已有逻辑处理。
   markAgent(agentStates, "safety-agent", safety.status === "blocked" ? "blocked" : "completed", safety.summary);
-  // 条件判断：根据当前状态选择不同分支，保证错误能尽早暴露。
   if (safety.status === "blocked") {
-    // 循环：按顺序处理多条数据或多个步骤。
     for (const agent of ["sql-agent", "mcp-verifier-agent", "retro-agent"]) {
       // 调用函数：把当前数据交给已有逻辑处理。
       markAgent(agentStates, agent, "skipped", "安全审批阻断，后续阶段停止。");
     }
-    // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
     const decision = {
       status: "blocked-by-safety",
       blockedBy: ["safety-agent"],
       approvalRequired: false,
       summary: "远程命令命中灾难性模式，不能进入审批或执行。",
     };
-    // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
     const finalReport = buildFinalReport(input, evidenceBoard, decision);
     // 调用函数：把当前数据交给已有逻辑处理。
     markAgent(agentStates, "coordinator-agent", "completed", "已输出安全阻断结论。");
-    // 返回结果：调用方会拿到这个值继续后续流程。
     return {
       day: 56,
       title: "完整多 Agent 工程闭环 Capstone",
@@ -667,54 +562,44 @@ export function runCompleteMultiAgentClosure(input = createMockCapstoneInput()) 
       unresolvedRisks,
     };
   }
-  // 条件判断：根据当前状态选择不同分支，保证错误能尽早暴露。
   if (safety.approvalRequired) {
     unresolvedRisks.push("远程状态变更仍需要人工审批和人工执行。");
   }
 
   handoffs.push(handoff("safety-agent", "sql-agent", "sent", "只生成 SQL 草案和回滚 SQL，不执行。", ["safety"]));
-  // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const sql = runSqlAgent(input.sql);
   evidenceBoard.sql = sql;
   // 调用函数：把当前数据交给已有逻辑处理。
   markAgent(agentStates, "sql-agent", sql.status === "drafted" ? "completed" : "blocked", sql.status);
-  // 条件判断：根据当前状态选择不同分支，保证错误能尽早暴露。
   if (sql.status !== "drafted") {
     unresolvedRisks.push("SQL 草案生成失败，需要补齐可审计条件。");
   }
 
   handoffs.push(handoff("sql-agent", "mcp-verifier-agent", "sent", "验证 MCP 协议入口是否真实可用。", ["sql"]));
-  // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const mcp = runMcpVerifierAgent(input.mcp);
   evidenceBoard.mcp = mcp;
   // 调用函数：把当前数据交给已有逻辑处理。
   markAgent(agentStates, "mcp-verifier-agent", mcp.status === "ready" ? "completed" : "blocked", mcp.reason);
-  // 条件判断：根据当前状态选择不同分支，保证错误能尽早暴露。
   if (mcp.status !== "ready") {
     unresolvedRisks.push("MCP endpoint 未通过 /mcp + initialize + tools/list 验真。");
   }
 
   handoffs.push(handoff("mcp-verifier-agent", "retro-agent", "sent", "检查最终复盘质量和脱敏。", ["mcp"]));
-  // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const retro = runRetroAgent(input.retro);
   evidenceBoard.retro = retro;
   // 调用函数：把当前数据交给已有逻辑处理。
   markAgent(agentStates, "retro-agent", retro.status === "ready" ? "completed" : "blocked", retro.summary);
-  // 条件判断：根据当前状态选择不同分支，保证错误能尽早暴露。
   if (retro.status !== "ready") {
     unresolvedRisks.push("复盘缺少关键字段或存在敏感字段泄露。");
   }
 
   handoffs.push(handoff("retro-agent", "coordinator-agent", "sent", "汇总证据板和最终结论。", ["retro"]));
-  // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const blockingAgents = [
     sql.status !== "drafted" ? "sql-agent" : null,
     mcp.status !== "ready" ? "mcp-verifier-agent" : null,
     retro.status !== "ready" ? "retro-agent" : null,
   ].filter(Boolean);
-  // 定义变量：这个值后面会被更新，所以使用 let。
   let status = "ready-for-human-review";
-  // 条件判断：根据当前状态选择不同分支，保证错误能尽早暴露。
   if (mcp.status !== "ready" && retro.status !== "ready") {
     // 更新状态：这里会改变前面定义的变量或对象字段。
     status = "needs-human-review";
@@ -728,7 +613,6 @@ export function runCompleteMultiAgentClosure(input = createMockCapstoneInput()) 
     // 更新状态：这里会改变前面定义的变量或对象字段。
     status = "needs-sql-fix";
   }
-  // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const decision = {
     status,
     blockedBy: blockingAgents,
@@ -739,12 +623,10 @@ export function runCompleteMultiAgentClosure(input = createMockCapstoneInput()) 
         ? "所有 Agent 已完成 handoff，外部动作均未执行，结论可提交人工审阅。"
         : "闭环存在未解决风险，不能标记为 ready。",
   };
-  // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const finalReport = buildFinalReport(input, evidenceBoard, decision);
   // 调用函数：把当前数据交给已有逻辑处理。
   markAgent(agentStates, "coordinator-agent", "completed", "已汇总 evidence board 和最终审计结论。");
 
-  // 返回结果：调用方会拿到这个值继续后续流程。
   return {
     day: 56,
     title: "完整多 Agent 工程闭环 Capstone",
@@ -759,8 +641,6 @@ export function runCompleteMultiAgentClosure(input = createMockCapstoneInput()) 
   };
 }
 
-// 导出函数：这是当前模块提供给测试、CLI 或其它本 day 文件使用的能力。
 export function runDemo() {
-  // 返回结果：调用方会拿到这个值继续后续流程。
   return runCompleteMultiAgentClosure(createMockCapstoneInput());
 }

@@ -16,7 +16,12 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 22
+          # 用途：读取仓库根 .nvmrc，保证 CI 与本地 nvm 使用同一 Node 版本，
+          # 避免 CI 绿灯但学习者本地版本不一致导致跑不起来的版本漂移问题。
+          node-version-file: .nvmrc
+
+      - name: Check day structure
+        run: npm run test:structure
 
       - name: Run unit tests
         run: npm test

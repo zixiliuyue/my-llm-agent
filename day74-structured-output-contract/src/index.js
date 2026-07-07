@@ -16,7 +16,6 @@
  * 支持:type(string/number/boolean/object/array)、required、enum、minimum/maximum、
  * minLength、properties、items。返回结构化错误列表,每条指明字段路径和原因。
  */
-// 导出函数：这是当前模块提供给测试、CLI 或其它本 day 文件使用的能力。
 export function validateSchema(value, schema, path = "$") {
   // 定义常量：收集所有校验错误,一次性返回,便于生成修复提示。
   const errors = [];
@@ -80,7 +79,6 @@ export function validateSchema(value, schema, path = "$") {
 }
 
 /** 判断值是否符合 schema 声明的基础类型。 */
-// 普通函数：把一段可复用逻辑命名,降低主流程阅读成本。
 function matchType(value, type) {
   // 条件判断：数组要单独判断,因为 typeof [] 是 "object"。
   if (type === "array") return Array.isArray(value);
@@ -94,7 +92,6 @@ function matchType(value, type) {
 }
 
 /** 给出值的实际类型描述,用于错误信息。 */
-// 普通函数：把一段可复用逻辑命名,降低主流程阅读成本。
 function describeType(value) {
   // 条件判断：数组和 null 要特判,否则 typeof 会误导。
   if (Array.isArray(value)) return "array";
@@ -107,7 +104,6 @@ function describeType(value) {
  * function-calling 参数校验:工具调用前,先用工具声明的参数 schema 校验模型给的入参。
  * 不合法就拒绝调用并返回错误,这样错误的工具调用不会真的执行。
  */
-// 导出函数：这是当前模块提供给测试、CLI 或其它本 day 文件使用的能力。
 export function validateToolCall({ tool, args }) {
   // 条件判断：未知工具直接拒绝,避免模型臆造工具名。
   if (!tool || !tool.parameters) {
@@ -121,7 +117,6 @@ export function validateToolCall({ tool, args }) {
 }
 
 /** 把校验错误翻译成给模型的“修复提示”,这是自动修复回路的关键一环。 */
-// 导出函数：这是当前模块提供给测试、CLI 或其它本 day 文件使用的能力。
 export function buildRepairPrompt(errors) {
   // 定义常量：把每条错误拼成人类和模型都能懂的一行。
   const lines = errors.map((e) => `- ${e.path}: ${e.message}`);
@@ -134,7 +129,6 @@ export function buildRepairPrompt(errors) {
  * 最多重试 maxRetries 次。producer 是一个 (repairPrompt|null) => value 的函数,
  * 真实系统里就是“带着修复提示再调一次 LLM”。
  */
-// 导出函数：这是当前模块提供给测试、CLI 或其它本 day 文件使用的能力。
 export function produceWithRepair({ schema, producer, maxRetries = 2 }) {
   // 定义变量：记录每一轮的尝试,便于审计模型是怎么一步步修好的。
   const attempts = [];
@@ -164,7 +158,6 @@ export function produceWithRepair({ schema, producer, maxRetries = 2 }) {
 }
 
 /** CLI demo：一个总是先输出坏 JSON、拿到修复提示后才输出合法 JSON 的模型。 */
-// 普通函数：把一段可复用逻辑命名,降低主流程阅读成本。
 export function runDemo() {
   // 定义常量：期望模型输出的结构契约——一份事故摘要。
   const schema = {

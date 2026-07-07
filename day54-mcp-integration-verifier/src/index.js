@@ -5,9 +5,7 @@
  * 注释说明保留在文件顶部，帮助学习时先理解本文件职责。
  */
 // 学习目标：验证真实 MCP 协议入口，不把 /health、/sse 或根 URL 当成 MCP 可用。
-// 导出函数：这是当前模块提供给测试、CLI 或其它本 day 文件使用的能力。
 export function createMockMcpProbe(overrides = {}) {
-  // 返回结果：调用方会拿到这个值继续后续流程。
   return {
     baseUrl: overrides.baseUrl ?? "http://127.0.0.1:18000",
     candidatePath: overrides.candidatePath ?? "/mcp",
@@ -26,21 +24,14 @@ export function createMockMcpProbe(overrides = {}) {
   };
 }
 
-// 导出函数：这是当前模块提供给测试、CLI 或其它本 day 文件使用的能力。
 export function buildMcpEndpoint(baseUrl, candidatePath = "/mcp") {
-  // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const trimmed = String(baseUrl).replace(/\/+$/, "");
-  // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const path = candidatePath.startsWith("/") ? candidatePath : `/${candidatePath}`;
-  // 返回结果：调用方会拿到这个值继续后续流程。
   return `${trimmed}${path}`;
 }
 
-// 导出函数：这是当前模块提供给测试、CLI 或其它本 day 文件使用的能力。
 export function verifyMcpIntegration(probe = createMockMcpProbe()) {
-  // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const endpoint = buildMcpEndpoint(probe.baseUrl, probe.candidatePath);
-  // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const evidence = [
     `root_status=${probe.http.rootStatus}`,
     `health_status=${probe.http.healthStatus}`,
@@ -52,11 +43,8 @@ export function verifyMcpIntegration(probe = createMockMcpProbe()) {
     `resources_empty=${probe.protocol.resourcesEmpty}`,
   ];
 
-  // 定义变量：这个值后面会被更新，所以使用 let。
   let status = "not-mcp";
-  // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const nextActions = [];
-  // 条件判断：根据当前状态选择不同分支，保证错误能尽早暴露。
   if (probe.candidatePath === "/health" || probe.candidatePath === "/sse" || probe.candidatePath === "/") {
     // 更新状态：这里会改变前面定义的变量或对象字段。
     status = "wrong-endpoint";
@@ -79,7 +67,6 @@ export function verifyMcpIntegration(probe = createMockMcpProbe()) {
     nextActions.push("记录 endpoint、tools/list 结果和工具数量作为验收证据。");
   }
 
-  // 返回结果：调用方会拿到这个值继续后续流程。
   return {
     day: 54,
     title: "MCP 接入验真 Agent",
@@ -92,9 +79,7 @@ export function verifyMcpIntegration(probe = createMockMcpProbe()) {
   };
 }
 
-// 导出函数：这是当前模块提供给测试、CLI 或其它本 day 文件使用的能力。
 export function runDemo() {
-  // 返回结果：调用方会拿到这个值继续后续流程。
   return {
     ready: verifyMcpIntegration(createMockMcpProbe()),
     wrongEndpoint: verifyMcpIntegration(createMockMcpProbe({ candidatePath: "/health" })),

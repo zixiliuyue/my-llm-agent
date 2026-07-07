@@ -5,49 +5,34 @@
  * runtime。默认使用内存 exporter，不启动 Jaeger 或 Prometheus。
  */
 
-// 定义常量：这个值只在当前作用域读取，不会被重新赋值。
 const DEFAULT_NOW = "2026-05-25T10:00:00.000Z";
 
-// 普通函数：把一段可复用逻辑命名，降低主流程阅读成本。
 function createTraceId(seed) {
-  // 返回结果：调用方会拿到这个值继续后续流程。
   return `trace-${Buffer.from(seed).toString("hex").slice(0, 16)}`;
 }
 
 /** 创建内存可观测性 SDK，模拟 OTel tracer、logger 和 meter。 */
-// 普通函数：把一段可复用逻辑命名，降低主流程阅读成本。
 export function createObservability({ serviceName = "agent-runtime", now = () => DEFAULT_NOW } = {}) {
-  // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const logs = [];
-  // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const spans = [];
-  // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const counters = new Map();
-  // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const histograms = new Map();
 
-  // 普通函数：把一段可复用逻辑命名，降低主流程阅读成本。
   function log(level, message, fields = {}) {
     logs.push({ ts: now(), level, serviceName, message, ...fields });
   }
 
-  // 普通函数：把一段可复用逻辑命名，降低主流程阅读成本。
   function increment(name, labels = {}, value = 1) {
-    // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
     const key = JSON.stringify({ name, labels });
     counters.set(key, (counters.get(key) || 0) + value);
   }
 
-  // 普通函数：把一段可复用逻辑命名，降低主流程阅读成本。
   function observe(name, labels = {}, value) {
-    // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
     const key = JSON.stringify({ name, labels });
     histograms.set(key, [...(histograms.get(key) || []), value]);
   }
 
-  // 普通函数：把一段可复用逻辑命名，降低主流程阅读成本。
   function startSpan(name, attributes = {}) {
-    // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
     const span = {
       traceId: attributes.traceId || createTraceId(`${name}:${spans.length + 1}`),
       spanId: `span-${spans.length + 1}`,
@@ -61,7 +46,6 @@ export function createObservability({ serviceName = "agent-runtime", now = () =>
       events: [],
     };
     spans.push(span);
-    // 返回结果：调用方会拿到这个值继续后续流程。
     return {
       span,
       addEvent(eventName, eventAttributes = {}) {
@@ -74,7 +58,6 @@ export function createObservability({ serviceName = "agent-runtime", now = () =>
     };
   }
 
-  // 返回结果：调用方会拿到这个值继续后续流程。
   return {
     log,
     increment,
@@ -88,33 +71,23 @@ export function createObservability({ serviceName = "agent-runtime", now = () =>
 }
 
 /** 渲染 Prometheus exposition 文本。 */
-// 普通函数：把一段可复用逻辑命名，降低主流程阅读成本。
 export function renderPrometheus(counters, histograms) {
-  // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const lines = [];
-  // 循环：按顺序处理多条数据或多个步骤。
   for (const [key, value] of counters.entries()) {
-    // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
     const { name, labels } = JSON.parse(key);
     lines.push(`${name}${formatLabels(labels)} ${value}`);
   }
-  // 循环：按顺序处理多条数据或多个步骤。
   for (const [key, values] of histograms.entries()) {
-    // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
     const { name, labels } = JSON.parse(key);
-    // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
     const sum = values.reduce((total, value) => total + value, 0);
     lines.push(`${name}_count${formatLabels(labels)} ${values.length}`);
     lines.push(`${name}_sum${formatLabels(labels)} ${sum}`);
   }
-  // 返回结果：调用方会拿到这个值继续后续流程。
   return `${lines.join("\n")}\n`;
 }
 
 /** 渲染 Jaeger/OTel exporter 风格 payload。 */
-// 普通函数：把一段可复用逻辑命名，降低主流程阅读成本。
 export function renderJaeger(serviceName, spans) {
-  // 返回结果：调用方会拿到这个值继续后续流程。
   return {
     data: [{
       serviceName,
@@ -131,25 +104,18 @@ export function renderJaeger(serviceName, spans) {
   };
 }
 
-// 普通函数：把一段可复用逻辑命名，降低主流程阅读成本。
 function formatLabels(labels) {
-  // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const entries = Object.entries(labels);
-  // 条件判断：根据当前状态选择不同分支，保证错误能尽早暴露。
   if (entries.length === 0) return "";
-  // 返回结果：调用方会拿到这个值继续后续流程。
   return `{${entries.map(([key, value]) => `${key}="${String(value)}"`).join(",")}}`;
 }
 
 /** 带可观测性的 Agent 运行示例。 */
-// 普通函数：把一段可复用逻辑命名，降低主流程阅读成本。
 export function runObservedAgent(goal, observability = createObservability()) {
-  // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const root = observability.startSpan("agent.run", { goal, runId: "run-otel-0001" });
   observability.log("info", "agent run started", { runId: "run-otel-0001", goal });
   observability.increment("agent_runs_total", { status: "started" });
 
-  // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const toolSpan = observability.startSpan("tool.call", { parentSpanId: root.span.spanId, toolName: "searchDocs", traceId: root.span.traceId });
   toolSpan.addEvent("tool.input", { query: goal });
   observability.observe("agent_tool_latency_ms", { tool: "searchDocs" }, 37);
@@ -160,7 +126,6 @@ export function runObservedAgent(goal, observability = createObservability()) {
   observability.increment("agent_runs_total", { status: "completed" });
   root.end("ok");
 
-  // 返回结果：调用方会拿到这个值继续后续流程。
   return {
     runId: "run-otel-0001",
     traceId: root.span.traceId,
@@ -169,13 +134,9 @@ export function runObservedAgent(goal, observability = createObservability()) {
 }
 
 /** CLI demo：输出 logs、Prometheus metrics 和 Jaeger payload。 */
-// 普通函数：把一段可复用逻辑命名，降低主流程阅读成本。
 export function runDemo() {
-  // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const observability = createObservability();
-  // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const run = runObservedAgent("诊断 agent 工具调用延迟", observability);
-  // 返回结果：调用方会拿到这个值继续后续流程。
   return {
     day: 69,
     title: "observability-otel-runtime",

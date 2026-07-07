@@ -5,25 +5,17 @@
  * Postgres/Redis/模型，Docker Compose 作为显式演示路径，单测使用内存实现。
  */
 
-// 定义常量：这个值只在当前作用域读取，不会被重新赋值。
 const DEFAULT_NOW = "2026-05-25T10:00:00.000Z";
 
-// 普通函数：把一段可复用逻辑命名，降低主流程阅读成本。
 function createId(prefix, number) {
-  // 返回结果：调用方会拿到这个值继续后续流程。
   return `${prefix}-${String(number).padStart(4, "0")}`;
 }
 
 /** 创建产品平台内存版；真实系统可把 stores 换成 API + worker + DB + Redis。 */
-// 普通函数：把一段可复用逻辑命名，降低主流程阅读成本。
 export function createAgentOpsPlatform({ now = () => DEFAULT_NOW } = {}) {
-  // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const runs = new Map();
-  // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const approvals = new Map();
-  // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const counters = { run: 0, approval: 0 };
-  // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const ragDocs = [
     {
       id: "runtime-runbook",
@@ -37,12 +29,9 @@ export function createAgentOpsPlatform({ now = () => DEFAULT_NOW } = {}) {
     },
   ];
 
-  // 返回结果：调用方会拿到这个值继续后续流程。
   return {
     createRun({ goal, actor = "tome", tenant = "local-demo" }) {
-      // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
       const runId = createId("run", ++counters.run);
-      // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
       const run = {
         id: runId,
         goal,
@@ -57,16 +46,12 @@ export function createAgentOpsPlatform({ now = () => DEFAULT_NOW } = {}) {
         finalReport: null,
       };
       runs.set(runId, run);
-      // 返回结果：调用方会拿到这个值继续后续流程。
       return run;
     },
 
     searchKnowledge(runId, query) {
-      // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
       const run = this.getRun(runId);
-      // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
       const terms = query.toLowerCase().split(/\W+/).filter(Boolean);
-      // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
       const citations = ragDocs
         .map((doc) => ({
           documentId: doc.id,
@@ -78,16 +63,12 @@ export function createAgentOpsPlatform({ now = () => DEFAULT_NOW } = {}) {
         .sort((left, right) => right.score - left.score);
       run.citations = citations;
       run.timeline.push({ at: now(), type: "rag.search", message: `找到 ${citations.length} 条引用` });
-      // 返回结果：调用方会拿到这个值继续后续流程。
       return citations;
     },
 
     requestToolApproval(runId, { toolName, command, reason, risk = "medium" }) {
-      // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
       const run = this.getRun(runId);
-      // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
       const approvalId = createId("approval", ++counters.approval);
-      // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
       const toolCall = {
         id: `tool-${run.toolCalls.length + 1}`,
         toolName,
@@ -102,18 +83,13 @@ export function createAgentOpsPlatform({ now = () => DEFAULT_NOW } = {}) {
       run.toolCalls.push(toolCall);
       run.status = "waiting-approval";
       run.timeline.push({ at: now(), type: "approval.requested", message: `${toolName} 等待人工审批` });
-      // 返回结果：调用方会拿到这个值继续后续流程。
       return toolCall;
     },
 
     decideApproval(approvalId, { approved, reviewer = "human-reviewer", note = "" }) {
-      // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
       const approval = approvals.get(approvalId);
-      // 条件判断：根据当前状态选择不同分支，保证错误能尽早暴露。
       if (!approval) throw new Error(`approval ${approvalId} 不存在`);
-      // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
       const run = this.getRun(approval.runId);
-      // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
       const toolCall = run.toolCalls.find((item) => item.id === approval.toolCallId);
       approval.status = approved ? "approved" : "rejected";
       approval.reviewer = reviewer;
@@ -122,27 +98,20 @@ export function createAgentOpsPlatform({ now = () => DEFAULT_NOW } = {}) {
       toolCall.status = approved ? "dry-run-approved" : "rejected";
       run.status = approved ? "running" : "blocked";
       run.timeline.push({ at: now(), type: "approval.decided", message: `${reviewer} ${approval.status}` });
-      // 返回结果：调用方会拿到这个值继续后续流程。
       return approval;
     },
 
     appendEvidence(runId, evidence) {
-      // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
       const run = this.getRun(runId);
       run.evidenceBoard.push({ id: `evidence-${run.evidenceBoard.length + 1}`, at: now(), ...evidence });
       run.timeline.push({ at: now(), type: "evidence.added", message: evidence.title });
-      // 返回结果：调用方会拿到这个值继续后续流程。
       return run.evidenceBoard.at(-1);
     },
 
     completeRun(runId) {
-      // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
       const run = this.getRun(runId);
-      // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
       const hasApproval = run.toolCalls.every((toolCall) => toolCall.status === "dry-run-approved");
-      // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
       const hasCitation = run.citations.length > 0;
-      // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
       const hasEvidence = run.evidenceBoard.length > 0;
       run.status = hasApproval && hasCitation && hasEvidence ? "ready-for-human-review" : "needs-more-evidence";
       run.finalReport = {
@@ -152,21 +121,16 @@ export function createAgentOpsPlatform({ now = () => DEFAULT_NOW } = {}) {
         sections: ["timeline", "impact", "evidence", "fix", "prevention"],
       };
       run.timeline.push({ at: now(), type: "run.completed", message: run.status });
-      // 返回结果：调用方会拿到这个值继续后续流程。
       return run.finalReport;
     },
 
     getRun(runId) {
-      // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
       const run = runs.get(runId);
-      // 条件判断：根据当前状态选择不同分支，保证错误能尽早暴露。
       if (!run) throw new Error(`run ${runId} 不存在`);
-      // 返回结果：调用方会拿到这个值继续后续流程。
       return run;
     },
 
     listRuns() {
-      // 返回结果：调用方会拿到这个值继续后续流程。
       return Array.from(runs.values()).map((run) => ({
         id: run.id,
         goal: run.goal,
@@ -177,14 +141,11 @@ export function createAgentOpsPlatform({ now = () => DEFAULT_NOW } = {}) {
     },
 
     health() {
-      // 返回结果：调用方会拿到这个值继续后续流程。
       return { ok: true, service: "day60-agent-platform", time: now() };
     },
 
     metrics() {
-      // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
       const allRuns = Array.from(runs.values());
-      // 返回结果：调用方会拿到这个值继续后续流程。
       return {
         runsTotal: allRuns.length,
         waitingApproval: allRuns.filter((run) => run.status === "waiting-approval").length,
@@ -195,15 +156,10 @@ export function createAgentOpsPlatform({ now = () => DEFAULT_NOW } = {}) {
 }
 
 /** 运行完整产品闭环：用户输入 -> run -> RAG -> approval -> evidence -> final report。 */
-// 普通函数：把一段可复用逻辑命名，降低主流程阅读成本。
 export function runProductDemo() {
-  // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const platform = createAgentOpsPlatform();
-  // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const run = platform.createRun({ goal: "诊断 agent run 卡在工具调用审批的原因" });
-  // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const citations = platform.searchKnowledge(run.id, "agent risky tool approval evidence");
-  // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const toolCall = platform.requestToolApproval(run.id, {
     toolName: "remote.shell.dryRun",
     command: "systemctl status agent-worker",
@@ -215,10 +171,8 @@ export function runProductDemo() {
     source: "mock-worker",
     content: "agent-worker active; queue lag 0; last heartbeat 3s ago",
   });
-  // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const finalReport = platform.completeRun(run.id);
 
-  // 返回结果：调用方会拿到这个值继续后续流程。
   return {
     day: 60,
     title: "agent-platform-e2e-product",
