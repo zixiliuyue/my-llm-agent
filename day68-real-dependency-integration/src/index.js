@@ -36,6 +36,8 @@ export function loadConfig({ env = {}, dotenvText = "" } = {}) {
   // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const config = {
     nodeEnv: merged.NODE_ENV || "test",
+    // 安全边界：默认连接串仅用于本机 compose 演示（回环地址 + 演示口令），
+    // 真实环境必须通过 POSTGRES_URL / REDIS_URL 等环境变量覆盖，禁止依赖此默认值。
     postgresUrl: merged.POSTGRES_URL || "postgres://agent:agent@127.0.0.1:55432/agent_ops",
     redisUrl: merged.REDIS_URL || "redis://127.0.0.1:56379/0",
     minioEndpoint: merged.MINIO_ENDPOINT || "http://127.0.0.1:59000",

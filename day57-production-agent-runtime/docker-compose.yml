@@ -1,9 +1,11 @@
 services:
   postgres:
     image: postgres:16-alpine
+    # 安全边界：口令改为环境变量注入，避免弱口令硬编码进仓库；
+    # 未设置时回退到本地演示默认值，真实环境必须通过 .env 覆盖。
     environment:
-      POSTGRES_USER: agent
-      POSTGRES_PASSWORD: agent
+      POSTGRES_USER: ${POSTGRES_USER:-agent}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-agent}
       POSTGRES_DB: agent_runtime
     ports:
       - "54327:5432"

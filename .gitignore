@@ -2,3 +2,19 @@ node_modules/
 dist/
 .DS_Store
 *.log
+
+# 环境变量与密钥：禁止提交，防止真实凭证泄露
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+secrets/
+credentials.json
+
+# 本地临时输出与缓存
+tmp/
+*.tmp
+coverage/
