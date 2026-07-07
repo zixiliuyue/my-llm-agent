@@ -1,10 +1,10 @@
-# mini-openclaw 71 天学习项目
+# mini-openclaw 75 天学习项目
 
 这个仓库从 LLM-Agent 基础逐步演化到教学版 mini-openclaw。每一天都是完全自包含的小项目：有自己的 `package.json`、`README.md`、`src/` 和 `test/`，源码不 import 其它 day，方便学习过程中随意修改某一天代码。
 
 > **安全声明**：本仓库为教学项目。代码中出现的所有服务地址（默认 `127.0.0.1`）、数据库/对象存储凭证（如 `agent`、`minioadmin`）和邮箱（`@example.com`）均为本地 mock 或演示占位符，**不是真实凭证，禁止用于生产环境**。真实部署时请务必通过环境变量（`.env`）注入自己的地址与密钥，并保证不将其提交到版本库。
 
-## 71 天路线
+## 75 天路线
 
 | Day | 目录 | 主题 | 入口 |
 |---|---|---|---|
@@ -79,11 +79,15 @@
 | 69 | `day69-observability-otel-runtime` | OTel/Prometheus/Jaeger 可观测 Runtime | `npm run day69:start` / `npm run day69:test` |
 | 70 | `day70-agent-eval-ci-gate` | GitHub Actions Agent Eval CI gate | `npm run day70:start` / `npm run day70:test` |
 | 71 | `day71-agent-communication-protocol` | Agent 通信协议与 JSON-RPC/pub-sub | `npm run day71:start` / `npm run day71:test` |
+| 72 | `day72-llm-as-judge-eval` | LLM-as-Judge 评测：rubric/多裁判投票/golden 对齐 | `npm run day72:start` / `npm run day72:test` |
+| 73 | `day73-rag-faithfulness-check` | RAG 幻觉检测：逐句证据支撑/拒答建议 | `npm run day73:start` / `npm run day73:test` |
+| 74 | `day74-structured-output-contract` | 结构化输出契约：JSON Schema 校验/自动修复 | `npm run day74:start` / `npm run day74:test` |
+| 75 | `day75-ai-ethics-safety-guardrail` | AI 伦理护栏：输入/输出双侧 toxicity/bias 治理 | `npm run day75:start` / `npm run day75:test` |
 
 ## 快速验证
 
 ```bash
-# 用途：运行 day01-day71 的 mock/unit 测试
+# 用途：运行 day01-day75 的 mock/unit 测试
 # 执行目录：<项目根目录>
 # 输出判断：每个 day 打印 tests passed，最终退出码为 0
 # 风险：不调用真实模型、不部署、不执行远程命令
@@ -91,7 +95,7 @@ npm test
 ```
 
 ```bash
-# 用途：一键跑通 71 天 start 示例、单元测试、Web build 和 day05 真实模型 API
+# 用途：一键跑通 75 天 start 示例、单元测试、Web build 和 day05 真实模型 API
 # 执行目录：<项目根目录>
 # 输出判断：最后打印 examples smoke passed，所有步骤为 OK
 # 风险：会访问本地 Ollama，不执行远程命令或部署；脚本会清理生成的 dist

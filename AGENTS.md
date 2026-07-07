@@ -4,7 +4,7 @@
 
 ## 1. 项目定位
 
-- 这是 71 天 mini-openclaw 学习项目：day01-day30 得到教学版本地 agent 平台，day31-day40 扩展本地多模态能力评估，day41-day55 补齐 SRE/权限/远程审批/MCP/事故报告/观测诊断/发布验证/CLI 接入/热更新/前端路由/SQL/复盘质量等生产工程案例，day56 作为完整多 Agent 工程闭环 capstone，day57-day65 补齐生产级 Runtime、Harness、RAG、端到端产品、安全沙盒、编排、发布灰度、多模型路由和多模态理解，day66-day71 补齐沙盒执行器、HITL、真实依赖集成、OTel 可观测、CI gate 和通信协议。
+- 这是 75 天 mini-openclaw 学习项目：day01-day30 得到教学版本地 agent 平台，day31-day40 扩展本地多模态能力评估，day41-day55 补齐 SRE/权限/远程审批/MCP/事故报告/观测诊断/发布验证/CLI 接入/热更新/前端路由/SQL/复盘质量等生产工程案例，day56 作为完整多 Agent 工程闭环 capstone，day57-day65 补齐生产级 Runtime、Harness、RAG、端到端产品、安全沙盒、编排、发布灰度、多模型路由和多模态理解，day66-day71 补齐沙盒执行器、HITL、真实依赖集成、OTel 可观测、CI gate 和通信协议，day72-day75 补齐生成式 AI 输出质量与治理：LLM-as-Judge 评测、RAG 幻觉检测、结构化输出契约和 AI 伦理内容安全护栏。
 - 当前路线按职业画像服务“平台工程 / SRE / 全栈工具链 / AI 工程化落地”学习目标：重点不是模型炫技，而是把 Agent 接入真实工程链路，并保持证据、权限、审批、审计、回滚和复盘边界。
 - day01-day04 是 Agent 核心：agent loop、协议解析、工具调用、多 agent 协作和 MCP mock。
 - day05-day10 是 API/Web/状态：Web API、eval、trace、session、HTTP/WebSocket gateway。
@@ -14,6 +14,7 @@
 - day41-day56 是生产工程 Agent：SRE 排障、权限感知工具、远程命令审批、MCP 观测工具 server、事故报告、观测诊断、权限缓存排障、安全远程执行、发布验证、CLI manifest、配置热更新诊断、前端权限路由检查、SQL 生成、MCP 接入验真、复盘质量评估和完整多 Agent 工程闭环。
 - day57-day65 是岗位能力补强：生产级 Agent Runtime、Harness/Eval/Replay、生产 RAG、端到端 Agent Ops 产品、安全沙盒、多 Agent DAG 编排、发布灰度、多模型路由、多模态理解。
 - day66-day71 是生产环境补强：不受信任代码执行器、Human-in-the-Loop、真实依赖集成计划、OpenTelemetry 可观测、GitHub Actions eval gate、Agent 通信协议。
+- day72-day75 是生成式 AI 输出质量与治理：LLM-as-Judge 自动评测、RAG 幻觉检测(faithfulness)、结构化输出契约与自动修复、AI 伦理与内容安全护栏。
 - 默认使用中文解释，代码注释也必须使用中文。
 - 每个 day 完全自包含：源码不 import 其它 day，不共享 core，不要求先修好前一天才能运行当天测试。
 - 普通任务每次只推进一个 day；用户明确要求全量补齐时，可以批量更新多个 day。
@@ -75,11 +76,11 @@ npm run local:multimodal -- "一个本地 agent 平台封面图"
 ```
 
 ```bash
-# 用途：运行生产工程 Agent 案例 day41-day71
+# 用途：运行生产工程 Agent 案例 day41-day75
 # 执行目录：<项目根目录>
-# 结果判断：day41-day71 均打印 tests passed
+# 结果判断：day41-day75 均打印 tests passed
 # 风险：全部走 mock/dry-run，不访问真实生产系统
-npm run day41:test && npm run day42:test && npm run day43:test && npm run day44:test && npm run day45:test && npm run day46:test && npm run day47:test && npm run day48:test && npm run day49:test && npm run day50:test && npm run day51:test && npm run day52:test && npm run day53:test && npm run day54:test && npm run day55:test && npm run day56:test && npm run day57:test && npm run day58:test && npm run day59:test && npm run day60:test && npm run day61:test && npm run day62:test && npm run day63:test && npm run day64:test && npm run day65:test && npm run day66:test && npm run day67:test && npm run day68:test && npm run day69:test && npm run day70:test && npm run day71:test
+npm run day41:test && npm run day42:test && npm run day43:test && npm run day44:test && npm run day45:test && npm run day46:test && npm run day47:test && npm run day48:test && npm run day49:test && npm run day50:test && npm run day51:test && npm run day52:test && npm run day53:test && npm run day54:test && npm run day55:test && npm run day56:test && npm run day57:test && npm run day58:test && npm run day59:test && npm run day60:test && npm run day61:test && npm run day62:test && npm run day63:test && npm run day64:test && npm run day65:test && npm run day66:test && npm run day67:test && npm run day68:test && npm run day69:test && npm run day70:test && npm run day71:test && npm run day72:test && npm run day73:test && npm run day74:test && npm run day75:test
 ```
 
 ## 4. 项目规则
@@ -103,7 +104,7 @@ npm run day41:test && npm run day42:test && npm run day43:test && npm run day44:
 - 修改根脚本后运行根目录 `npm test`。
 - 修改 Web day 后运行对应 `npm run dayXX:build`，并用 mock 模式打开页面验证非空。
 - 修改 day31-day40 多模态链路后，至少运行 `npm run local:multimodal -- "一个本地 agent 平台封面图"`。
-- 修改 day41-day71 生产工程案例后，至少运行 `npm run day41:test && npm run day42:test && npm run day43:test && npm run day44:test && npm run day45:test && npm run day46:test && npm run day47:test && npm run day48:test && npm run day49:test && npm run day50:test && npm run day51:test && npm run day52:test && npm run day53:test && npm run day54:test && npm run day55:test && npm run day56:test && npm run day57:test && npm run day58:test && npm run day59:test && npm run day60:test && npm run day61:test && npm run day62:test && npm run day63:test && npm run day64:test && npm run day65:test && npm run day66:test && npm run day67:test && npm run day68:test && npm run day69:test && npm run day70:test && npm run day71:test`。
+- 修改 day41-day75 生产工程案例后，至少运行 `npm run day41:test && npm run day42:test && npm run day43:test && npm run day44:test && npm run day45:test && npm run day46:test && npm run day47:test && npm run day48:test && npm run day49:test && npm run day50:test && npm run day51:test && npm run day52:test && npm run day53:test && npm run day54:test && npm run day55:test && npm run day56:test && npm run day57:test && npm run day58:test && npm run day59:test && npm run day60:test && npm run day61:test && npm run day62:test && npm run day63:test && npm run day64:test && npm run day65:test && npm run day66:test && npm run day67:test && npm run day68:test && npm run day69:test && npm run day70:test && npm run day71:test && npm run day72:test && npm run day73:test && npm run day74:test && npm run day75:test`。
 - 修改 `scripts/run-all-examples.mjs`、根 `package.json` 或跨 day 路线后，优先运行 `npm test`；Ollama 可用时再运行 `npm run examples:smoke`。
 - `npm run examples:smoke` 会访问本地 Ollama 和 day05 API；如果 Ollama 未启动，应先用 `npm run doctor` 给出原因，不要把 smoke 失败误判为 day 代码失败。
 - AGENTS-only 更新只需要验证 AGENTS 文档结构和 diff；不要顺手跑 build、部署或格式化全仓。
@@ -144,6 +145,10 @@ npm run day41:test && npm run day42:test && npm run day43:test && npm run day44:
 - day69 可观测默认使用内存 exporter；真实 Prometheus/Jaeger/OpenTelemetry collector 只作为显式替换点。
 - day70 CI gate 必须输出可读评估报告，不能只给 pass/fail。
 - day71 通信协议必须校验 envelope、JSON-RPC 和 correlationId；真实 NATS/Redis/gRPC 只替换 broker。
+- day72 LLM-as-Judge 里模型只做单维度打分；rubric、多裁判投票、中位数聚合和 golden 对齐必须是确定性代码，judge 未与 golden 对齐前不得盲信自动分数。
+- day73 RAG 幻觉检测必须逐句校验答案是否被证据支撑；无依据句要显式标记，faithfulness 低于阈值应拒答或补检索，不能因带了 citation 就放行。
+- day74 结构化输出契约里模型只负责产出内容；是否合法、错在哪、重试几次由代码判断，工具调用前必须先验参数，非法入参不得真的执行。
+- day75 AI 伦理护栏必须在模型两侧各设一道：输入拦意图、输出拦表达；toxicity 直接拦截、bias 优先改写，拦截/改写都要留审计且理由脱敏，不回显原始危险内容。
 
 ## 7. 已沉淀教程材料
 

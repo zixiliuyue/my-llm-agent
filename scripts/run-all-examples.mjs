@@ -510,7 +510,7 @@ await runStep(results, 'npm:test', () => runNpmScript('test', [], LONG_TIMEOUT_M
 await runStep(results, 'local:multimodal', () => runNpmScript('local:multimodal', ['一个本地 agent 平台封面图'], SHORT_TIMEOUT_MS));
 
 // 循环：按顺序处理多条数据或多个步骤。
-  for (let day = 1; day <= 71; day += 1) {
+  for (let day = 1; day <= 75; day += 1) {
   // 定义常量：这个值只在当前作用域读取，不会被重新赋值。
   const script = `day${String(day).padStart(2, '0')}:start`;
   // 条件判断：根据当前状态选择不同分支，保证错误能尽早暴露。
