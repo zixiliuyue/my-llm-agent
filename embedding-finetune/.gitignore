@@ -1,0 +1,4 @@
+# 训练产物（模型权重、ONNX 导出）不进版本库，与仓库 dist/ 规则一致
+artifacts/
+__pycache__/
+*.pyc
