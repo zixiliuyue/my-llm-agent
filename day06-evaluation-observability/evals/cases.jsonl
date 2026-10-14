@@ -1,4 +1,0 @@
-{"id":"calc-basic","question":"计算 2+3*4","expectedTool":"calculator","expectedText":"14"}
-{"id":"rag-basic","question":"什么是 agent loop","expectedTool":"search_notes","expectedText":"agent loop"}
-{"id":"time-basic","question":"现在几点","expectedTool":"current_time","expectedText":"时间"}
-

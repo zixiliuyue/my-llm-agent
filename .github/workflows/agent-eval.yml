@@ -1,33 +1,28 @@
-name: Agent Eval Gate
+name: SRE RCA Agent Test & Benchmark CI
 
 on:
-  pull_request:
   push:
-    branches:
-      - main
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
 
 jobs:
-  eval:
+  test-and-eval:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
+      - name: Set up Go 1.23
+        uses: actions/setup-go@v5
         with:
-          # 用途：读取仓库根 .nvmrc，保证 CI 与本地 nvm 使用同一 Node 版本，
-          # 避免 CI 绿灯但学习者本地版本不一致导致跑不起来的版本漂移问题。
-          node-version-file: .nvmrc
+          go-version: '1.23.0'
 
-      - name: Check day structure
-        run: npm run test:structure
+      - name: Pull Alpine 3.20 Sandbox Image
+        run: docker pull alpine:3.20
 
-      - name: Run unit tests
-        run: npm test
+      - name: Run Unit & Real Docker Sandbox Tests
+        run: go test -v -race ./...
 
-      - name: Run agent harness gate
-        run: npm run day58:gate
-
-      - name: Run CI eval comparison
-        run: npm run day70:ci
+      - name: Verify CLI Single-Ticket Diagnosis
+        run: go run ./cmd/sre-agent --ticket-id INC-2026-0059 --json
